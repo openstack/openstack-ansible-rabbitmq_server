@@ -1,0 +1,128 @@
+---
+# Copyright 2015, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Playbook for pre-role testing 1of2
+  hosts: localhost
+  connection: local
+  pre_tasks:
+    - name: Ensure root ssh key
+      user:
+        name: "{{ ansible_env.USER | default('root') }}"
+        generate_ssh_key: "yes"
+        ssh_key_bits: 2048
+        ssh_key_file: ".ssh/id_rsa"
+    - name: get the calling users key
+      command: cat ~/.ssh/id_rsa.pub
+      register: key_get
+    - set_fact:
+        lxc_container_ssh_key: "{{ key_get.stdout }}"
+  roles:
+    - role: "lxc_hosts"
+      lxc_net_address: 10.100.100.1
+      lxc_net_dhcp_range: 10.100.100.2,10.100.100.253
+      lxc_net_bridge: lxcbr0
+      lxc_kernel_options:
+        - { key: 'fs.inotify.max_user_instances', value: 1024 }
+      lxc_container_caches:
+        - url: "https://rpc-repo.rackspace.com/container_images/rpc-trusty-container.tgz"
+          name: "trusty.tgz"
+          sha256sum: "56c6a6e132ea7d10be2f3e8104f47136ccf408b30e362133f0dc4a0a9adb4d0c"
+          chroot_path: trusty/rootfs-amd64
+      # The $HOME directory is mocked to work with tox
+      #  by defining the 'ansible_env' hash. This should
+      #  NEVER be done outside of testing.
+      ansible_env:  ## NEVER DO THIS OUTSIDE OF TESTING
+        HOME: "/tmp"
+    - role: "py_from_git"
+      git_repo: "https://github.com/lxc/python2-lxc"
+      git_dest: "/opt/lxc_python2"
+      git_install_branch: "master"
+  post_tasks:
+    # THIS TASK IS ONLY BEING DONE BECAUSE THE TOX SHARED LXC LIB IS NOT USABLE ON A
+    #  HOST MACHINE THAT MAY NOT HAVE ACCESS TO THE VENV.
+    - name: Ensure the lxc lib is on the host
+      command: /usr/local/bin/pip install /opt/lxc_python2
+    # Inventory is being pre-loaded using a post tasks instead of through a dynamic
+    #  inventory system. While this is not a usual method for deployment it's being
+    #  done for functional testing.
+    - name: Create container hosts
+      add_host:
+        groups: "all,all_containers,rabbitmq_all"
+        hostname: "{{ item.name }}"
+        inventory_hostname: "{{ item.name }}"
+        ansible_ssh_host: "{{ item.address }}"
+        ansible_become: true
+        properties:
+          service_name: "{{ item.service }}"
+        container_networks:
+          management_address:
+            address: "{{ item.address }}"
+            bridge: "lxcbr0"
+            interface: "eth1"
+            netmask: "255.255.252.0"
+            type: "veth"
+        physical_host: localhost
+        container_name: "{{ item.name }}"
+      with_items:
+        - { name: "container1", service: "service1", address: "10.100.100.101" }
+        - { name: "container2", service: "service2", address: "10.100.100.102" }
+        - { name: "container3", service: "service3", address: "10.100.100.103" }
+
+- name: Playbook for pre-role testing 2of2
+  hosts: all_containers
+  connection: local
+  gather_facts: false
+  roles:
+    - role: "lxc_container_create"
+      lxc_container_release: trusty
+      lxc_container_backing_store: dir
+      global_environment_variables:
+        PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+- name: Playbook for role testing
+  hosts: rabbitmq_all
+  gather_facts: true
+  roles:
+    - role: "{{ rolename | basename }}"
+      rabbitmq_cookie_token: secrete
+  post_tasks:
+    - name: Check rabbitmq is running
+      shell: "ps auxf | grep rabbit"
+      delegate_to: 10.100.100.101
+    - name: Check rabbitmq is running
+      shell: "ps auxf | grep rabbit"
+      delegate_to: 10.100.100.102
+    - name: Check rabbitmq is running
+      shell: "ps auxf | grep rabbit"
+      delegate_to: 10.100.100.103
+    - name: Open rabbitmq.config
+      slurp:
+        src: "/etc/rabbitmq/rabbitmq.config"
+      register: rabbitmq_config
+    - name: Open enabled_plugins
+      slurp:
+        src: "/etc/rabbitmq/enabled_plugins"
+      register: enabled_plugins
+    - name: Read rabbit files
+      set_fact:
+        enabled_plugins_contents: "{{ enabled_plugins.content | b64decode }}"
+        rabbitmq_config_contents: "{{ rabbitmq_config.content | b64decode }}"
+    - name: Check files contents
+      assert:
+        that:
+          - "'rabbitmq_management' in enabled_plugins_contents"
+          - "'rabbit@10.100.100.101' in rabbitmq_config_contents"
+          - "'rabbit@10.100.100.102' in rabbitmq_config_contents"
+          - "'rabbit@10.100.100.103' in rabbitmq_config_contents"
