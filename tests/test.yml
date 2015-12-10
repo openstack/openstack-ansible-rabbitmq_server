@@ -13,13 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Playbook for pre-role testing 1of2
-  hosts: localhost
+- name: Playbook for pre-role testing 1of3
+  hosts: 127.0.0.1
   connection: local
+  become: false
   pre_tasks:
-    - name: Ensure root ssh key
+    - name: Create ssh key pair for root
       user:
-        name: "{{ ansible_env.USER | default('root') }}"
+        name: "{{ ansible_ssh_user }}"
         generate_ssh_key: "yes"
         ssh_key_bits: 2048
         ssh_key_file: ".ssh/id_rsa"
@@ -28,6 +29,18 @@
       register: key_get
     - set_fact:
         lxc_container_ssh_key: "{{ key_get.stdout }}"
+
+- name: Playbook for pre-role testing 2of3
+  hosts: localhost
+  connection: local
+  pre_tasks:
+    - name: Ensure root's new public ssh key is in authorized_keys
+      authorized_key:
+        user: root
+        key: "{{ hostvars['127.0.0.1']['lxc_container_ssh_key'] }}"
+        manage_dir: no
+    - set_fact:
+        lxc_container_ssh_key: "{{ hostvars['127.0.0.1']['lxc_container_ssh_key'] }}"
   roles:
     - role: "lxc_hosts"
       lxc_net_address: 10.100.100.1
@@ -80,7 +93,7 @@
         - { name: "container2", service: "service2", address: "10.100.100.102" }
         - { name: "container3", service: "service3", address: "10.100.100.103" }
 
-- name: Playbook for pre-role testing 2of2
+- name: Playbook for pre-role testing 3of3
   hosts: all_containers
   connection: local
   gather_facts: false
@@ -90,9 +103,18 @@
       lxc_container_backing_store: dir
       global_environment_variables:
         PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  post_tasks:
+    - name: Wait for ssh to be available
+      local_action:
+        module: wait_for
+        port: "{{ ansible_ssh_port | default('22') }}"
+        host: "{{ ansible_ssh_host | default(inventory_hostname) }}"
+        search_regex: OpenSSH
+        delay: 1
 
 - name: Playbook for role testing
   hosts: rabbitmq_all
+  user: root
   gather_facts: true
   roles:
     - role: "{{ rolename | basename }}"
