@@ -121,14 +121,13 @@
       rabbitmq_cookie_token: secrete
   post_tasks:
     - name: Check rabbitmq is running
-      shell: "ps auxf | grep rabbit"
-      delegate_to: 10.100.100.101
-    - name: Check rabbitmq is running
-      shell: "ps auxf | grep rabbit"
-      delegate_to: 10.100.100.102
-    - name: Check rabbitmq is running
-      shell: "ps auxf | grep rabbit"
-      delegate_to: 10.100.100.103
+      command: "pgrep rabbit"
+      delegate_to: "{{ item }}"
+      when: ansible_ssh_host == item
+      with_items:
+        - 10.100.100.101
+        - 10.100.100.102
+        - 10.100.100.103
     - name: Open rabbitmq.config
       slurp:
         src: "/etc/rabbitmq/rabbitmq.config"
