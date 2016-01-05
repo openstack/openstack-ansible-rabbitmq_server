@@ -14,16 +14,16 @@
 # limitations under the License.
 
 - name: Store ssl cert
-  command: |
-    cat {{ rabbitmq_ssl_cert }}
+  slurp:
+    src: "{{ rabbitmq_ssl_cert }}"
   register: _rabbitmq_ssl_cert
   changed_when: false
   tags:
     - rabbitmq-ssl
 
 - name: Store ssl key
-  command: |
-    cat {{ rabbitmq_ssl_key }}
+  slurp:
+    src: "{{ rabbitmq_ssl_key }}"
   register: _rabbitmq_ssl_key
   changed_when: false
   tags:
@@ -31,8 +31,8 @@
 
 - name: Register a fact for the nova pub key
   set_fact:
-     rabbitmq_ssl_cert_fact: "{{ _rabbitmq_ssl_cert.stdout }}"
-     rabbitmq_ssl_key_fact: "{{ _rabbitmq_ssl_key.stdout }}"
+     rabbitmq_ssl_cert_fact: "{{ _rabbitmq_ssl_cert.content }}"
+     rabbitmq_ssl_key_fact: "{{ _rabbitmq_ssl_key.content }}"
   tags:
     - nova-key
     - nova-key-create
