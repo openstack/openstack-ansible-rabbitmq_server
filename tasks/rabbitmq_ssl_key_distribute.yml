@@ -21,7 +21,7 @@
     group: "rabbitmq"
     mode: "{{ item.file_mode }}"
   with_items:
-    - { name: "rabbitmq_ssl_key_fact", file_mode: "0640" }
+    - { name: "{{ rabbitmq_ssl_key_fact }}", file_mode: "0640" }
   tags:
     - rabbitmq-ssl
 
@@ -33,7 +33,7 @@
     group: "rabbitmq"
     mode: "{{ item.file_mode }}"
   with_items:
-    - { name: "rabbitmq_ssl_cert_fact", file_mode: "0640" }
+    - { name: "{{ rabbitmq_ssl_cert_fact }}", file_mode: "0640" }
   tags:
     - rabbitmq-ssl
 
