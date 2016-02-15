@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+## APT Cache Options
+cache_timeout: 600
+
 # Defines that the role will be deployed on a host machine
 is_metal: true
 
