@@ -13,26 +13,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Get version of installed RabbitMQ package
+- name: Get version of installed RabbitMQ package (deb)
   shell: |
     dpkg -l | grep rabbitmq-server
   failed_when: false
-  register: installed_rabbitmq
+  register: installed_rabbitmq_deb
   when:
     - not rabbitmq_upgrade | bool
+    - ansible_pkg_mgr == 'apt'
   tags:
     - rabbitmq-package-deb
     - rabbitmq-apt-packages
 
+- name: Get version of installed RabbitMQ package (rpm)
+  shell: |
+    rpm -qa | grep rabbitmq-server
+  failed_when: false
+  register: installed_rabbitmq_rpm
+  when:
+    - not rabbitmq_upgrade | bool
+    - ansible_pkg_mgr == 'yum'
+  tags:
+    - rabbitmq-package-rpm
+    - rabbitmq-apt-packages
+
+- name: Register a fact for the installed RabbitMQ version
+  set_fact:
+    installed_rabbitmq: "{{ item }}"
+  when: not item | skipped and item | changed
+  with_items:
+    - "{{ installed_rabbitmq_deb }}"
+    - "{{ installed_rabbitmq_rpm }}"
+
 - name: Compare installed version of RabbitMQ with new version variable
   fail:
     msg: "To install a new major/minor version of RabbitMQ set '-e rabbitmq_upgrade=true'."
-  when: >
-    not rabbitmq_upgrade | bool and
-    installed_rabbitmq.rc == 0 and
-    installed_rabbitmq.stdout.split()[2] != rabbitmq_package_version
+  when:
+    - not rabbitmq_upgrade | bool
+    - installed_rabbitmq.rc == 0
+    - not installed_rabbitmq.stdout | search(rabbitmq_package_version)
   tags:
     - rabbitmq-package-deb
+    - rabbitmq-package-rpm
     - rabbitmq-apt-packages
 
 - include: rabbitmq_upgrade_prep.yml

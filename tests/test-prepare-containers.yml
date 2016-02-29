@@ -15,7 +15,6 @@
 
 - name: Create test containers
   hosts: all_containers
-  connection: local
   gather_facts: false
   pre_tasks:
     - name: Destroy test containers
@@ -40,7 +39,6 @@
         - container-directories
   roles:
     - role: "lxc_container_create"
-      lxc_container_release: trusty
       lxc_container_backing_store: dir
       global_environment_variables:
         PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

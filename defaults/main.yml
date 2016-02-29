@@ -26,13 +26,11 @@ rabbitmq_upgrade: false
 #  upgrade/version state can be ignored by setting `rabbitmq_ignore_version_state=true`
 rabbitmq_ignore_version_state: false
 
-rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server_3.6.1-1_all.deb"
-rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].split('_')[1] }}"
-rabbitmq_package_sha256: "0728fbdb14ec62712c6f931a7d91648cafbc6c30d8d4da790832e784b4d2e956"
-rabbitmq_package_path: "/opt/rabbitmq-server.deb"
-
-rabbitmq_apt_packages:
-  - erlang-nox
+rabbitmq_package_url: "{{ _rabbitmq_package_url }}"
+rabbitmq_package_version: "{{ _rabbitmq_package_version }}"
+rabbitmq_release_version: "{{ _rabbitmq_release_version }}"
+rabbitmq_package_sha256: "{{ _rabbitmq_package_sha256 }}"
+rabbitmq_package_path: "{{ _rabbitmq_package_path }}"
 
 rabbitmq_pip_packages:
   - pycrypto

@@ -26,9 +26,9 @@
 - include: test-install-rabbitmq-server.yml
 
 # Run tests
-- include: test-functional.yml
+- include: test-rabbitmq-server-functional.yml
   vars:
-    rabbitmq_package_version: "3.6.1-1"
+    rabbitmq_release_version: "3.6.1"
 
 ############################# UPGRADE TESTING #############################
 
@@ -38,14 +38,13 @@
 # Install previous version of RabbitMQ server
 - include: test-install-rabbitmq-server.yml
   vars:
-    rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.5.7/rabbitmq-server_3.5.7-1_all.deb"
-    rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].split('_')[1] }}"
-    rabbitmq_package_sha256: "b8a42321c2f2689dc579911fbb583bd9c4d2ce2f20003d7050d5a324a6d2de42"
+    rabbitmq_package_url: "{{ rabbitmq_old_package[ansible_os_family | lower]['rabbitmq_package_url'] }}"
+    rabbitmq_package_sha256: "{{ rabbitmq_old_package[ansible_os_family | lower]['rabbitmq_package_sha256'] }}"
 
 # Run tests
-- include: test-functional.yml
+- include: test-rabbitmq-server-functional.yml
   vars:
-    rabbitmq_package_version: "3.5.7-1"
+    rabbitmq_release_version: "3.5.7"
 
 # Perform upgrade of RabbitMQ server (package_version will come
 # from role defaults)
@@ -54,6 +53,6 @@
     rabbitmq_upgrade: true
 
 # Run tests
-- include: test-functional.yml
+- include: test-rabbitmq-server-functional.yml
   vars:
-    rabbitmq_package_version: "3.6.1-1"
+    rabbitmq_release_version: "3.6.1"

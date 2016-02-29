@@ -23,11 +23,17 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - trusty
+        - xenial
+    - name: EL
+      versions:
+        - 7
   categories:
     - cloud
     - rabbitmq
     - development
     - openstack
 dependencies:
-  - apt_package_pinning
+  - role: apt_package_pinning
+    when:
+      - ansible_pkg_mgr == 'apt'
   - pip_install

@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Rackspace US, Inc.
+# Copyright 2016, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -64,4 +64,4 @@
           - hostvars['container1']['rabbitmq_ssl_key_checksum'] == hostvars['container2']['rabbitmq_ssl_key_checksum'] == hostvars['container3']['rabbitmq_ssl_key_checksum']
     - name: Ensure expected version of rabbitmq is running
       assert:
-        that: rabbitmqctl_status.stdout | search ("rabbit,\"RabbitMQ\",\"{{ rabbitmq_package_version.split('-')[0] }}\"")
+        that: rabbitmqctl_status.stdout | search ("rabbit,\"RabbitMQ\",\"{{ rabbitmq_release_version }}\"")

@@ -1,5 +1,5 @@
 ---
-# Copyright 2016, Rackspace US, Inc.
+# Copyright 2016, Walmart Stores, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-container_name: "{{ inventory_hostname }}"
-container_networks:
-  management_address:
-    address: "{{ ansible_host }}"
-    bridge: "lxcbr0"
-    interface: "eth1"
-    netmask: "255.255.252.0"
-    type: "veth"
-physical_host: localhost
-properties:
-  service_name: "{{ inventory_hostname }}"
+_rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server_3.6.1-1_all.deb"
+_rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].split('_')[1] }}"
+_rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
+_rabbitmq_package_sha256: "0728fbdb14ec62712c6f931a7d91648cafbc6c30d8d4da790832e784b4d2e956"
+_rabbitmq_package_path: "/opt/rabbitmq-server.deb"
+
+rabbitmq_dependencies:
+  - erlang-nox
+  - gcc
+  - python-dev

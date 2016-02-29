@@ -17,6 +17,7 @@
   service:
     name: rabbitmq-server
     state: started
+    enabled: yes
   failed_when: false
   when: >
     ansible_hostname == rabbitmq_primary_cluster_node
@@ -29,6 +30,7 @@
   service:
     name: rabbitmq-server
     state: started
+    enabled: yes
   failed_when: false
   when: >
     ansible_hostname != rabbitmq_primary_cluster_node

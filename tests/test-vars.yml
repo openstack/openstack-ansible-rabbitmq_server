@@ -1,3 +1,11 @@
 rabbitmq_cookie_token: secrete
 rabbitmq_ssl_cert: /etc/rabbitmq/rabbitmq.pem
 rabbitmq_ssl_key: /etc/rabbitmq/rabbitmq.key
+
+rabbitmq_old_package:
+  debian:
+    rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.5.7/rabbitmq-server_3.5.7-1_all.deb"
+    rabbitmq_package_sha256: "b8a42321c2f2689dc579911fbb583bd9c4d2ce2f20003d7050d5a324a6d2de42"
+  redhat:
+    rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.5.7/rabbitmq-server-3.5.7-1.noarch.rpm"
+    rabbitmq_package_sha256: "5469b049d6444d95d917634da1e167cb678060920faec606788804a63356ba40"

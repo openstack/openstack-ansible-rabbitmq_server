@@ -21,6 +21,8 @@
     - rabbitmq-upgrade
     - rabbitmq-package-deb
     - rabbitmq-package-deb-get
+    - rabbitmq-package-rpm
+    - rabbitmq-package-rpm-get
 
 - name: Download the RabbitMQ package
   get_url:
@@ -35,6 +37,8 @@
   tags:
     - rabbitmq-package-deb
     - rabbitmq-package-deb-get
+    - rabbitmq-package-rpm
+    - rabbitmq-package-rpm-get
 
 - name: Fix /etc/hosts
   lineinfile:
