@@ -47,13 +47,10 @@
 
 - name: Create the local directories
   file:
-    path: "{{ item.path }}"
+    path: "/etc/rabbitmq/"
     state: "directory"
-    group: "{{ item.owner|default('root') }}"
-    owner: "{{ item.group|default('root') }}"
-    mode: "{{ item.mode|default('0755') }}"
-    recurse: "{{ item.recurse|default('false') }}"
-  with_items:
-    - { path: "/etc/rabbitmq/" }
+    group: "root"
+    owner: "root"
+    mode: "0755"
   tags:
     - rabbitmq-config
