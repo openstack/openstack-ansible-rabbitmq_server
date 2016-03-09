@@ -16,9 +16,6 @@
 ## APT Cache Options
 cache_timeout: 600
 
-# Defines that the role will be deployed on a host machine
-is_metal: true
-
 rabbitmq_primary_cluster_node: "{{ groups['rabbitmq_all'][0] }}"
 
 # Upgrading the RabbitMQ package requires shutting down the cluster. This variable makes upgrading
