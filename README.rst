@@ -1,18 +1,33 @@
-OpenStack rabbitmq server
-#########################
-:tags: openstack, rabbitmq, server, cloud, ansible
-:category: \*nix
+OpenStack-Ansible RabbitMQ Server
+#################################
 
-Role to deploy rabbitmq and cluster it when there are more than one nodes.
+This Ansible role deploys RabbitMQ. When multiple hosts are present in the
+rabbitmq_all inventory group a cluster will be created.
+
+Default Variables
+=================
+
+.. literalinclude:: ../../defaults/main.yml
+   :language: yaml
+   :start-after: under the License.
+
+Required Variables
+==================
+
+.. code-block:: yaml
+
+    # RabbitMQ cluster shared secret
+    rabbitmq_cookie_token: secrete
+
+Example Playbook
+================
 
 .. code-block:: yaml
 
     - name: Install rabbitmq server
       hosts: rabbitmq_all
-      max_fail_percentage: 20
       user: root
       roles:
         - { role: "rabbitmq_server", tags: [ "rabbitmq-server" ] }
       vars:
         rabbitmq_cookie_token: secrete
-        container_address: "{{ ansible_ssh_host }}"
