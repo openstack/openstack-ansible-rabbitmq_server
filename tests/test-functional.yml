@@ -47,9 +47,6 @@
     assert:
       that:
         - "'rabbitmq_management' in enabled_plugins_contents"
-        - "'rabbit@10.100.100.101' in rabbitmq_config_contents"
-        - "'rabbit@10.100.100.102' in rabbitmq_config_contents"
-        - "'rabbit@10.100.100.103' in rabbitmq_config_contents"
   - name: Get status of rabbitmq
     command: rabbitmqctl status
     register: rabbitmqctl_status
