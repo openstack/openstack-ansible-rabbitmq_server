@@ -29,10 +29,9 @@
   tags:
     - rabbitmq-ssl
 
-- name: Register a fact for the nova pub key
+- name: Register a fact for the cert and key
   set_fact:
      rabbitmq_ssl_cert_fact: "{{ _rabbitmq_ssl_cert.content }}"
      rabbitmq_ssl_key_fact: "{{ _rabbitmq_ssl_key.content }}"
   tags:
-    - nova-key
-    - nova-key-create
+    - rabbitmq-ssl
