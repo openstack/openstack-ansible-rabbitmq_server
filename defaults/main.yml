@@ -16,7 +16,7 @@
 ## APT Cache Options
 cache_timeout: 600
 
-rabbitmq_primary_cluster_node: "{{ groups['rabbitmq_all'][0] }}"
+rabbitmq_primary_cluster_node: "{{ hostvars[groups['rabbitmq_all'][0]]['ansible_hostname'] }}"
 
 # Upgrading the RabbitMQ package requires shutting down the cluster. This variable makes upgrading
 #  the version an explicit action.
