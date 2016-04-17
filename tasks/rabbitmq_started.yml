@@ -19,7 +19,7 @@
     state: started
   failed_when: false
   when: >
-    inventory_hostname == rabbitmq_primary_cluster_node
+    ansible_hostname == rabbitmq_primary_cluster_node
   tags:
     - rabbitmq-server-started
     - rabbitmq-upgrade
@@ -31,7 +31,7 @@
     state: started
   failed_when: false
   when: >
-    inventory_hostname != rabbitmq_primary_cluster_node
+    ansible_hostname != rabbitmq_primary_cluster_node
   tags:
     - rabbitmq-server-started
     - rabbitmq-upgrade
