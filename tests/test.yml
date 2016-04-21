@@ -13,22 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Run basic prep
-- include: test-prep.yml
+# Prepare the user ssh keys
+- include: test-prepare-keys.yml
+
+# Prepare the host
+- include: test-prepare-host.yml
 
 # Run container clean up and build
-- include: test-container-create.yml
+- include: test-prepare-containers.yml
 
-# Deploy the environment
-- name: Install role default rabbitmq version
-  hosts: rabbitmq_all
-  user: root
-  gather_facts: true
-  roles:
-    - role: "{{ rolename | basename }}"
-      rabbitmq_cookie_token: secrete
-  post_tasks:
-    - include: test-functional.yml
+# Install RabbitMQ server
+- include: test-install-rabbitmq-server.yml
 
-# Perform upgrade testing
-- include: test-upgrade.yml
+############################# UPGRADE TESTING #############################
+
+# Run container clean up and build
+- include: test-prepare-containers.yml
+
+# Install previous version of RabbitMQ server
+- include: test-install-rabbitmq-server.yml
+  vars:
+    rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.5.7/rabbitmq-server_3.5.7-1_all.deb"
+    rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].split('_')[1] }}"
+    rabbitmq_package_sha256: "b8a42321c2f2689dc579911fbb583bd9c4d2ce2f20003d7050d5a324a6d2de42"
+
+# Perform upgrade of RabbitMQ server
+- include: test-install-rabbitmq-server.yml
+  vars:
+    rabbitmq_upgrade: true
