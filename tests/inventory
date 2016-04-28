@@ -1,2 +1,13 @@
 [all]
 localhost ansible_connection=local ansible_become=True
+container1 ansible_ssh_host=10.100.100.101 ansible_host=10.100.100.101 ansible_become=True ansible_user=root
+container2 ansible_ssh_host=10.100.100.102 ansible_host=10.100.100.102 ansible_become=True ansible_user=root
+container3 ansible_ssh_host=10.100.100.103 ansible_host=10.100.100.103 ansible_become=True ansible_user=root
+
+[rabbitmq_all]
+container1
+container2
+container3
+
+[all_containers:children]
+rabbitmq_all
