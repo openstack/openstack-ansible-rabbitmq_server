@@ -1,16 +1,16 @@
 - name: apt_package_pinning
   src: https://git.openstack.org/openstack/openstack-ansible-apt_package_pinning
   scm: git
-  version: master
+  version: origin/stable/mitaka
 - name: pip_install
   src: https://git.openstack.org/openstack/openstack-ansible-pip_install
   scm: git
-  version: master
+  version: origin/stable/mitaka
 - name: lxc_hosts
   src: https://git.openstack.org/openstack/openstack-ansible-lxc_hosts
   scm: git
-  version: master
+  version: origin/stable/mitaka
 - name: lxc_container_create
   src: https://git.openstack.org/openstack/openstack-ansible-lxc_container_create
   scm: git
-  version: master
+  version: origin/stable/mitaka
