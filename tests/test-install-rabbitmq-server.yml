@@ -13,14 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# NOTE(mancdaz): rabbitmq cannot be upgraded in serial, so when
+# rabbitmq_upgrade=True, serial is set to 0, else it is 1 for installs
 - name: Install RabbitMQ server
   hosts: rabbitmq_all
+  serial: "{{ rabbitmq_upgrade|default(false) | bool | ternary(0, 1)}}"
   user: root
   gather_facts: true
   roles:
     - role: "{{ rolename | basename }}"
-      rabbitmq_cookie_token: secrete
-  post_tasks:
-    - include: test-functional.yml
   vars_files:
     - test-vars.yml

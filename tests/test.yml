@@ -25,6 +25,11 @@
 # Install RabbitMQ server
 - include: test-install-rabbitmq-server.yml
 
+# Run tests
+- include: test-functional.yml
+  vars:
+    rabbitmq_package_version: "3.6.1-1"
+
 ############################# UPGRADE TESTING #############################
 
 # Run container clean up and build
@@ -37,7 +42,18 @@
     rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].split('_')[1] }}"
     rabbitmq_package_sha256: "b8a42321c2f2689dc579911fbb583bd9c4d2ce2f20003d7050d5a324a6d2de42"
 
-# Perform upgrade of RabbitMQ server
+# Run tests
+- include: test-functional.yml
+  vars:
+    rabbitmq_package_version: "3.5.7-1"
+
+# Perform upgrade of RabbitMQ server (package_version will come
+# from role defaults)
 - include: test-install-rabbitmq-server.yml
   vars:
     rabbitmq_upgrade: true
+
+# Run tests
+- include: test-functional.yml
+  vars:
+    rabbitmq_package_version: "3.6.1-1"
