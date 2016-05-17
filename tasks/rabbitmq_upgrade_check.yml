@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# ansible-lint fails on this task due to the detected use of 'dpkg',
+# so we skip this task in the ansible-lint check by using the
+# 'skip_ansible_lint' tag
 - name: Get version of installed RabbitMQ package (deb)
   shell: |
     dpkg -l | grep rabbitmq-server
@@ -24,7 +27,11 @@
   tags:
     - rabbitmq-package-deb
     - rabbitmq-apt-packages
+    - skip_ansible_lint
 
+# ansible-lint fails on this task due to the detected use of 'rpm',
+# so we skip this task in the ansible-lint check by using the
+# 'skip_ansible_lint' tag
 - name: Get version of installed RabbitMQ package (rpm)
   shell: |
     rpm -qa | grep rabbitmq-server
@@ -36,6 +43,7 @@
   tags:
     - rabbitmq-package-rpm
     - rabbitmq-apt-packages
+    - skip_ansible_lint
 
 - name: Register a fact for the installed RabbitMQ version
   set_fact:
