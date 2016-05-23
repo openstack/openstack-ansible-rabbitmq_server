@@ -4,8 +4,8 @@ rabbitmq_ssl_key: /etc/rabbitmq/rabbitmq.key
 
 rabbitmq_old_package:
   debian:
-    rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.5.7/rabbitmq-server_3.5.7-1_all.deb"
-    rabbitmq_package_sha256: "b8a42321c2f2689dc579911fbb583bd9c4d2ce2f20003d7050d5a324a6d2de42"
+    rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server_3.6.1-1_all.deb"
+    rabbitmq_package_sha256: "0728fbdb14ec62712c6f931a7d91648cafbc6c30d8d4da790832e784b4d2e956"
   redhat:
-    rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.5.7/rabbitmq-server-3.5.7-1.noarch.rpm"
-    rabbitmq_package_sha256: "5469b049d6444d95d917634da1e167cb678060920faec606788804a63356ba40"
+    rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server-3.6.1-1.noarch.rpm"
+    rabbitmq_package_sha256: "b688950915289a8596bdce35086b00ad08ee0e32567396c5bda850854642fac7"

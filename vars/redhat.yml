@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-_rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server-3.6.1-1.noarch.rpm"
+_rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.2/rabbitmq-server-3.6.2-1.noarch.rpm"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].rsplit('.', 1)[0] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
-_rabbitmq_package_sha256: "b688950915289a8596bdce35086b00ad08ee0e32567396c5bda850854642fac7"
+_rabbitmq_package_sha256: "ed07ebabcf6e4cd42b1d823b6a05b97458bcf265190dfec0c0a1f59495b1e80c"
 _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
 rabbitmq_dependencies:
@@ -24,3 +24,4 @@ rabbitmq_dependencies:
   - gcc
   - openssl
   - python-devel
+  - socat
