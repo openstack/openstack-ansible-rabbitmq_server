@@ -30,7 +30,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: rabbitmq_dependencies
+  with_items: "{{ rabbitmq_dependencies }}"
   tags:
     - rabbitmq-yum-packages
 

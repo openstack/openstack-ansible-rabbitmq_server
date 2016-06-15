@@ -17,7 +17,7 @@
   rabbitmq_plugin:
     names: rabbitmq_management
     state: enabled
-  with_items: rabbitmq_plugins
+  with_items: "{{ rabbitmq_plugins }}"
   register: rabbitmq_plugin
   tags:
     - rabbitmq-config

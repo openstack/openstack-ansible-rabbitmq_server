@@ -36,7 +36,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: rabbitmq_pip_packages
+  with_items: "{{ rabbitmq_pip_packages }}"
   tags:
     - rabbitmq-pip-packages
 

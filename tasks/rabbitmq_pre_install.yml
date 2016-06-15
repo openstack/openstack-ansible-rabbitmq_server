@@ -45,7 +45,7 @@
     dest: /etc/hosts
     state: present
     line: "{{ hostvars[item]['ansible_ssh_host'] }} {{ hostvars[item]['ansible_hostname'] }} {{ hostvars[item]['ansible_hostname'].split('.')[0] }}"
-  with_items: groups['rabbitmq_all']
+  with_items: "{{ groups['rabbitmq_all'] }}"
   tags:
     - rabbitmq-config
 
