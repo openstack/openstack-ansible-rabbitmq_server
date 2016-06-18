@@ -27,6 +27,15 @@
   tags:
     - rabbitmq-yum-packages
 
+- name: Reload the systemd daemon
+  command: "systemctl daemon-reload"
+  when:
+    - install_rabbitmq | changed
+    - pid1_name == "systemd"
+  tags:
+    - rabbitmq-apt-packages
+    - rabbitmq-yum-packages
+
 - name: Install pip packages
   pip:
     name: "{{ item }}"

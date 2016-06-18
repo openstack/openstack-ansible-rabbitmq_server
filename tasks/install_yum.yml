@@ -37,6 +37,7 @@
 - name: Install the RabbitMQ package
   yum:
     name: "{{ rabbitmq_package_path }}"
+  register: install_rabbitmq
   tags:
     - rabbitmq-package-rpm
     - rabbitmq-yum-packages
