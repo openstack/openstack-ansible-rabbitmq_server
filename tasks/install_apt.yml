@@ -45,6 +45,7 @@
 - name: Install the RabbitMQ package
   apt:
     deb: "{{ rabbitmq_package_path }}"
+  register: install_rabbitmq
   tags:
     - rabbitmq-package-deb
     - rabbitmq-apt-packages
