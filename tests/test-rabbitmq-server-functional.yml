@@ -21,7 +21,7 @@
     - test-vars.yml
   tasks:
     - name: Check rabbitmq is running
-      command: "pgrep rabbit"
+      command: "pgrep -f rabbit"
       delegate_to: "{{ item }}"
       when: ansible_ssh_host == item
       with_items:

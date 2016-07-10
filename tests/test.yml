@@ -28,7 +28,7 @@
 # Run tests
 - include: test-rabbitmq-server-functional.yml
   vars:
-    rabbitmq_release_version: "3.6.2"
+    rabbitmq_release_version: "3.6.3"
 
 ############################# UPGRADE TESTING #############################
 
@@ -55,4 +55,4 @@
 # Run tests
 - include: test-rabbitmq-server-functional.yml
   vars:
-    rabbitmq_release_version: "3.6.2"
+    rabbitmq_release_version: "3.6.3"
