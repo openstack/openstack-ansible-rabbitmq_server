@@ -1,3 +1,4 @@
+rabbitmq_host_group: "rabbitmq_all_other"
 rabbitmq_cookie_token: secrete
 rabbitmq_ssl_cert: /etc/rabbitmq/rabbitmq.pem
 rabbitmq_ssl_key: /etc/rabbitmq/rabbitmq.key

@@ -56,7 +56,7 @@
   rabbitmq_user:
     user: guest
     state: absent
-  when: inventory_hostname == groups['rabbitmq_all'][0]
+  when: inventory_hostname == groups[rabbitmq_host_group][0]
   tags:
     - rabbitmq-user
 
@@ -64,6 +64,6 @@
   rabbitmq_user:
     user: guest
     state: absent
-  when: inventory_hostname != groups['rabbitmq_all'][0]
+  when: inventory_hostname != groups[rabbitmq_host_group][0]
   tags:
     - rabbitmq-user

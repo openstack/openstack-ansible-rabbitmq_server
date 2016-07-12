@@ -4,10 +4,10 @@ container1 ansible_ssh_host=10.100.100.101 ansible_host=10.100.100.101 ansible_b
 container2 ansible_ssh_host=10.100.100.102 ansible_host=10.100.100.102 ansible_become=True ansible_user=root
 container3 ansible_ssh_host=10.100.100.103 ansible_host=10.100.100.103 ansible_become=True ansible_user=root
 
-[rabbitmq_all]
+[rabbitmq_all_other]
 container1
 container2
 container3
 
 [all_containers:children]
-rabbitmq_all
+rabbitmq_all_other
