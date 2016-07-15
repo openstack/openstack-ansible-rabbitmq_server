@@ -16,7 +16,7 @@
 - name: Distribute self signed ssl key
   copy:
     dest: "{{ rabbitmq_ssl_key }}"
-    content: "{{ hostvars[groups['rabbitmq_all'][0]]['rabbitmq_ssl_key_fact'] | b64decode }}"
+    content: "{{ hostvars[groups[rabbitmq_host_group][0]]['rabbitmq_ssl_key_fact'] | b64decode }}"
     owner: "rabbitmq"
     group: "rabbitmq"
     mode: "0640"
@@ -26,7 +26,7 @@
 - name: Distribute self signed ssl cert
   copy:
     dest: "{{ rabbitmq_ssl_cert }}"
-    content: "{{ hostvars[groups['rabbitmq_all'][0]]['rabbitmq_ssl_cert_fact'] | b64decode }}"
+    content: "{{ hostvars[groups[rabbitmq_host_group][0]]['rabbitmq_ssl_cert_fact'] | b64decode }}"
     owner: "rabbitmq"
     group: "rabbitmq"
     mode: "0640"

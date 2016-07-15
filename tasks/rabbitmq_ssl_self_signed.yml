@@ -17,12 +17,12 @@
 # RabbitMQ container.
 - include: rabbitmq_ssl_key_create.yml
   when: >
-    inventory_hostname == groups['rabbitmq_all'][0]
+    inventory_hostname == groups[rabbitmq_host_group][0]
 
 - include: rabbitmq_ssl_key_store.yml
   when: >
-    inventory_hostname == groups['rabbitmq_all'][0]
+    inventory_hostname == groups[rabbitmq_host_group][0]
 
 - include: rabbitmq_ssl_key_distribute.yml
   when: >
-    inventory_hostname != groups['rabbitmq_all'][0]
+    inventory_hostname != groups[rabbitmq_host_group][0]
