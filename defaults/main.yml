@@ -35,9 +35,6 @@ rabbitmq_release_version: "{{ _rabbitmq_release_version }}"
 rabbitmq_package_sha256: "{{ _rabbitmq_package_sha256 }}"
 rabbitmq_package_path: "{{ _rabbitmq_package_path }}"
 
-rabbitmq_pip_packages:
-  - pycrypto
-
 # Name of the rabbitmq cluster
 rabbitmq_cluster_name: rabbitmq_cluster1
 

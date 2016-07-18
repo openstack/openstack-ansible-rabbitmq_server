@@ -21,7 +21,5 @@ _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
 rabbitmq_dependencies:
   - erlang
-  - gcc
   - openssl
-  - python-devel
   - socat

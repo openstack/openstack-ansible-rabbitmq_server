@@ -21,6 +21,4 @@ _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
 rabbitmq_dependencies:
   - erlang-nox
-  - gcc
-  - python-dev
   - socat
