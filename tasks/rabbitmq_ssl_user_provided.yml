@@ -16,17 +16,26 @@
 # If we have a user-provided SSL certificate from
 # /etc/openstack_deploy/user_variables.yml, we should deploy that certificate
 # and key to each RabbitMQ container.
-- name: Deploy user provided ssl cert and key
+- name: Deploy user provided ssl cert
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "{{ rabbitmq_user_ssl_cert }}"
+    dest: "{{ rabbitmq_ssl_cert }}"
     owner: "rabbitmq"
     group: "rabbitmq"
-    mode: "{{ item.mode }}"
-  with_items:
-    - { src: "{{ rabbitmq_user_ssl_cert }}", dest: "{{ rabbitmq_ssl_cert }}", mode: "0644" }
-    - { src: "{{ rabbitmq_user_ssl_key }}", dest: "{{ rabbitmq_ssl_key }}", mode: "0600" }
-  when: rabbitmq_user_ssl_cert is defined and rabbitmq_user_ssl_key is defined
+    mode: "0644"
+  when: rabbitmq_user_ssl_cert is defined
+  tags:
+    - rabbitmq-configs
+    - rabbitmq-ssl
+
+- name: Deploy user provided ssl key
+  copy:
+    src: "{{ rabbitmq_user_ssl_key }}"
+    dest: "{{ rabbitmq_ssl_key }}"
+    owner: "rabbitmq"
+    group: "rabbitmq"
+    mode: "0600"
+  when: rabbitmq_user_ssl_key is defined
   tags:
     - rabbitmq-configs
     - rabbitmq-ssl
