@@ -44,7 +44,10 @@
   lineinfile:
     dest: /etc/hosts
     state: present
-    line: "{{ hostvars[item]['ansible_ssh_host'] }} {{ hostvars[item]['ansible_hostname'] }} {{ hostvars[item]['ansible_hostname'].split('.')[0] }}"
+    line: >
+      {{ hostvars[item]['ansible_ssh_host'] }}
+      {{ hostvars[item]['ansible_hostname'] }}
+      {% if hostvars[item]['ansible_hostname'] != 'localhost' %}{{ hostvars[item]['ansible_hostname'].split('.')[0] }}{% endif %}
   with_items: "{{ groups[rabbitmq_host_group] }}"
   tags:
     - rabbitmq-config
