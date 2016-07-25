@@ -44,11 +44,17 @@
   lineinfile:
     dest: /etc/hosts
     state: present
-    line: >
-      {{ hostvars[item]['ansible_ssh_host'] }}
-      {{ hostvars[item]['ansible_hostname'] }}
-      {% if hostvars[item]['ansible_hostname'] != 'localhost' %}{{ hostvars[item]['ansible_hostname'].split('.')[0] }}{% endif %}
+    line: "{{ hostvars[item]['ansible_ssh_host'] }} {{ hostvars[item]['ansible_hostname'] }} {{ hostvars[item]['ansible_hostname'].split('.')[0] }}"
   with_items: "{{ groups[rabbitmq_host_group] }}"
+  tags:
+    - rabbitmq-config
+
+- name: Ensure localhost /etc/hosts entry is correct
+  lineinfile:
+    dest: /etc/hosts
+    state: present
+    line: '127.0.0.1 localhost'
+    regexp: '^127.0.0.1'
   tags:
     - rabbitmq-config
 
