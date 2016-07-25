@@ -31,3 +31,4 @@ Example Playbook
         - { role: "rabbitmq_server", tags: [ "rabbitmq-server" ] }
       vars:
         rabbitmq_cookie_token: secrete
+
