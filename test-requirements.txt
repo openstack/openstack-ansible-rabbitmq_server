@@ -9,3 +9,11 @@ sphinx!=1.3b1,<1.3,>=1.2.1 # BSD
 oslosphinx!=3.4.0,>=2.5.0 # Apache-2.0
 doc8 # Apache-2.0
 reno>=1.8.0 # Apache2
+
+# NOTE(mhayden): CentOS 7 has Python 2.7.5, which has no SNI support built in.
+#                Two of the required Python modules for SNI support are here
+#                and the remaining one (ndg-httpsclient) is in the tox.ini
+#                since this module isn't found within the global requirements
+#                list.
+pyasn1  # BSD
+pyOpenSSL>=0.14  # Apache-2.0
