@@ -15,5 +15,5 @@ reno>=1.8.0 # Apache2
 #                and the remaining one (ndg-httpsclient) is in the tox.ini
 #                since this module isn't found within the global requirements
 #                list.
-pyasn1  # BSD
-pyOpenSSL>=0.14  # Apache-2.0
+pyasn1 # BSD
+pyOpenSSL>=0.14 # Apache-2.0
