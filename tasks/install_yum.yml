@@ -24,7 +24,7 @@
 - name: Install RabbitMQ package dependencies
   yum:
     pkg: "{{ item }}"
-    state: latest
+    state: "{{ rabbitmq_package_state }}"
     update_cache: yes
   register: install_packages
   until: install_packages|success

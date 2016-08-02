@@ -33,7 +33,7 @@
 - name: Install RabbitMQ package dependencies
   apt:
     pkg: "{{ item }}"
-    state: latest
+    state: "{{ rabbitmq_package_state }}"
   register: install_packages
   until: install_packages|success
   retries: 5

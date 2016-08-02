@@ -16,6 +16,10 @@
 ## APT Cache Options
 cache_timeout: 600
 
+# Set the package install state for distribution packages
+# Options are 'present' and 'latest'
+rabbitmq_package_state: "latest"
+
 # Inventory group containing the hosts for the cluster
 rabbitmq_host_group: "rabbitmq_all"
 
