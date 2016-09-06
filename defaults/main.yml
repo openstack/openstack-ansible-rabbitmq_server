@@ -48,9 +48,9 @@ rabbitmq_cluster_partition_handling: pause_minority
 # Rabbitmq open file limits
 rabbitmq_ulimit: 4096
 
-# Enable the management plugin in rabbitmq
+# Configure rabbitmq plugins
 rabbitmq_plugins:
-  - names: rabbitmq_management
+  - name: rabbitmq_management
     state: enabled
 
 # RabbitMQ SSL support

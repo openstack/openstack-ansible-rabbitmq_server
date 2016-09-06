@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Enable management plugin
+- name: Configure rabbitmq plugins
   rabbitmq_plugin:
-    names: rabbitmq_management
-    state: enabled
+    names: "{{ item.name }}"
+    state: "{{ item.state }}"
   with_items: "{{ rabbitmq_plugins }}"
   register: rabbitmq_plugin
   tags:
