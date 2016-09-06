@@ -20,5 +20,6 @@ _rabbitmq_package_sha256: "9de570ca9e3d30bdc26a79c683503e158d35e5cacafb36e4e9b01
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
 rabbitmq_dependencies:
+  - erlang-base-hipe
   - erlang-nox
   - socat
