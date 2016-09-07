@@ -79,3 +79,6 @@ rabbitmq_collect_statistics_interval: 5000
 
 # RabbitMQ Management rates mode
 rabbitmq_management_rates_mode: basic
+
+# Precompile RabbitMQ with HiPE
+rabbitmq_hipe_compile: False
