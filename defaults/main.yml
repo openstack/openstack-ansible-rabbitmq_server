@@ -82,3 +82,32 @@ rabbitmq_management_rates_mode: basic
 
 # Precompile RabbitMQ with HiPE
 rabbitmq_hipe_compile: False
+
+# RabbitMQ policies
+# Used to tune performance characteristics of OpenStack messaging
+#
+# Example override that uses HA queues only for telemetry and sets message
+# expiry for RPC messages
+#
+# rabbitmq_policies:
+#   - name: "heat_rpc_expire"
+#     pattern: '^heat-engine-listener\\.'
+#     tags: "expires=3600000"
+#     priority: 1
+#   - name: "results_expire"
+#     pattern: '^results\\.'
+#     tags: "expires=3600000"
+#     priority: 1
+#   - name: "tasks_expire"
+#     pattern: '^results\\.'
+#     tags: "expires=3600000"
+#     priority: 1
+#   - name: "ha-notif"
+#     pattern: '^(event|metering|notifications)\.'
+#     tags: "ha-sync-mode=automatic"
+#     priority: 0
+#
+rabbitmq_policies:
+  - name: "HA"
+    pattern: '^(?!amq\.).*'
+    tags: "ha-mode=all"

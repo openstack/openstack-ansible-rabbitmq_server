@@ -25,10 +25,12 @@
 - name: Enable queue mirroring
   rabbitmq_policy:
     node: "rabbit@{{ ansible_hostname }}"
-    name: "HA"
-    pattern: '^(?!amq\.).*'
-    tags: "ha-mode=all"
+    name: "{{ item.name }}"
+    pattern: "{{ item.pattern }}"
+    priority: "{{ item.priority | default(0) }}"
+    tags: "{{ item.tags }}"
   register: rabbitmq_queue_mirror
+  with_items: "{{ rabbitmq_policies }}"
   tags:
     - rabbitmq-config
     - rabbitmq-cluster
