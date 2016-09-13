@@ -35,6 +35,18 @@
     - rabbitmq-config
     - rabbitmq-cluster
 
+- name: Create rabbitmq systemd service config dir
+  file:
+    path: "/etc/systemd/system/rabbitmq-server.service.d"
+    state: "directory"
+    group: "root"
+    owner: "root"
+    mode: "0755"
+  when:
+    - pid1_name == "systemd"
+  tags:
+    - rabbitmq-config
+
 - name: Create rabbitmq config
   register: rabbit_config_changed
   template:
@@ -44,6 +56,24 @@
     - { src: "rabbitmq.config.j2", dest: "/etc/rabbitmq/rabbitmq.config" }
     - { src: "rabbitmq-server.j2", dest: "/etc/default/rabbitmq-server" }
     - { src: "rabbitmq-env.j2", dest: "/etc/rabbitmq/rabbitmq-env.conf" }
+  tags:
+    - rabbitmq-config
+
+- name: Apply resource limits (systemd)
+  register: rabbit_resource_limit_changed
+  template:
+    src: "limits.conf.j2"
+    dest: "/etc/systemd/system/rabbitmq-server.service.d/limits.conf"
+  when:
+    - pid1_name == "systemd"
+  tags:
+    - rabbitmq-config
+
+- name: Reload the systemd daemon
+  command: "systemctl daemon-reload"
+  when:
+    - pid1_name == "systemd"
+    - rabbit_resource_limit_changed|changed
   tags:
     - rabbitmq-config
 
