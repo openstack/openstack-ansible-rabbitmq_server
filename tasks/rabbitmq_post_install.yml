@@ -22,7 +22,7 @@
   tags:
     - rabbitmq-config
 
-- name: Enable queue mirroring
+- name: Apply rabbitmq policies
   rabbitmq_policy:
     node: "rabbit@{{ ansible_hostname }}"
     name: "{{ item.name }}"
