@@ -17,13 +17,14 @@
   hosts: "{{ rabbitmq_host_group }}"
   user: root
   gather_facts: true
+  become: true
   vars_files:
     - test-vars.yml
   tasks:
     - name: Check rabbitmq is running
       command: "pgrep -f rabbit"
       delegate_to: "{{ item }}"
-      when: ansible_ssh_host == item
+      when: ansible_host == item
       with_items:
         - 10.100.100.101
         - 10.100.100.102

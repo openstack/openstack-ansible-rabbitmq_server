@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Rackspace US, Inc.
+# Copyright 2016, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,15 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Setup the host
-- include: playbooks/test-install-openstack-hosts.yml
-- include: playbooks/test-setup-host.yml
+bridges:
+  - "br-mgmt"
 
-# Install RabbitMQ server
-- include: test-install-rabbitmq-server.yml
-
-# Run tests
-- include: test-rabbitmq-server-functional.yml
-  vars:
-    rabbitmq_release_version: "3.6.5"
-
+ansible_python_interpreter: "/usr/bin/python2"
