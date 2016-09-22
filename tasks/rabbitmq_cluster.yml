@@ -14,9 +14,9 @@
 # limitations under the License.
 
 - include: rabbitmq_cluster_create.yml
-  when: >
-    ansible_hostname == rabbitmq_primary_cluster_node
+  static: no
+  when: ansible_hostname == rabbitmq_primary_cluster_node
 
 - include: rabbitmq_cluster_join.yml
-  when: >
-    ansible_hostname != rabbitmq_primary_cluster_node
+  static: no
+  when: ansible_hostname != rabbitmq_primary_cluster_node

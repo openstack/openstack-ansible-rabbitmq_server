@@ -16,14 +16,14 @@
 - include: rabbitmq_upgrade_check.yml
 
 - include: install_apt.yml
-  when:
-    - ansible_pkg_mgr == 'apt'
+  static: no
+  when: ansible_pkg_mgr == 'apt'
   tags:
     - rabbitmq-apt-packages
 
 - include: install_yum.yml
-  when:
-    - ansible_pkg_mgr == 'yum'
+  static: no
+  when: ansible_pkg_mgr == 'yum'
   tags:
     - rabbitmq-yum-packages
 

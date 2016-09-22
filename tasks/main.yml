@@ -40,6 +40,7 @@
 
 # The install process will be skipped if `rabbitmq_ignore_version_state=true`
 - include: rabbitmq_install.yml
+  static: no
   when: not rabbitmq_ignore_version_state | bool
 
 # RabbitMQ SSL/TLS listener configuration
@@ -53,6 +54,7 @@
 #   playbooks/roles/rabbitmq_server/defaults/main.yml
 #
 - include: rabbitmq_ssl_self_signed.yml
+  static: no
   when: >
     rabbitmq_user_ssl_cert is not defined or
     rabbitmq_user_ssl_key is not defined

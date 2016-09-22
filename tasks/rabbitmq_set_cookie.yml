@@ -22,6 +22,7 @@
     - rabbitmq-config
 
 - include: rabbitmq_stopped.yml
+  static: no
   when: tmp_rabbit_cookie.stdout != rabbitmq_cookie_token
   tags:
     - rabbitmq-config
@@ -39,6 +40,7 @@
     - rabbitmq-config
 
 - include: rabbitmq_started.yml
+  static: no
   when: tmp_rabbit_cookie.stdout != rabbitmq_cookie_token
   tags:
     - rabbitmq-config
