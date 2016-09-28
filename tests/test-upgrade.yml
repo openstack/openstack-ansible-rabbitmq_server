@@ -14,8 +14,8 @@
 # limitations under the License.
 
 # Setup the host
-- include: playbooks/test-install-openstack-hosts.yml
-- include: playbooks/test-setup-host.yml
+- include: common/test-install-openstack-hosts.yml
+- include: common/test-setup-host.yml
 
 # Install previous version of RabbitMQ server
 - include: test-install-rabbitmq-server.yml

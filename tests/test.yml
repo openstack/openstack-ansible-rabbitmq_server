@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Setup the host
-- include: playbooks/test-setup-host.yml
+- include: common/test-setup-host.yml
 
 # Install RabbitMQ server
 - include: test-install-rabbitmq-server.yml
