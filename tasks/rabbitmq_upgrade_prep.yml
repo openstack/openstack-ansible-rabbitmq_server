@@ -28,6 +28,6 @@
 - name: Ensure erlang epmd is stopped
   shell: |
     pkill $(pgrep -lf "erlang" | awk '{print $2}')
-  ignore_errors: true
+  failed_when: false
   tags:
     - rabbitmq-upgrade
