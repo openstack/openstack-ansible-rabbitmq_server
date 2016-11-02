@@ -35,8 +35,9 @@
     - rabbitmq-cluster
 
 - name: Join rabbitmq cluster
-  shell: |
+  command: >
     rabbitmqctl join_cluster "rabbit@{{ rabbitmq_primary_cluster_node.split('.')[0] }}"
+  changed_when: false
   when: result.rc != 0
   register: rabbit_join_cluster
   until: rabbit_join_cluster|success
@@ -46,8 +47,8 @@
     - rabbitmq-cluster
 
 - name: Start rabbitmq app
-  shell: |
-    rabbitmqctl start_app
+  command: rabbitmqctl start_app
+  changed_when: false
   when: result.rc != 0
   tags:
     - rabbitmq-start-app

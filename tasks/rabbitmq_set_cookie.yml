@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Read rabbit cookie
-  shell: "cat /var/lib/rabbitmq/.erlang.cookie"
+  command: "cat /var/lib/rabbitmq/.erlang.cookie"
   register: tmp_rabbit_cookie
   changed_when: tmp_rabbit_cookie.rc != 0
   failed_when: false
