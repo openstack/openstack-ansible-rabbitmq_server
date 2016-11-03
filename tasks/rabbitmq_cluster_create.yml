@@ -23,8 +23,8 @@
     - rabbitmq-cluster
 
 - name: Create rabbitmq cluster
-  shell: |
-    rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
+  command: rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
+  changed_when: false
   when: rabbitmq_cluster_status.rc != 0
   tags:
     - rabbitmq-cluster

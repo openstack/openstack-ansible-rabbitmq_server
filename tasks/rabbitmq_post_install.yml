@@ -76,6 +76,8 @@
     - rabbit_resource_limit_changed|changed
   tags:
     - rabbitmq-config
+    # don't trigger ANSIBLE0016
+    - skip_ansible_lint
 
 - include: rabbitmq_restart.yml
   static: no
