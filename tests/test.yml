@@ -27,25 +27,10 @@
   vars:
     rabbitmq_release_version: "3.6.1"
 
-# Perform upgrade of RabbitMQ server (package_version will come
-# from role defaults)
-# NOTE(mattt): We disable upgrade testing when package manager == 'yum',
-#              this is due to the following ansible bug:
-#              https://github.com/ansible/ansible-modules-core/pull/4547
-#              This conditional can be removed if/when we upgrade to
-#              ansible 2.2 or the fix is backported to ansible 2.1.
 - include: test-install-rabbitmq-server.yml
-  when: ansible_pkg_mgr != 'yum'
   vars:
     rabbitmq_upgrade: true
 
-# Run tests
-# NOTE(mattt): We disable upgrade testing when package manager == 'yum',
-#              this is due to the following ansible bug:
-#              https://github.com/ansible/ansible-modules-core/pull/4547
-#              This conditional can be removed if/when we upgrade to
-#              ansible 2.2 or the fix is backported to ansible 2.1.
 - include: test-rabbitmq-server-functional.yml
-  when: ansible_pkg_mgr != 'yum'
   vars:
     rabbitmq_release_version: "3.6.5"
