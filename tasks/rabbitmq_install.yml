@@ -31,7 +31,7 @@
   command: "systemctl daemon-reload"
   when:
     - install_rabbitmq | changed
-    - pid1_name == "systemd"
+    - ansible_service_mgr == 'systemd'
   tags:
     - rabbitmq-apt-packages
     - rabbitmq-yum-packages
