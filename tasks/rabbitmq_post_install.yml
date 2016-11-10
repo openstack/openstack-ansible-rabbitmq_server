@@ -43,7 +43,7 @@
     owner: "root"
     mode: "0755"
   when:
-    - pid1_name == "systemd"
+    - ansible_service_mgr == 'systemd'
   tags:
     - rabbitmq-config
 
@@ -65,14 +65,14 @@
     src: "limits.conf.j2"
     dest: "/etc/systemd/system/rabbitmq-server.service.d/limits.conf"
   when:
-    - pid1_name == "systemd"
+    - ansible_service_mgr == 'systemd'
   tags:
     - rabbitmq-config
 
 - name: Reload the systemd daemon
   command: "systemctl daemon-reload"
   when:
-    - pid1_name == "systemd"
+    - ansible_service_mgr == 'systemd'
     - rabbit_resource_limit_changed|changed
   tags:
     - rabbitmq-config
