@@ -62,7 +62,7 @@ rabbitmq_ssl_ca_cert: /etc/rabbitmq/rabbitmq-ca.pem
 # SSL certificate for RabbitMQ when this playbook runs.  You can also change
 # the subject of the self-signed certificate here if you prefer.
 rabbitmq_ssl_self_signed_regen: false
-rabbitmq_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ container_name }}"
+rabbitmq_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ ansible_hostname }}"
 
 # Define user-provided SSL certificates in:
 # /etc/openstack_deploy/user_variables.yml
