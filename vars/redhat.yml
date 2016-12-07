@@ -23,3 +23,25 @@ rabbitmq_dependencies:
   - erlang
   - openssl
   - socat
+
+rabbitmq_mirror_dependencies:
+  - pygpgme
+  - yum-utils
+
+rabbitmq_distro_packages:
+  - rabbitmq-server
+
+rabbitmq_gpg_keys:
+  - key_name: 'rabbitmq-release-signing-key.asc'
+    keyserver: 'https://www.rabbitmq.com'
+
+rabbitmq_repo:
+  name: rabbitmq_rabbitmq-server
+  description: "RabbitMQ Server Rolling Repository"
+  baseurl: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch"
+  repo_gpgcheck: yes
+  state: "present"
+  gpgkey: "https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey"
+  # TODO(evrardjp) Move to ssl verify yes
+  #sslverify: no
+  #sslcacert: /etc/pki/tls/certs/ca-bundle.crt

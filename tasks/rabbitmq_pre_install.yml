@@ -34,6 +34,7 @@
   retries: 3
   delay: 10
   until: package_download|success
+  when: rabbitmq_install_method == 'file'
   tags:
     - rabbitmq-package-deb
     - rabbitmq-package-deb-get
