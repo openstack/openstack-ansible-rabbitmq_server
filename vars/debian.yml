@@ -23,3 +23,17 @@ rabbitmq_dependencies:
   - erlang-base-hipe
   - erlang-nox
   - socat
+
+rabbitmq_distro_packages:
+  - rabbitmq-server
+
+rabbitmq_gpg_keys:
+  - key_name: 'rabbitmq'
+    keyserver: 'hkp://keyserver.ubuntu.com:80'
+    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
+    hash_id: '0x6B73A36E6026DFCA'
+
+rabbitmq_apt_repo_url: "http://www.rabbitmq.com/debian"
+rabbitmq_repo:
+  repo: "deb {{ rabbitmq_apt_repo_url }} testing main"
+  state: "present"
