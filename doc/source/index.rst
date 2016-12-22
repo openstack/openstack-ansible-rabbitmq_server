@@ -14,6 +14,9 @@ Table of Contents
    configure-rabbitmq.rst
 
 
+To clone or view the source code for this repository, visit the role repository
+for `rabbitmq_server <https://github.com/openstack/openstack-ansible-rabbitmq_server>`_.
+
 Default variables
 ~~~~~~~~~~~~~~~~~
 
