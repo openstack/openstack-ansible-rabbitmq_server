@@ -86,6 +86,9 @@ rabbitmq_management_rates_mode: basic
 # Precompile RabbitMQ with HiPE
 rabbitmq_hipe_compile: False
 
+# Disable non-TLS listeners
+rabbitmq_disable_non_tls_listeners: False
+
 # RabbitMQ policies
 # Used to tune performance characteristics of OpenStack messaging
 #
