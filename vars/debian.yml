@@ -37,3 +37,4 @@ rabbitmq_apt_repo_url: "http://www.rabbitmq.com/debian"
 rabbitmq_repo:
   repo: "deb {{ rabbitmq_apt_repo_url }} testing main"
   state: "present"
+  filename: "RabbitMQ"

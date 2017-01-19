@@ -54,7 +54,7 @@
 - name: Install RabbitMQ yum mirror
   yum_repository:
     name: "{{ rabbitmq_repo.name }}"
-    file:  "RabbitMQ"
+    file:  "{{ rabbitmq_repo.filename | default(omit) }}"
     description: "{{ rabbitmq_repo.description | default(omit) }}"
     baseurl: "{{ rabbitmq_repo.baseurl }}"
     repo_gpgcheck: "{{ rabbitmq_repo.repo_gpgcheck | default(omit) }}"
