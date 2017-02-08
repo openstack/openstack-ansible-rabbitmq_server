@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-_rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.5/rabbitmq-server-3.6.5-1.noarch.rpm"
+_rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.6/rabbitmq-server-3.6.6-1.el7.noarch.rpm"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].rsplit('.', 1)[0] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
-_rabbitmq_package_sha256: "2c028ef46fb21134ac5cf85fe144232f9a8d2d8de4f1f827c8ad311b1dfbf57c"
+_rabbitmq_package_sha256: "978ad1cec04c423027f1e42a083a4b437e57f48f3135622b7626118afc0b1fe5"
 _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
 rabbitmq_dependencies:
