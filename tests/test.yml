@@ -28,7 +28,7 @@
 # Run tests
 - include: test-functional.yml
   vars:
-    rabbitmq_package_version: "3.6.1-1"
+    rabbitmq_package_version: "3.6.6-1"
 
 ############################# UPGRADE TESTING #############################
 
@@ -56,4 +56,4 @@
 # Run tests
 - include: test-functional.yml
   vars:
-    rabbitmq_package_version: "3.6.1-1"
+    rabbitmq_package_version: "3.6.6-1"
