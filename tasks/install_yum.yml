@@ -13,14 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install epel-release package
-  yum:
-    name: epel-release
-    state: present
-    update_cache: yes
-  tags:
-    - rabbitmq-yum-packages
-
 - name: Add rabbitmq gpg-keys
   rpm_key:
     state: present
