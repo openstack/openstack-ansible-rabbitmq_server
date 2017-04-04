@@ -25,7 +25,7 @@
 # Run tests
 - include: test-rabbitmq-server-functional.yml
   vars:
-    rabbitmq_release_version: "3.6.1"
+    rabbitmq_release_version: "3.6.6"
 
 # Perform upgrade of RabbitMQ server (package_version will come
 # from role defaults)
@@ -48,4 +48,4 @@
 - include: test-rabbitmq-server-functional.yml
   when: ansible_pkg_mgr != 'yum'
   vars:
-    rabbitmq_release_version: "3.6.6"
+    rabbitmq_release_version: "3.6.9"
