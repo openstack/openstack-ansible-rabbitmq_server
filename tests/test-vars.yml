@@ -7,8 +7,8 @@ rabbitmq_hipe_compile: True
 
 rabbitmq_old_package:
   debian:
-    rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server_3.6.1-1_all.deb"
-    rabbitmq_package_sha256: "0728fbdb14ec62712c6f931a7d91648cafbc6c30d8d4da790832e784b4d2e956"
+    rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.6/rabbitmq-server_3.6.6-1_all.deb"
+    rabbitmq_package_sha256: "44e3a6b0a594d5c7bc4b4b74bd93ed0111777c6ebcbca44e6b49400bb55f3044"
   redhat:
-    rabbitmq_package_url: "https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server-3.6.1-1.noarch.rpm"
-    rabbitmq_package_sha256: "b688950915289a8596bdce35086b00ad08ee0e32567396c5bda850854642fac7"
+    rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.6/rabbitmq-server-3.6.6-1.el7.noarch.rpm"
+    rabbitmq_package_sha256: "978ad1cec04c423027f1e42a083a4b437e57f48f3135622b7626118afc0b1fe5"
