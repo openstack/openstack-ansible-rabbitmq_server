@@ -13,23 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Remove package rabbit if found for upgrade
-  file:
-    path: "{{ rabbitmq_package_path }}"
-    state: absent
-  tags:
-    - rabbitmq-upgrade
-    - rabbitmq-package-deb
-    - rabbitmq-package-deb-get
-    - rabbitmq-package-rpm
-    - rabbitmq-package-rpm-get
-
 - name: Download the RabbitMQ package
   get_url:
     url: "{{ rabbitmq_package_url }}"
     dest: "{{ rabbitmq_package_path }}"
     mode: "0644"
-    sha256sum: "{{ rabbitmq_package_sha256 }}"
+    checksum: "sha256:{{ rabbitmq_package_sha256 }}"
   register: package_download
   retries: 3
   delay: 10
