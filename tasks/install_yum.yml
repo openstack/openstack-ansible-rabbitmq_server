@@ -13,35 +13,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Add rabbitmq gpg-keys
-  rpm_key:
-    state: present
-    key: "{{ item.keyserver }}/{{ item.key_name }}"
-  register: add_keys
-  until: add_keys|success
-  failed_when: false
-  retries: 5
-  delay: 2
-  with_items: "{{ rabbitmq_gpg_keys }}"
-  when: rabbitmq_install_method != 'file'
-  tags:
-    - rabbitmq-gpg-keys
+- block:
+    - name: Add rabbitmq gpg-keys
+      rpm_key:
+        state: present
+        key: "{{ item.keyserver }}/{{ item.key_name }}"
+      register: add_keys
+      until: add_keys | success
+      retries: 5
+      delay: 2
+      with_items: "{{ rabbitmq_gpg_keys }}"
+      when: rabbitmq_install_method != 'file'
+      tags:
+        - rabbitmq-gpg-keys
 
-- name: Add rabbitmq gpg-keys using fallback keyserver
-  rpm_key:
-    state: present
-    key: "{{ item.fallback_keyserver }}/{{ item.key_name }}"
-  register: add_keys
-  until: add_keys|success
-  retries: 5
-  delay: 2
-  with_items: "{{ rabbitmq_gpg_keys }}"
-  when:
-    - rabbitmq_install_method != 'file'
-    - add_keys|failed
-    - item.fallback_keyserver is defined
-  tags:
-    - rabbitmq-gpg-keys
+  rescue:
+    - name: Add rabbitmq gpg-keys using fallback keyserver
+      rpm_key:
+        state: present
+        key: "{{ item.fallback_keyserver }}/{{ item.key_name }}"
+      register: add_keys_fallback
+      until: add_keys_fallback | success
+      retries: 5
+      delay: 2
+      with_items: "{{ rabbitmq_gpg_keys }}"
+      when:
+        - rabbitmq_install_method != 'file'
+        - item.fallback_keyserver is defined
+      tags:
+        - rabbitmq-gpg-keys
 
 - name: Install RabbitMQ yum mirror
   yum_repository:

@@ -13,18 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Get rabbitmq cluster name
-  shell: |
-    rabbitmqctl cluster_status | grep -w '<<"{{ rabbitmq_cluster_name }}">>'
-  register: rabbitmq_cluster_status
-  failed_when: false
-  changed_when: rabbitmq_cluster_status.rc != 0
-  tags:
-    - rabbitmq-cluster
+- block:
+    - name: Get rabbitmq cluster name
+      shell: |
+        rabbitmqctl cluster_status | grep -w '<<"{{ rabbitmq_cluster_name }}">>'
+      changed_when: false
+      tags:
+        - rabbitmq-cluster
 
-- name: Create rabbitmq cluster
-  command: rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
-  changed_when: false
-  when: rabbitmq_cluster_status.rc != 0
-  tags:
-    - rabbitmq-cluster
+  rescue:
+    - name: Create rabbitmq cluster
+      command: rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
+      tags:
+        - rabbitmq-cluster

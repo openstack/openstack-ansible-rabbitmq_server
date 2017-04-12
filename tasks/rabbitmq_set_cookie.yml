@@ -13,34 +13,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Read rabbit cookie
-  command: "cat /var/lib/rabbitmq/.erlang.cookie"
-  register: tmp_rabbit_cookie
-  changed_when: tmp_rabbit_cookie.rc != 0
-  failed_when: false
-  tags:
-    - rabbitmq-config
+- block:
+    - name: Read rabbit cookie
+      slurp:
+        src: /var/lib/rabbitmq/.erlang.cookie
+      register: tmp_rabbit_cookie
+      failed_when: (tmp_rabbit_cookie.content | b64decode).find(rabbitmq_cookie_token) == -1
+      tags:
+        - rabbitmq-config
 
-- include: rabbitmq_stopped.yml
-  static: no
-  when: tmp_rabbit_cookie.stdout != rabbitmq_cookie_token
-  tags:
-    - rabbitmq-config
+  rescue:
+    - include: rabbitmq_stopped.yml
+      static: no
+      tags:
+        - rabbitmq-config
 
-- name: Set rabbit cookie
-  copy:
-    content: "{{ rabbitmq_cookie_token }}"
-    dest: /var/lib/rabbitmq/.erlang.cookie
-    mode: "0400"
-    owner: rabbitmq
-    group: rabbitmq
-  when: tmp_rabbit_cookie.stdout != rabbitmq_cookie_token
-  register: cookie_set
-  tags:
-    - rabbitmq-config
+    - name: Set rabbit cookie
+      copy:
+        content: "{{ rabbitmq_cookie_token }}"
+        dest: /var/lib/rabbitmq/.erlang.cookie
+        mode: "0400"
+        owner: rabbitmq
+        group: rabbitmq
+      register: cookie_set
+      tags:
+        - rabbitmq-config
 
-- include: rabbitmq_started.yml
-  static: no
-  when: tmp_rabbit_cookie.stdout != rabbitmq_cookie_token
-  tags:
-    - rabbitmq-config
+    - include: rabbitmq_started.yml
+      static: no
+      tags:
+        - rabbitmq-config

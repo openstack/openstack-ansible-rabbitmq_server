@@ -16,40 +16,32 @@
 # If cluster name is our own hostname, we assume we're not properly clustered
 # TODO(someone): implement a more robust way of checking
 # if node is clustered or not
-- name: Check cluster status
-  shell: |
-    rabbitmqctl -q cluster_status | grep '{cluster_name,<<"{{ rabbitmq_cluster_name }}">>}'
-  changed_when: result.rc != 0
-  failed_when: false
-  register: result
-  tags:
-    - rabbitmq-cluster
+- block:
+    - name: Check cluster status
+      shell: |
+        rabbitmqctl -q cluster_status | grep '{cluster_name,<<"{{ rabbitmq_cluster_name }}">>}'
+      changed_when: false
+      tags:
+        - rabbitmq-cluster
 
-- name: Stop rabbitmq app
-  shell: |
-    rabbitmqctl stop_app; sleep 5
-  failed_when: false
-  when: result.rc != 0
-  tags:
-    - rabbitmq-stop-app
-    - rabbitmq-cluster
+  rescue:
+    - name: Stop rabbitmq app
+      shell: |
+        rabbitmqctl stop_app; sleep 5
+      tags:
+        - rabbitmq-cluster
 
-- name: Join rabbitmq cluster
-  command: >
-    rabbitmqctl join_cluster "rabbit@{{ rabbitmq_primary_cluster_node.split('.')[0] }}"
-  changed_when: false
-  when: result.rc != 0
-  register: rabbit_join_cluster
-  until: rabbit_join_cluster|success
-  retries: 5
-  delay: 2
-  tags:
-    - rabbitmq-cluster
+    - name: Join rabbitmq cluster
+      command: >
+        rabbitmqctl join_cluster "rabbit@{{ rabbitmq_primary_cluster_node.split('.')[0] }}"
+      register: rabbit_join_cluster
+      until: rabbit_join_cluster|success
+      retries: 5
+      delay: 2
+      tags:
+        - rabbitmq-cluster
 
-- name: Start rabbitmq app
-  command: rabbitmqctl start_app
-  changed_when: false
-  when: result.rc != 0
-  tags:
-    - rabbitmq-start-app
-    - rabbitmq-cluster
+    - name: Start rabbitmq app
+      command: rabbitmqctl start_app
+      tags:
+        - rabbitmq-cluster
