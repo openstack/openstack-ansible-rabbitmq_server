@@ -25,7 +25,7 @@
 # Run tests
 - include: test-rabbitmq-server-functional.yml
   vars:
-    rabbitmq_release_version: "3.6.1"
+    rabbitmq_release_version: "3.6.6"
 
 - include: test-install-rabbitmq-server.yml
   vars:
@@ -33,4 +33,4 @@
 
 - include: test-rabbitmq-server-functional.yml
   vars:
-    rabbitmq_release_version: "3.6.6"
+    rabbitmq_release_version: "3.6.9"
