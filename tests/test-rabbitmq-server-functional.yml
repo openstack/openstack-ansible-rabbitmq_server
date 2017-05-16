@@ -26,9 +26,9 @@
       delegate_to: "{{ item }}"
       when: ansible_host == item
       with_items:
-        - 10.100.100.101
-        - 10.100.100.102
-        - 10.100.100.103
+        - 10.1.0.2
+        - 10.1.0.3
+        - 10.1.0.4
     - name: Open rabbitmq.config
       slurp:
         src: "/etc/rabbitmq/rabbitmq.config"
