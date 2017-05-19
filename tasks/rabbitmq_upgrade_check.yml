@@ -42,7 +42,7 @@
     - ansible_pkg_mgr == 'yum'
   tags:
     - rabbitmq-package-rpm
-    - rabbitmq-apt-packages
+    - rabbitmq-yum-packages
     - skip_ansible_lint
 
 - name: Register a fact for the installed RabbitMQ version
