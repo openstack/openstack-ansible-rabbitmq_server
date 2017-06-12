@@ -13,20 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install RabbitMQ package dependencies
-  apt:
-    pkg: "{{ item }}"
-    state: "{{ rabbitmq_package_state }}"
-    update_cache: yes
-    cache_valid_time: "{{ cache_timeout }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: "{{ rabbitmq_dependencies | deprecated(rabbitmq_apt_packages, 'rabbitmq_apt_packages', 'rabbitmq_dependencies', 'Ocata') }}"
-  tags:
-    - rabbitmq-apt-packages
-
 - block:
     - name: Add rabbitmq apt-keys
       apt_key:
@@ -39,7 +25,6 @@
       until: add_keys | success
       retries: 5
       delay: 2
-      when: rabbitmq_install_method == 'external_repo'
       with_items: "{{ rabbitmq_gpg_keys }}"
       tags:
         - rabbitmq-apt-keys
@@ -57,7 +42,6 @@
       delay: 2
       with_items: "{{ rabbitmq_gpg_keys }}"
       when:
-        - rabbitmq_install_method == 'external_repo'
         - (item.fallback_keyserver is defined or item.fallback_url is defined)
       tags:
         - rabbitmq-apt-keys
@@ -71,28 +55,55 @@
   until: add_repos|success
   retries: 5
   delay: 2
-  when: rabbitmq_install_method == 'external_repo'
+  when:
+    - rabbitmq_install_method == 'external_repo'
   tags:
     - rabbitmq-repos
 
-- name: Install the RabbitMQ package through a deb file
+- name: Add erlang repo
+  apt_repository:
+    repo: "{{ rabbitmq_erlang_repo.repo }}"
+    state: "{{ rabbitmq_erlang_repo.state }}"
+    filename: "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
+  register: add_repos
+  until: add_repos|success
+  retries: 5
+  delay: 2
+  tags:
+    - rabbitmq-repos
+
+- name: Install RabbitMQ package dependencies
+  apt:
+    pkg: "{{ rabbitmq_dependencies | deprecated(rabbitmq_apt_packages, 'rabbitmq_apt_packages', 'rabbitmq_dependencies', 'Ocata') }}"
+    state: "{{ rabbitmq_package_state }}"
+    update_cache: yes
+    cache_valid_time: "{{ cache_timeout }}"
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  tags:
+    - rabbitmq-apt-packages
+
+- name: Install the RabbitMQ package deb
   apt:
     deb: "{{ rabbitmq_package_path }}"
   register: install_rabbitmq
-  when: rabbitmq_install_method == 'file'
+  when:
+    - rabbitmq_install_method == 'file'
   tags:
     - rabbitmq-package-deb
     - rabbitmq-apt-packages
 
 - name: Install RabbitMQ packages
   package:
-    name: "{{ item }}"
+    name: "{{ rabbitmq_erlang_distro_packages }}"
     state: "{{ rabbitmq_package_state }}"
   register: install_packages
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ rabbitmq_distro_packages }}"
-  when: rabbitmq_install_method != 'file'
+  when:
+    - rabbitmq_install_method != 'file'
   tags:
     - rabbitmq-apt-packages

@@ -19,6 +19,28 @@ _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
 _rabbitmq_package_sha256: "ff100febb8c409692e57f3dc98fd2fc667f83eeefa3958a6fda865ce40a40349"
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
+_rabbitmq_gpg_keys:
+  - key_name: 'rabbitmq'
+    keyserver: 'hkp://keyserver.ubuntu.com:80'
+    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
+    hash_id: '0x6B73A36E6026DFCA'
+  - key_name: 'erlang_solutions'
+    keyserver: 'hkp://keyserver.ubuntu.com:80'
+    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
+    hash_id: '0xd208507ca14f4fca'
+
+_rabbitmq_repo_url: "http://www.rabbitmq.com/debian"
+rabbitmq_repo:
+  repo: "deb {{ rabbitmq_repo_url }} testing main"
+  state: "present"
+  filename: "RabbitMQ"
+
+_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/{{ ansible_distribution | lower }}"
+rabbitmq_erlang_repo:
+  repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_distribution_release | lower }} contrib"
+  state: "present"
+  filename: els_erlang
+
 rabbitmq_dependencies:
   - erlang-base-hipe
   - erlang-nox
@@ -26,15 +48,3 @@ rabbitmq_dependencies:
 
 rabbitmq_distro_packages:
   - rabbitmq-server
-
-rabbitmq_gpg_keys:
-  - key_name: 'rabbitmq'
-    keyserver: 'hkp://keyserver.ubuntu.com:80'
-    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
-    hash_id: '0x6B73A36E6026DFCA'
-
-rabbitmq_apt_repo_url: "http://www.rabbitmq.com/debian"
-rabbitmq_repo:
-  repo: "deb {{ rabbitmq_apt_repo_url }} testing main"
-  state: "present"
-  filename: "RabbitMQ"
