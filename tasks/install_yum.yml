@@ -13,43 +13,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install epel-release package
-  yum:
-    name: epel-release
-    state: present
-    update_cache: yes
-  tags:
-    - rabbitmq-yum-packages
+- block:
+    - name: Add rabbitmq gpg-keys
+      rpm_key:
+        state: present
+        key: "{{ item.keyserver }}/{{ item.key_name }}"
+      register: add_keys
+      until: add_keys | success
+      retries: 5
+      delay: 2
+      with_items: "{{ rabbitmq_gpg_keys }}"
+      tags:
+        - rabbitmq-gpg-keys
 
-- name: Add rabbitmq gpg-keys
-  rpm_key:
-    state: present
-    key: "{{ item.keyserver }}/{{ item.key_name }}"
-  register: add_keys
-  until: add_keys|success
-  failed_when: false
-  retries: 5
-  delay: 2
-  with_items: "{{ rabbitmq_gpg_keys }}"
-  when: rabbitmq_install_method != 'file'
-  tags:
-    - rabbitmq-gpg-keys
-
-- name: Add rabbitmq gpg-keys using fallback keyserver
-  rpm_key:
-    state: present
-    key: "{{ item.fallback_keyserver }}/{{ item.key_name }}"
-  register: add_keys
-  until: add_keys|success
-  retries: 5
-  delay: 2
-  with_items: "{{ rabbitmq_gpg_keys }}"
-  when:
-    - rabbitmq_install_method != 'file'
-    - add_keys|failed
-    - item.fallback_keyserver is defined
-  tags:
-    - rabbitmq-gpg-keys
+  rescue:
+    - name: Add rabbitmq gpg-keys using fallback keyserver
+      rpm_key:
+        state: present
+        key: "{{ item.fallback_keyserver }}/{{ item.key_name }}"
+      register: add_keys_fallback
+      until: add_keys_fallback | success
+      retries: 5
+      delay: 2
+      with_items: "{{ rabbitmq_gpg_keys }}"
+      when:
+        - item.fallback_keyserver is defined
+      tags:
+        - rabbitmq-gpg-keys
 
 - name: Install RabbitMQ yum mirror
   yum_repository:
@@ -63,7 +53,23 @@
     gpgkey: "{{ rabbitmq_repo.gpgkey | default(omit) }}"
     sslverify: "{{ rabbitmq_repo.sslverify | default(omit) }}"
     sslcacert: "{{ rabbitmq_repo.sslcacert | default(omit) }}"
-  when: rabbitmq_install_method != 'file'
+  when:
+    - rabbitmq_install_method != 'file'
+  tags:
+    - rabbitmq-repos
+
+- name: Install erlang yum mirror
+  yum_repository:
+    name: "{{ rabbitmq_erlang_repo.name }}"
+    file:  "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
+    description: "{{ rabbitmq_erlang_repo.description | default(omit) }}"
+    baseurl: "{{ rabbitmq_erlang_repo.baseurl }}"
+    repo_gpgcheck: "{{ rabbitmq_erlang_repo.repo_gpgcheck | default(omit) }}"
+    gpgcheck: "{{ rabbitmq_erlang_repo.gpgcheck | default(omit) }}"
+    state: "{{ rabbitmq_erlang_repo.state }}"
+    gpgkey: "{{ rabbitmq_erlang_repo.gpgkey | default(omit) }}"
+    sslverify: "{{ rabbitmq_erlang_repo.sslverify | default(omit) }}"
+    sslcacert: "{{ rabbitmq_erlang_repo.sslcacert | default(omit) }}"
   tags:
     - rabbitmq-repos
 
@@ -79,6 +85,14 @@
   tags:
     - rabbitmq-yum-packages
 
+- name: Install RabbitMQ packages
+  yum:
+    name: "{{ (rabbitmq_install_method == 'file') | ternary(rabbitmq_package_path, rabbitmq_distro_packages) }}"
+  register: install_rabbitmq
+  tags:
+    - rabbitmq-package-rpm
+    - rabbitmq-yum-packages
+
 - name: Install RabbitMQ package dependencies for external_repo usage
   yum:
     pkg: "{{ item }}"
@@ -88,14 +102,7 @@
   retries: 5
   delay: 2
   with_items: "{{ rabbitmq_mirror_dependencies }}"
-  when: rabbitmq_install_method != 'file'
+  when:
+    - rabbitmq_install_method != 'file'
   tags:
-    - rabbitmq-yum-packages
-
-- name: Install the RabbitMQ package
-  yum:
-    name: "{{ (rabbitmq_install_method == 'file') | ternary(rabbitmq_package_path, rabbitmq_distro_packages) }}"
-  register: install_rabbitmq
-  tags:
-    - rabbitmq-package-rpm
     - rabbitmq-yum-packages

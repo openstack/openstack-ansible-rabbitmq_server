@@ -13,6 +13,65 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- block:
+    - name: Add rabbitmq apt-keys
+      apt_key:
+        id: "{{ item.hash_id }}"
+        keyserver: "{{ item.keyserver | default(omit) }}"
+        data: "{{ item.data | default(omit) }}"
+        url: "{{ item.url | default(omit) }}"
+        state: "present"
+      register: add_keys
+      until: add_keys | success
+      retries: 5
+      delay: 2
+      with_items: "{{ rabbitmq_gpg_keys }}"
+      tags:
+        - rabbitmq-apt-keys
+
+  rescue:
+    - name: Add rabbitmq apt-keys using fallback keyserver
+      apt_key:
+        id: "{{ item.hash_id }}"
+        keyserver: "{{ item.fallback_keyserver | default(omit) }}"
+        url: "{{ item.fallback_url | default(omit) }}"
+        state: "present"
+      register: add_keys_fallback
+      until: add_keys_fallback | success
+      retries: 5
+      delay: 2
+      with_items: "{{ rabbitmq_gpg_keys }}"
+      when:
+        - (item.fallback_keyserver is defined or item.fallback_url is defined)
+      tags:
+        - rabbitmq-apt-keys
+
+- name: Add rabbitmq repo
+  apt_repository:
+    repo: "{{ rabbitmq_repo.repo }}"
+    state: "{{ rabbitmq_repo.state }}"
+    filename: "{{ rabbitmq_repo.filename | default(omit) }}"
+  register: add_rabbitmq_repos
+  until: add_rabbitmq_repos|success
+  retries: 5
+  delay: 2
+  when:
+    - rabbitmq_install_method == 'external_repo'
+  tags:
+    - rabbitmq-repos
+
+- name: Add erlang repo
+  apt_repository:
+    repo: "{{ rabbitmq_erlang_repo.repo }}"
+    state: "{{ rabbitmq_erlang_repo.state }}"
+    filename: "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
+  register: add_erlang_repos
+  until: add_erlang_repos|success
+  retries: 5
+  delay: 2
+  tags:
+    - rabbitmq-repos
+
 #TODO(evrardjp): Replace the next 2 tasks by a standard apt with cache
 #when https://github.com/ansible/ansible-modules-core/pull/1517 is merged
 #in 1.9.x or we move to 2.0 (if tested working)
@@ -26,7 +85,9 @@
 - name: Update apt if needed
   apt:
     update_cache: yes
-  when: "ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > {{cache_timeout}}"
+  when:
+    - (ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > {{cache_timeout}}) or
+      add_rabbitmq_repos | changed or add_erlang_repos | changed
   tags:
     - rabbitmq-apt-packages
 
@@ -42,59 +103,12 @@
   tags:
     - rabbitmq-apt-packages
 
-- name: Add rabbitmq apt-keys
-  apt_key:
-    id: "{{ item.hash_id }}"
-    keyserver: "{{ item.keyserver | default(omit) }}"
-    data: "{{ item.data | default(omit) }}"
-    url: "{{ item.url | default(omit) }}"
-    state: "present"
-  register: add_keys
-  until: add_keys|success
-  failed_when: false
-  retries: 5
-  delay: 2
-  when: rabbitmq_install_method == 'external_repo'
-  with_items: "{{ rabbitmq_gpg_keys }}"
-  tags:
-    - rabbitmq-apt-keys
-
-- name: Add rabbitmq apt-keys using fallback keyserver
-  apt_key:
-    id: "{{ item.hash_id }}"
-    keyserver: "{{ item.fallback_keyserver | default(omit) }}"
-    url: "{{ item.fallback_url | default(omit) }}"
-    state: "present"
-  register: add_keys_fallback
-  until: add_keys_fallback|success
-  retries: 5
-  delay: 2
-  with_items: "{{ rabbitmq_gpg_keys }}"
-  when:
-    - rabbitmq_install_method == 'external_repo'
-    - add_keys|failed
-    - (item.fallback_keyserver is defined or item.fallback_url is defined)
-  tags:
-    - rabbitmq-apt-keys
-
-- name: Add rabbitmq repo
-  apt_repository:
-    repo: "{{ rabbitmq_repo.repo }}"
-    state: "{{ rabbitmq_repo.state }}"
-    filename: "{{ rabbitmq_repo.filename | default(omit) }}"
-  register: add_repos
-  until: add_repos|success
-  retries: 5
-  delay: 2
-  when: rabbitmq_install_method == 'external_repo'
-  tags:
-    - rabbitmq-repos
-
-- name: Install the RabbitMQ package through a deb file
+- name: Install the RabbitMQ package deb
   apt:
     deb: "{{ rabbitmq_package_path }}"
   register: install_rabbitmq
-  when: rabbitmq_install_method == 'file'
+  when:
+    - rabbitmq_install_method == 'file'
   tags:
     - rabbitmq-package-deb
     - rabbitmq-apt-packages
@@ -108,6 +122,7 @@
   retries: 5
   delay: 2
   with_items: "{{ rabbitmq_distro_packages }}"
-  when: rabbitmq_install_method != 'file'
+  when:
+    - rabbitmq_install_method != 'file'
   tags:
     - rabbitmq-apt-packages

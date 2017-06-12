@@ -47,6 +47,12 @@ rabbitmq_repo_url: "{{ _rabbitmq_repo_url }}"
 # Set the repo information for the RabbitMQ repository
 rabbitmq_repo: "{{ _rabbitmq_repo }}"
 
+# Set the URL for the Erlang repository
+rabbitmq_erlang_repo_url: "{{ _rabbitmq_erlang_repo_url }}"
+
+# Set the repo information for the Erlang repository
+rabbitmq_erlang_repo: "{{ _rabbitmq_erlang_repo }}"
+
 # Choose file, distro, external_repo for rabbitmq_install_method.
 rabbitmq_install_method: "file"
 
