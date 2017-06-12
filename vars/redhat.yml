@@ -19,8 +19,36 @@ _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
 _rabbitmq_package_sha256: "757fc6746a1700380b3ba9bf4f00dfa16cc5a0ddc8c94636c4388e838f605c31"
 _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
+_rabbitmq_gpg_keys:
+  - key_name: 'rabbitmq-release-signing-key.asc'
+    keyserver: 'https://www.rabbitmq.com'
+  - key_name: 'erlang_solutions.asc'
+    keyserver: 'https://packages.erlang-solutions.com/ubuntu'
+
+_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch"
+rabbitmq_repo:
+  name: rabbitmq_rabbitmq-server
+  description: "RabbitMQ Server Rolling Repository"
+  baseurl: "{{ rabbitmq_repo_url }}"
+  repo_gpgcheck: yes
+  state: "present"
+  gpgkey: "https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey"
+  filename: RabbitMQ
+  # TODO(evrardjp) Move to ssl verify yes
+  #sslverify: no
+  #sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+
+_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/rpm/centos/$releasever/$basearch"
+rabbitmq_erlang_repo:
+  name: rabbitmq_els-erlang
+  description: "Erlang Solutions Erlang"
+  baseurl: "{{ rabbitmq_erlang_repo_url }}"
+  repo_gpgcheck: no
+  state: "present"
+  filename: els-erlang
+
 rabbitmq_dependencies:
-  - erlang
+  - erlang-hipe
   - openssl
   - socat
 
@@ -30,19 +58,3 @@ rabbitmq_mirror_dependencies:
 
 rabbitmq_distro_packages:
   - rabbitmq-server
-
-rabbitmq_gpg_keys:
-  - key_name: 'rabbitmq-release-signing-key.asc'
-    keyserver: 'https://www.rabbitmq.com'
-
-rabbitmq_repo:
-  name: rabbitmq_rabbitmq-server
-  description: "RabbitMQ Server Rolling Repository"
-  baseurl: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch"
-  repo_gpgcheck: yes
-  state: "present"
-  gpgkey: "https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey"
-  filename: RabbitMQ
-  # TODO(evrardjp) Move to ssl verify yes
-  #sslverify: no
-  #sslcacert: /etc/pki/tls/certs/ca-bundle.crt

@@ -39,6 +39,10 @@ rabbitmq_release_version: "{{ _rabbitmq_release_version }}"
 rabbitmq_package_sha256: "{{ _rabbitmq_package_sha256 }}"
 rabbitmq_package_path: "{{ _rabbitmq_package_path }}"
 
+rabbitmq_gpg_keys: "{{ _rabbitmq_gpg_keys }}"
+rabbitmq_repo_url: "{{ _rabbitmq_repo_url }}"
+rabbitmq_erlang_repo_url: "{{ _rabbitmq_erlang_repo_url }}"
+
 # Choose file, distro, external_repo for rabbitmq_install_method.
 rabbitmq_install_method: "file"
 
