@@ -9,6 +9,16 @@ rabbitmq_old_package:
   debian:
     rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.6/rabbitmq-server_3.6.6-1_all.deb"
     rabbitmq_package_sha256: "44e3a6b0a594d5c7bc4b4b74bd93ed0111777c6ebcbca44e6b49400bb55f3044"
+    rabbitmq_release_version: "3.6.6"
   redhat:
     rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.6/rabbitmq-server-3.6.6-1.el7.noarch.rpm"
     rabbitmq_package_sha256: "978ad1cec04c423027f1e42a083a4b437e57f48f3135622b7626118afc0b1fe5"
+    rabbitmq_release_version: "3.6.6"
+
+# NOTE(hwoarang): This normally matches the _rabbitmq_release_version variable
+# in the vars/* distro files.
+rabbitmq_new_package:
+  debian:
+    rabbitmq_release_version: "3.6.9"
+  redhat:
+    rabbitmq_release_version: "3.6.9"
