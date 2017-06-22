@@ -39,5 +39,7 @@ dependencies:
     apt_pinned_packages:
       - package: "*"
         release: "Erlang Solutions Ltd."
+      - package: "erlang-*"
+        version: "1:19.3*"
     when:
       - ansible_pkg_mgr == 'apt'

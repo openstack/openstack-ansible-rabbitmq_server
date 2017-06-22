@@ -48,7 +48,7 @@ rabbitmq_erlang_repo:
   filename: els-erlang
 
 rabbitmq_dependencies:
-  - erlang-hipe
+  - erlang-hipe-19.3
   - openssl
   - socat
 
