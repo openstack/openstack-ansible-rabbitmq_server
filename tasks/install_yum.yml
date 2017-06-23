@@ -73,6 +73,18 @@
   tags:
     - rabbitmq-repos
 
+- name: Enable and set erlang repo priority
+  command: |
+    yum-config-manager
+      --enable {{ item.name }}
+      --setopt="{{ item.name }}.priority={{ item.priority }}"
+  changed_when: false
+  with_items:
+    - name: "{{ rabbitmq_erlang_repo.name }}"
+      priority: 40
+  tags:
+    - rabbitmq-repos
+
 - name: Install RabbitMQ package dependencies
   yum:
     pkg: "{{ item }}"
