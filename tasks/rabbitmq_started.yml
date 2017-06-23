@@ -18,8 +18,8 @@
     name: rabbitmq-server
     state: started
     enabled: yes
-  when: >
-    ansible_hostname == rabbitmq_primary_cluster_node
+  when:
+    - ansible_hostname == rabbitmq_primary_cluster_node
   tags:
     - rabbitmq-server-started
     - rabbitmq-upgrade
@@ -30,8 +30,8 @@
     name: rabbitmq-server
     state: started
     enabled: yes
-  when: >
-    ansible_hostname != rabbitmq_primary_cluster_node
+  when:
+    - ansible_hostname != rabbitmq_primary_cluster_node
   tags:
     - rabbitmq-server-started
     - rabbitmq-upgrade
