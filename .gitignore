@@ -67,4 +67,5 @@ tests/*.retry
 # Vagrant artifacts
 .vagrant
 
-
+# Git clones
+openstack-ansible-ops

@@ -21,7 +21,14 @@
 # prepare the host and then execute all the tox tests.
 #
 
+## Shell Opts ----------------------------------------------------------------
 set -xeu
+
+## Vars ----------------------------------------------------------------------
+
+export WORKING_DIR=${WORKING_DIR:-$(pwd)}
+
+## Main ----------------------------------------------------------------------
 
 source /etc/os-release || source /usr/lib/os-release
 
@@ -41,7 +48,15 @@ install_pkg_deps() {
 
 git_clone_repo() {
     if [[ ! -d tests/common ]]; then
-        git clone https://git.openstack.org/openstack/openstack-ansible-tests tests/common
+        # The tests repo doesn't need a clone, we can just
+        # symlink it.
+        if [[ "$(basename ${WORKING_DIR})" == "openstack-ansible-tests" ]]; then
+            ln -s ${WORKING_DIR} ${WORKING_DIR}/tests/common
+        else
+            git clone \
+                https://git.openstack.org/openstack/openstack-ansible-tests \
+                tests/common
+        fi
     fi
 }
 
@@ -52,4 +67,3 @@ git_clone_repo
 # start executing the main test script
 source tests/common/run_tests_common.sh
 
-# vim: set ts=4 sw=4 expandtab:
