@@ -85,6 +85,20 @@
   tags:
     - rabbitmq-repos
 
+- name: Install yum versionlock plugin
+  yum:
+    name: "yum-plugin-versionlock"
+    state: "{{ rabbitmq_package_state }}"
+  tags:
+    - rabbitmq-yum-packages
+
+- name: Lock version of erlang packages
+  command: yum versionlock add erlang*19.3*
+  register: yum_versionlock_erlang
+  changed_when: "yum_versionlock_erlang.stdout.find('versionlock added: 0') == -1"
+  tags:
+    - rabbitmq-yum-packages
+
 - name: Install RabbitMQ package dependencies
   yum:
     pkg: "{{ item }}"
