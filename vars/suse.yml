@@ -22,10 +22,17 @@ _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
 _rabbitmq_package_sha256: "c44813ab94463f83e3e74be04db7304120697a27df12ca057e3dbb32717af32f"
 _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
+_rabbitmq_gpg_keys:
+  - key_name: 'rabbitmq-release-signing-key.asc'
+    keyserver: 'https://www.rabbitmq.com'
+  - key_name: 'erlang_solutions.asc'
+    keyserver: 'https://packages.erlang-solutions.com/ubuntu'
+
+rabbitmq_dependencies:
+  - erlang
+  - openssl
+  - socat
+
 rabbitmq_distro_packages:
   - rabbitmq-server
   - rabbitmq-server-plugins
-
-# NOTE(hwoarang) we always grab the package from the distribution repository
-# which has been configured in the openstack-ansible-pip_install role
-rabbitmq_install_method: distro

@@ -30,6 +30,5 @@ rabbitmq_new_package:
     rabbitmq_release_version: "3.6.9"
   redhat:
     rabbitmq_release_version: "3.6.9"
-  # NOTE(hwoarang): 3.6.6 is shipped in the Ocata OBS repository
   suse:
-    rabbitmq_release_version: "3.6.6"
+    rabbitmq_release_version: "3.6.9"

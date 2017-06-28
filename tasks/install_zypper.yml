@@ -13,9 +13,50 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- block:
+    - name: Add rabbitmq gpg-keys
+      rpm_key:
+        state: present
+        key: "{{ item.keyserver }}/{{ item.key_name }}"
+      register: add_keys
+      until: add_keys | success
+      retries: 5
+      delay: 2
+      with_items: "{{ rabbitmq_gpg_keys }}"
+      tags:
+        - rabbitmq-gpg-keys
+
+  rescue:
+    - name: Add rabbitmq gpg-keys using fallback keyserver
+      rpm_key:
+        state: present
+        key: "{{ item.fallback_keyserver }}/{{ item.key_name }}"
+      register: add_keys_fallback
+      until: add_keys_fallback | success
+      retries: 5
+      delay: 2
+      with_items: "{{ rabbitmq_gpg_keys }}"
+      when:
+        - item.fallback_keyserver is defined
+      tags:
+        - rabbitmq-gpg-keys
+
+- name: Install RabbitMQ package dependencies
+  zypper:
+    name: "{{ item }}"
+    state: "{{ rabbitmq_package_state }}"
+    update_cache: yes
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  with_items: "{{ rabbitmq_dependencies }}"
+  tags:
+    - rabbitmq-zypper-packages
+
 - name: Install the RabbitMQ package
   zypper:
-    name: "{{ rabbitmq_distro_packages }}"
+    name: "{{ (rabbitmq_install_method == 'file') | ternary(rabbitmq_package_path, rabbitmq_distro_packages) }}"
   register: install_rabbitmq
   tags:
     - rabbitmq-package-rpm
@@ -24,12 +65,16 @@
 # NOTE(hwoarang) on openSUSE, rabbitmq-server depends on epmd.service which
 # depends on epmd.socket which runs on localhost. It is just easier to let
 # the rabbitmq-server launch epmd directly since we are inside a container.
-- name: Add rabbitmq-server systemd service(SUSE)
+- name: Add rabbitmq-server systemd service (SUSE)
   template:
     src: "rabbitmq-server.service.j2"
     dest: "/etc/systemd/system/rabbitmq-server.service"
   register: rabbitmq_server_service_added
-  when: rabbitmq_install_method == 'distro'
+  # NOTE(hwoarang) Normally, this task should only be executed when
+  # rabbitmq_install_method == 'distro'. However, the upstream package
+  # does not contain a systemd file and as such we need to provide one.
+  # This should be reverted once https://github.com/rabbitmq/rabbitmq-server-release/pull/31
+  # is merged and new builds of rabbimq-server are available.
   tags:
     - rabbitmq-config
 
