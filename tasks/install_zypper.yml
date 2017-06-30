@@ -62,6 +62,13 @@
     - rabbitmq-package-rpm
     - rabbitmq-zypper-packages
 
+- name: Lock version of erlang packages
+  command: zypper addlock erlang*
+  register: zypper_addlock_erlang
+  changed_when: "zypper_addlock_erlang.stdout.find('successfully added') != -1"
+  tags:
+    - rabbitmq-zypper-packages
+
 # NOTE(hwoarang) on openSUSE, rabbitmq-server depends on epmd.service which
 # depends on epmd.socket which runs on localhost. It is just easier to let
 # the rabbitmq-server launch epmd directly since we are inside a container.
