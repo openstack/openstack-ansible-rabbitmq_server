@@ -97,7 +97,7 @@
 
 - name: Install RabbitMQ packages
   package:
-    name: "{{ rabbitmq_erlang_distro_packages }}"
+    name: "{{ rabbitmq_distro_packages }}"
     state: "{{ rabbitmq_package_state }}"
   register: install_packages
   until: install_packages|success
