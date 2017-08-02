@@ -86,7 +86,7 @@
     - rabbitmq-repos
 
 - name: Install yum versionlock plugin
-  yum:
+  package:
     name: "yum-plugin-versionlock"
     state: "{{ rabbitmq_package_state }}"
   tags:
@@ -100,7 +100,7 @@
     - rabbitmq-yum-packages
 
 - name: Install RabbitMQ package dependencies
-  yum:
+  package:
     pkg: "{{ item }}"
     state: "{{ rabbitmq_package_state }}"
     update_cache: yes
@@ -113,7 +113,7 @@
     - rabbitmq-yum-packages
 
 - name: Install RabbitMQ packages
-  yum:
+  package:
     name: "{{ (rabbitmq_install_method == 'file') | ternary(rabbitmq_package_path, rabbitmq_distro_packages) }}"
   register: install_rabbitmq
   tags:
@@ -121,7 +121,7 @@
     - rabbitmq-yum-packages
 
 - name: Install RabbitMQ package dependencies for external_repo usage
-  yum:
+  package:
     pkg: "{{ item }}"
     state: "{{ rabbitmq_package_state }}"
   register: install_packages
