@@ -101,14 +101,13 @@
 
 - name: Install RabbitMQ package dependencies
   package:
-    pkg: "{{ item }}"
+    pkg: "{{ rabbitmq_dependencies }}"
     state: "{{ rabbitmq_package_state }}"
     update_cache: yes
   register: install_packages
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ rabbitmq_dependencies }}"
   tags:
     - rabbitmq-yum-packages
 
@@ -122,13 +121,12 @@
 
 - name: Install RabbitMQ package dependencies for external_repo usage
   package:
-    pkg: "{{ item }}"
+    pkg: "{{ rabbitmq_mirror_dependencies }}"
     state: "{{ rabbitmq_package_state }}"
   register: install_packages
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: "{{ rabbitmq_mirror_dependencies }}"
   when:
     - rabbitmq_install_method != 'file'
   tags:
