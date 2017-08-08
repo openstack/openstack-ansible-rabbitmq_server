@@ -30,13 +30,13 @@ _rabbitmq_gpg_keys:
     hash_id: '0xd208507ca14f4fca'
 
 _rabbitmq_repo_url: "http://www.rabbitmq.com/debian"
-rabbitmq_repo:
+_rabbitmq_repo:
   repo: "deb {{ rabbitmq_repo_url }} testing main"
   state: "present"
   filename: "RabbitMQ"
 
 _rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/{{ ansible_distribution | lower }}"
-rabbitmq_erlang_repo:
+_rabbitmq_erlang_repo:
   repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_distribution_release | lower }} contrib"
   state: "present"
   filename: els_erlang

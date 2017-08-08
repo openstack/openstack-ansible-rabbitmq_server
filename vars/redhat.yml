@@ -26,7 +26,7 @@ _rabbitmq_gpg_keys:
     keyserver: 'https://packages.erlang-solutions.com/ubuntu'
 
 _rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch"
-rabbitmq_repo:
+_rabbitmq_repo:
   name: rabbitmq_rabbitmq-server
   description: "RabbitMQ Server Rolling Repository"
   baseurl: "{{ rabbitmq_repo_url }}"
@@ -39,7 +39,7 @@ rabbitmq_repo:
   #sslcacert: /etc/pki/tls/certs/ca-bundle.crt
 
 _rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/rpm/centos/$releasever/$basearch"
-rabbitmq_erlang_repo:
+_rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
   description: "Erlang Solutions Erlang"
   baseurl: "{{ rabbitmq_erlang_repo_url }}"
