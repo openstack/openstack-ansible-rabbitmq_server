@@ -103,7 +103,7 @@
   package:
     pkg: "{{ rabbitmq_dependencies }}"
     state: "{{ rabbitmq_package_state }}"
-    update_cache: yes
+    update_cache: "{{ ansible_pkg_mgr == 'yum' | ternary('yes', omit) }}"
   register: install_packages
   until: install_packages|success
   retries: 5

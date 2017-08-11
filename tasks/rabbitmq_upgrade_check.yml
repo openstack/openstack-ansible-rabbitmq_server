@@ -39,7 +39,7 @@
   register: installed_rabbitmq_rpm
   when:
     - not rabbitmq_upgrade | bool
-    - ansible_pkg_mgr in [ 'yum', 'zypper']
+    - ansible_pkg_mgr in ['yum', 'dnf', 'zypper']
   tags:
     - rabbitmq-package-rpm
     - rabbitmq-yum-packages
