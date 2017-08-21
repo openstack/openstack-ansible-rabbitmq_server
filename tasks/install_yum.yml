@@ -71,7 +71,6 @@
   yum:
     pkg: "{{ item }}"
     state: "{{ rabbitmq_package_state }}"
-    update_cache: yes
   register: install_packages
   until: install_packages|success
   retries: 5
