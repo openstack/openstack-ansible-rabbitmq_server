@@ -63,7 +63,7 @@ rabbitmq_cluster_name: rabbitmq_cluster1
 rabbitmq_cluster_partition_handling: pause_minority
 
 # Rabbitmq open file limits
-rabbitmq_ulimit: 4096
+rabbitmq_ulimit: 65536
 
 # Configure rabbitmq plugins
 rabbitmq_plugins:
