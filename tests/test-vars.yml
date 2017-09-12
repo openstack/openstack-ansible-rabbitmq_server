@@ -4,7 +4,6 @@ rabbitmq_ssl_cert: /etc/rabbitmq/rabbitmq.pem
 rabbitmq_ssl_key: /etc/rabbitmq/rabbitmq.key
 
 rabbitmq_hipe_compile: True
-rabbitmq_install_method: file
 
 rabbitmq_old_package:
   debian:
