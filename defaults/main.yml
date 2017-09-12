@@ -54,7 +54,7 @@ rabbitmq_erlang_repo_url: "{{ _rabbitmq_erlang_repo_url }}"
 rabbitmq_erlang_repo: "{{ _rabbitmq_erlang_repo }}"
 
 # Choose file, distro, external_repo for rabbitmq_install_method.
-rabbitmq_install_method: "file"
+rabbitmq_install_method: "{{ _rabbitmq_install_method }}"
 
 # Name of the rabbitmq cluster
 rabbitmq_cluster_name: rabbitmq_cluster1

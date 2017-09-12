@@ -54,7 +54,7 @@
     sslverify: "{{ rabbitmq_repo.sslverify | default(omit) }}"
     sslcacert: "{{ rabbitmq_repo.sslcacert | default(omit) }}"
   when:
-    - rabbitmq_install_method != 'file'
+    - rabbitmq_install_method == 'external_repo'
   tags:
     - rabbitmq-repos
 
@@ -70,6 +70,8 @@
     gpgkey: "{{ rabbitmq_erlang_repo.gpgkey | default(omit) }}"
     sslverify: "{{ rabbitmq_erlang_repo.sslverify | default(omit) }}"
     sslcacert: "{{ rabbitmq_erlang_repo.sslcacert | default(omit) }}"
+  when:
+    - rabbitmq_install_method == 'external_repo'
   tags:
     - rabbitmq-repos
 
@@ -80,6 +82,8 @@
       --setopt="{{ item.name }}.priority={{ item.priority }}"
   changed_when: false
   with_items:
+    - name: "{{ rabbitmq_repo.name }}"
+      priority: 40
     - name: "{{ rabbitmq_erlang_repo.name }}"
       priority: 40
   tags:
@@ -92,41 +96,34 @@
   tags:
     - rabbitmq-yum-packages
 
-- name: Lock version of erlang packages
-  command: yum versionlock add erlang*19.3*
-  register: yum_versionlock_erlang
-  changed_when: "yum_versionlock_erlang.stdout.find('versionlock added: 0') == -1"
+- name: Gather a list of the currently locked versions
+  command: yum versionlock list
+  register: yum_versionlock_list
   tags:
     - rabbitmq-yum-packages
 
-- name: Install RabbitMQ package dependencies
-  package:
-    pkg: "{{ rabbitmq_dependencies }}"
-    state: "{{ rabbitmq_package_state }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
+- name: Lock package versions
+  shell: |
+    yum versionlock delete {{ item.pkg_name }}
+    yum versionlock add {{ item.pkg_spec }}
+  args:
+    warn: no
+  when:
+    - item.pkg_spec not in yum_versionlock_list.stdout
+  with_items:
+    - { 'pkg_name': 'erlang', 'pkg_spec': "erlang-19*" }
+    - { 'pkg_name': 'rabbitmq-server', 'pkg_spec': "rabbitmq-server-{{ rabbitmq_release_version }}*" }
   tags:
     - rabbitmq-yum-packages
 
+# NOTE(mhayden): With the version locks applied, this step will install
+# the correct version of RabbitMQ along with the correct version of the
+# all-in-one erlang package.
 - name: Install RabbitMQ packages
   package:
-    name: "{{ (rabbitmq_install_method == 'file') | ternary(rabbitmq_package_path, rabbitmq_distro_packages) }}"
+    name: "{{ rabbitmq_distro_packages }}"
+    state: "{{ rabbitmq_package_state }}"
   register: install_rabbitmq
   tags:
     - rabbitmq-package-rpm
-    - rabbitmq-yum-packages
-
-- name: Install RabbitMQ package dependencies for external_repo usage
-  package:
-    pkg: "{{ rabbitmq_mirror_dependencies }}"
-    state: "{{ rabbitmq_package_state }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  when:
-    - rabbitmq_install_method != 'file'
-  tags:
     - rabbitmq-yum-packages

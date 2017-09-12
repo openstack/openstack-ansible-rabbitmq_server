@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+_rabbitmq_install_method: external_repo
 _rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.9/rabbitmq-server-3.6.9-1.el7.noarch.rpm"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].rsplit('.', 1)[0] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
@@ -22,15 +23,14 @@ _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 _rabbitmq_gpg_keys:
   - key_name: 'rabbitmq-release-signing-key.asc'
     keyserver: 'https://www.rabbitmq.com'
-  - key_name: 'erlang_solutions.asc'
-    keyserver: 'https://packages.erlang-solutions.com/ubuntu'
+  - key_name: 'gpgkey'
+    keyserver: 'https://packagecloud.io/rabbitmq/rabbitmq-server/'
 
 _rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch"
 _rabbitmq_repo:
   name: rabbitmq_rabbitmq-server
   description: "RabbitMQ Server Rolling Repository"
   baseurl: "{{ rabbitmq_repo_url }}"
-  repo_gpgcheck: yes
   state: "present"
   gpgkey: "https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey"
   filename: RabbitMQ
@@ -38,23 +38,14 @@ _rabbitmq_repo:
   #sslverify: no
   #sslcacert: /etc/pki/tls/certs/ca-bundle.crt
 
-_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/rpm/centos/$releasever/$basearch"
+_rabbitmq_erlang_repo_url: "https://dl.bintray.com/rabbitmq/rpm/erlang/19/el/7"
 _rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
-  description: "Erlang Solutions Erlang"
+  description: "RabbitMQ Erlang Packages from Bintray"
   baseurl: "{{ rabbitmq_erlang_repo_url }}"
-  repo_gpgcheck: no
   state: "present"
   filename: els-erlang
 
-rabbitmq_dependencies:
-  - erlang-hipe
-  - openssl
-  - socat
-
-rabbitmq_mirror_dependencies:
-  - pygpgme
-  - yum-utils
-
 rabbitmq_distro_packages:
+  - openssl
   - rabbitmq-server
