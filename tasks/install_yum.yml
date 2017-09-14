@@ -118,9 +118,10 @@
 
 # NOTE(mhayden): With the version locks applied, this step will install
 # the correct version of RabbitMQ along with the correct version of the
-# all-in-one erlang package.
+# all-in-one erlang package. Also, the version of dnf that comes with CentOS
+# 7 doesn't have version lock support, so we must use yum here.
 - name: Install RabbitMQ packages
-  package:
+  yum:
     name: "{{ rabbitmq_distro_packages }}"
     state: "{{ rabbitmq_package_state }}"
   register: install_rabbitmq
