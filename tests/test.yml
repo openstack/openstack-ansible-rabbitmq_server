@@ -19,6 +19,7 @@
 # Install previous version of RabbitMQ server
 - include: test-install-rabbitmq-server.yml
   vars:
+    rabbitmq_install_method: "{{ rabbitmq_old_package[ansible_os_family | lower]['method'] }}"
     rabbitmq_package_url: "{{ rabbitmq_old_package[ansible_os_family | lower]['rabbitmq_package_url'] }}"
     rabbitmq_package_sha256: "{{ rabbitmq_old_package[ansible_os_family | lower]['rabbitmq_package_sha256'] }}"
 
@@ -29,6 +30,7 @@
 
 - include: test-install-rabbitmq-server.yml
   vars:
+    rabbitmq_install_method: "{{ rabbitmq_new_package[ansible_os_family | lower]['method'] }}"
     rabbitmq_upgrade: true
 
 - include: test-rabbitmq-server-functional.yml

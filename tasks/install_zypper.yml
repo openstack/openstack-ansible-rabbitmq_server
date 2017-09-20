@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Fail if installation method is set to 'external_repo' on openSUSE
+  fail:
+    msg: "rabbitmq_install_method='external_repo' is not supported on openSUSE"
+  when: rabbitmq_install_method == 'external_repo'
+
 - block:
     - name: Add rabbitmq gpg-keys
       rpm_key:
@@ -40,34 +45,38 @@
         - item.fallback_keyserver is defined
       tags:
         - rabbitmq-gpg-keys
+  when: rabbitmq_install_method != 'distro'
 
-- name: Install RabbitMQ package dependencies
+# NOTE(hwoarang) For the upgrade job we fetch the old version from upstream and the new one from OBS. zypper gets upset if you
+# get the updaded package during an update so you need to pass --force to actually force such a change. However, --force forces a
+# re-install independent of repo changes but it's not the end of the world.
+- name: Install the RabbitMQ package RPM
   zypper:
-    name: "{{ item }}"
+    name: "{{ rabbitmq_package_path }}"
     state: "{{ rabbitmq_package_state }}"
-    update_cache: yes
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: "{{ rabbitmq_dependencies }}"
-  tags:
-    - rabbitmq-zypper-packages
-
-- name: Install the RabbitMQ package
-  zypper:
-    name: "{{ (rabbitmq_install_method == 'file') | ternary(rabbitmq_package_path, rabbitmq_distro_packages) }}"
   register: install_rabbitmq
   tags:
     - rabbitmq-package-rpm
     - rabbitmq-zypper-packages
+  when: rabbitmq_install_method == 'file'
 
-- name: Lock version of erlang packages
-  command: zypper addlock erlang*
-  register: zypper_addlock_erlang
-  changed_when: "zypper_addlock_erlang.stdout.find('successfully added') != -1"
+- block:
+  - name: Install the RabbitMQ package
+    zypper:
+      name: "{{ rabbitmq_distro_packages }}"
+      state: "{{ rabbitmq_package_state }}"
+    register: install_rabbitmq
+  rescue:
+    - name: Install the RabbitMQ package (force)
+      package:
+        name: "{{ rabbitmq_distro_packages }}"
+        state: "{{ rabbitmq_package_state }}"
+        force: yes
+      register: install_rabbitmq
   tags:
+    - rabbitmq-package-rpm
     - rabbitmq-zypper-packages
+  when: rabbitmq_install_method == 'distro'
 
 # NOTE(hwoarang) on openSUSE, rabbitmq-server depends on epmd.service which
 # depends on epmd.socket which runs on localhost. It is just easier to let

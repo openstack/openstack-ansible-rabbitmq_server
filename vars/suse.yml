@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Even though we install the rabbitmq-server from the openSUSE repositories
-# (the Ocata OBS project) we still add these here in case we use them in the
-# future.
-_rabbitmq_install_method: file
+_rabbitmq_install_method: distro
+
+# These are all here as alternative ways to get the required packages either by
+# installing the package directly or getting it from the CentOS mirror
 _rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.11/rabbitmq-server-3.6.11-1.suse.noarch.rpm"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].rsplit('.', 1)[0] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
@@ -28,11 +28,6 @@ _rabbitmq_gpg_keys:
     keyserver: 'https://www.rabbitmq.com'
   - key_name: 'erlang_solutions.asc'
     keyserver: 'https://packages.erlang-solutions.com/ubuntu'
-
-rabbitmq_dependencies:
-  - erlang
-  - openssl
-  - socat
 
 rabbitmq_distro_packages:
   - rabbitmq-server
