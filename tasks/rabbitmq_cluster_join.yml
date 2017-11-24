@@ -21,15 +21,11 @@
       shell: |
         rabbitmqctl -q cluster_status | grep '{cluster_name,<<"{{ rabbitmq_cluster_name }}">>}'
       changed_when: false
-      tags:
-        - rabbitmq-cluster
 
   rescue:
     - name: Stop rabbitmq app
       shell: |
         rabbitmqctl stop_app; sleep 5
-      tags:
-        - rabbitmq-cluster
 
     - name: Join rabbitmq cluster
       command: >
@@ -38,8 +34,6 @@
       until: rabbit_join_cluster|success
       retries: 5
       delay: 2
-      tags:
-        - rabbitmq-cluster
 
     - name: Start rabbitmq app
       command: rabbitmqctl start_app
@@ -47,5 +41,3 @@
       until: rabbit_start_app|success
       retries: 5
       delay: 2
-      tags:
-        - rabbitmq-cluster
