@@ -66,6 +66,7 @@
 - include: rabbitmq_cluster.yml
   tags:
     - rabbitmq_server-config
+    - rabbitmq-cluster
 
 - name: Flush handlers
   meta: flush_handlers
