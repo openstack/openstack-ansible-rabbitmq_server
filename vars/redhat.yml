@@ -14,10 +14,10 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/el/7/rabbitmq-server-3.6.11-1.el7.noarch.rpm"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/el/7/rabbitmq-server-3.6.14-1.el7.noarch.rpm"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].rsplit('.', 1)[0] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
-_rabbitmq_package_sha256: "e09272c9ed3d3f0a34f1eb74f757b36051a7d6e9c825e054cd0132e961398913"
+_rabbitmq_package_sha256: "ed7b9cdf1870d6a5088833e5e54277dd62dc7fa21be660ad83fa790a3fb5207b"
 _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
 _rabbitmq_gpg_keys:

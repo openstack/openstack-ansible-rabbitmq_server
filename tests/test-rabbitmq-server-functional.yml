@@ -67,6 +67,10 @@
       register: rabbitmqctl_status
       changed_when: false
 
+    - name: Print rabbitmqctl status
+      debug:
+        var: rabbitmqctl_status
+
     - name: Ensure SSL cert/key checksums are identical across cluster
       assert:
         that:
