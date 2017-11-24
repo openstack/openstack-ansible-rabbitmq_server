@@ -29,48 +29,63 @@
         - 10.1.0.2
         - 10.1.0.3
         - 10.1.0.4
+
     - name: Open rabbitmq.config
       slurp:
         src: "/etc/rabbitmq/rabbitmq.config"
       register: rabbitmq_config
+
     - name: Open enabled_plugins
       slurp:
         src: "/etc/rabbitmq/enabled_plugins"
       register: enabled_plugins
+
     - name: Read rabbitmq_ssl_cert
       stat:
         path: "{{ rabbitmq_ssl_cert }}"
       register: rabbitmq_ssl_cert_stat
+
     - name: Read rabbitmq_ssl_key
       stat:
         path: "{{ rabbitmq_ssl_key }}"
       register: rabbitmq_ssl_key_stat
+
     - name: Read rabbit files
       set_fact:
         enabled_plugins_contents: "{{ enabled_plugins.content | b64decode }}"
         rabbitmq_config_contents: "{{ rabbitmq_config.content | b64decode }}"
         rabbitmq_ssl_cert_checksum: "{{ rabbitmq_ssl_cert_stat.stat.checksum }}"
         rabbitmq_ssl_key_checksum: "{{ rabbitmq_ssl_key_stat.stat.checksum }}"
+
     - name: Check files contents
       assert:
         that:
           - "'rabbitmq_management' in enabled_plugins_contents"
+
     - name: Get status of rabbitmq
       command: rabbitmqctl status
       register: rabbitmqctl_status
+      changed_when: false
+
     - name: Ensure SSL cert/key checksums are identical across cluster
       assert:
         that:
           - hostvars['container1']['rabbitmq_ssl_cert_checksum'] == hostvars['container2']['rabbitmq_ssl_cert_checksum'] == hostvars['container3']['rabbitmq_ssl_cert_checksum']
           - hostvars['container1']['rabbitmq_ssl_key_checksum'] == hostvars['container2']['rabbitmq_ssl_key_checksum'] == hostvars['container3']['rabbitmq_ssl_key_checksum']
+
     - name: Ensure expected version of rabbitmq is running
       assert:
         that: rabbitmqctl_status.stdout | search ("rabbit,\"RabbitMQ\",\"{{ rabbitmq_release_version }}\"")
+
     - name: Get the policy list
       command: rabbitmqctl -q list_policies
       register: rabbitmq_policies_output
-    - debug:
+      changed_when: false
+
+    - name: Show the policies
+      debug:
         var: rabbitmq_policies.stdout
+
     # Expected policy: "/       HA      all     ^(?!amq\\.).*   {"ha-mode":"all"}       0"
     - name: Validate that the expected policies are present
       assert:
