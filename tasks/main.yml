@@ -58,6 +58,7 @@
 - include: rabbitmq_set_cookie.yml
   tags:
     - rabbitmq_server-config
+    - rabbitmq-config
 
 - include: rabbitmq_post_install.yml
   tags:
