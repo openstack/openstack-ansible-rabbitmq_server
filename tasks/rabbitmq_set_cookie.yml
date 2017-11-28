@@ -13,33 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- block:
-    - name: Read rabbit cookie
-      slurp:
-        src: /var/lib/rabbitmq/.erlang.cookie
-      register: tmp_rabbit_cookie
-      failed_when: (tmp_rabbit_cookie.content | b64decode).find(rabbitmq_cookie_token) == -1
-      tags:
-        - rabbitmq-config
+- name: Set rabbit cookie
+  copy:
+    content: "{{ rabbitmq_cookie_token }}"
+    dest: /var/lib/rabbitmq/.erlang.cookie
+    mode: "0400"
+    owner: rabbitmq
+    group: rabbitmq
+  register: cookie_set
 
-  rescue:
-    - include: rabbitmq_stopped.yml
-      static: no
-      tags:
-        - rabbitmq-config
+- include: rabbitmq_stopped.yml
+  static: no
+  when:
+    - cookie_set | changed
 
-    - name: Set rabbit cookie
-      copy:
-        content: "{{ rabbitmq_cookie_token }}"
-        dest: /var/lib/rabbitmq/.erlang.cookie
-        mode: "0400"
-        owner: rabbitmq
-        group: rabbitmq
-      register: cookie_set
-      tags:
-        - rabbitmq-config
+- include: rabbitmq_started.yml
+  static: no
+  when:
+    - cookie_set | changed
 
-    - include: rabbitmq_started.yml
-      static: no
-      tags:
-        - rabbitmq-config
