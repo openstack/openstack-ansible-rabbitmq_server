@@ -24,8 +24,12 @@ Default variables
    :language: yaml
    :start-after: under the License.
 
-Required variables
-~~~~~~~~~~~~~~~~~~
+Dependencies
+~~~~~~~~~~~~
+
+This role needs pip >= 7.1 installed on the target host.
+
+To use this role, define the following variables:
 
 .. code-block:: yaml
 
