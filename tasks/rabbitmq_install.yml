@@ -31,6 +31,8 @@
     - rabbitmq-yum-packages
     - rabbimtq-zypper-packages
     - rabbitmq_server-install
+    # Avoid ANSIBLE0006 systemctl used in place of systemd module issue
+    - skip_ansible_lint
 
 - name: Ensure there are no policy-rc files
   file:
