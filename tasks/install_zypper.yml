@@ -95,7 +95,8 @@
     - rabbitmq-config
 
 - name: Reload the systemd daemon
-  command: "systemctl daemon-reload"
+  systemd:
+    daemon_reload: yes
   when:
     - rabbitmq_server_service_added | changed
   tags:
