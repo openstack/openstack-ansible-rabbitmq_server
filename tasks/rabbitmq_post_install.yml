@@ -80,7 +80,8 @@
     - rabbitmq-config
 
 - name: Reload the systemd daemon
-  command: "systemctl daemon-reload"
+  systemd:
+    daemon_reload: yes
   when:
     - ansible_service_mgr == 'systemd'
     - rabbit_resource_limit | changed

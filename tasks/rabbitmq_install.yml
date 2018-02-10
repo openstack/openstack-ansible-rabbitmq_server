@@ -22,17 +22,15 @@
     - rabbitmq_server-install
 
 - name: Reload the systemd daemon
-  command: "systemctl daemon-reload"
+  systemd:
+    daemon_reload: yes
   when:
     - install_rabbitmq | changed
-    - ansible_service_mgr == 'systemd'
   tags:
     - rabbitmq-apt-packages
     - rabbitmq-yum-packages
     - rabbimtq-zypper-packages
     - rabbitmq_server-install
-    # Avoid ANSIBLE0006 systemctl used in place of systemd module issue
-    - skip_ansible_lint
 
 - name: Ensure there are no policy-rc files
   file:
