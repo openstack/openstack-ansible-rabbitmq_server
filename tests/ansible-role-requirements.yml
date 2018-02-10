@@ -18,3 +18,7 @@
   src: https://git.openstack.org/openstack/openstack-ansible-lxc_container_create
   scm: git
   version: stable/pike
+- name: previous_rabbitmq_server
+  src: https://git.openstack.org/openstack/openstack-ansible-rabbitmq_server
+  scm: git
+  version: stable/ocata
