@@ -14,13 +14,38 @@
 # limitations under the License.
 
 - name: Run functional tests
-  hosts: "{{ rabbitmq_host_group }}"
+  hosts: rabbitmq_all
+  any_errors_fatal: true
   user: root
   gather_facts: true
   become: true
-  vars_files:
-    - test-vars.yml
   tasks:
+
+    - name: Gather variables for each operating system
+      include_vars: "{{ item }}"
+      with_first_found:
+        - "{{ playbook_dir }}/../vars/{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+        - "{{ playbook_dir }}/../vars/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+        - "{{ playbook_dir }}/../vars/{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+        - "{{ playbook_dir }}/../vars/{{ ansible_distribution | lower }}.yml"
+        - "{{ playbook_dir }}/../vars/{{ ansible_os_family | lower }}.yml"
+
+    - name: Set rabbitmq_package_url
+      set_fact:
+        rabbitmq_package_url: "{{ _rabbitmq_package_url }}"
+
+    - name: Set rabbitmq_package_version
+      set_fact:
+        rabbitmq_package_version: "{{ _rabbitmq_package_version }}"
+
+    - name: Set rabbitmq_release_version
+      set_fact:
+        rabbitmq_release_version: "{{ _rabbitmq_release_version }}"
+
+    - name: Set rabbitmq_install_method
+      set_fact:
+        rabbitmq_install_method: "{{ _rabbitmq_install_method }}"
+
     - name: Check rabbitmq is running
       command: "pgrep -f rabbit"
       delegate_to: "{{ item }}"
@@ -79,7 +104,9 @@
 
     - name: Ensure expected version of rabbitmq is running
       assert:
-        that: rabbitmqctl_status.stdout | search ("rabbit,\"RabbitMQ\",\"{{ rabbitmq_release_version }}\"")
+        that: rabbitmqctl_status.stdout | search ("rabbit,\"RabbitMQ\",\"{{ _rabbitmq_release_version }}\"")
+      when:
+        - "rabbitmq_install_method == 'file'"
 
     - name: Get the policy list
       command: rabbitmqctl -q list_policies

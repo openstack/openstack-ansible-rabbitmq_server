@@ -18,9 +18,3 @@
 
 # Prepare the containers
 - include: common/test-prepare-containers.yml
-
-# Install RabbitMQ server
-- include: common/test-install-rabbitmq.yml
-
-# Run functional tests
-- include: test-rabbitmq-functional.yml
