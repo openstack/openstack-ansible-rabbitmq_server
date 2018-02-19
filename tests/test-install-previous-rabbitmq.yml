@@ -1,5 +1,5 @@
 ---
-# Copyright 2016, Rackspace US, Inc.
+# Copyright 2018, SUSE LINUX GmbH.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,33 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO(odyssey4me):
+# If/when https://review.openstack.org/543245 is available to
+# this script in the previous stable branch, remove this play
+# and use it instead.
+
+# The rabbitmq needs access to hostvars for all containers in order
+# to set the values in /etc/hosts. We therefore collect all host/container
+# facts before continuing.
 - name: Gather facts
   hosts: "all"
   user: root
   gather_facts: true
 
-# The cluster must be stopped when doing major/minor upgrades
-# http://www.rabbitmq.com/clustering.html#upgrading
-- name: Stop RabbitMQ nodes that are not the upgrader
-  hosts: "{{ rabbitmq_host_group }}[1:]"
-  serial: 1
-  max_fail_percentage: 0
+# Install previous version
+- name: Deploy previous rabbitmq version
+  hosts: rabbitmq_all
   user: root
-  tasks:
-    - name: "Stop RabbitMQ"
-      service:
-        name: "rabbitmq-server"
-        state: "stopped"
-      when: rabbitmq_upgrade | default(false) | bool
-  vars_files:
-    - test-vars.yml
-
-- name: Install RabbitMQ server
-  hosts: "{{ rabbitmq_host_group }}"
   serial: 1
-  user: root
-  gather_facts: True
+  any_errors_fatal: true
+  gather_facts: true
   roles:
-    - role: rabbitmq_server
+    - role: "previous_rabbitmq_server"
   vars_files:
-    - test-vars.yml
+    - common/previous/test-vars.yml

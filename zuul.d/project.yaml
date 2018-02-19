@@ -19,6 +19,7 @@
         - openstack-ansible-functional-centos-7
         - openstack-ansible-functional-opensuse-423
         - openstack-ansible-functional-ubuntu-xenial
+        - openstack-ansible-upgrade-ubuntu-xenial
     experimental:
       jobs:
         - openstack-ansible-integrated-deploy-aio
@@ -28,3 +29,4 @@
         - openstack-ansible-functional-centos-7
         - openstack-ansible-functional-opensuse-423
         - openstack-ansible-functional-ubuntu-xenial
+        - openstack-ansible-upgrade-ubuntu-xenial
