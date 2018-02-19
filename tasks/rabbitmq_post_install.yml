@@ -42,8 +42,6 @@
     group: "root"
     owner: "root"
     mode: "0755"
-  when:
-    - ansible_service_mgr == 'systemd'
   tags:
     - rabbitmq-config
 
@@ -64,8 +62,6 @@
     src: "limits.conf.j2"
     dest: "/etc/systemd/system/rabbitmq-server.service.d/limits.conf"
   register: rabbit_resource_limit
-  when:
-    - ansible_service_mgr == 'systemd'
   tags:
     - rabbitmq-config
 
@@ -74,15 +70,13 @@
     src: systemd-restart-on-failure.conf.j2
     dest: "/etc/systemd/system/rabbitmq-server.service.d/systemd-restart-on-failure.conf"
   register: rabbit_restart_on_failure
-  when:
-    - ansible_service_mgr == 'systemd'
   tags:
     - rabbitmq-config
 
 - name: Reload the systemd daemon
-  command: "systemctl daemon-reload"
+  systemd:
+    daemon_reload: yes
   when:
-    - ansible_service_mgr == 'systemd'
     - rabbit_resource_limit | changed
     - rabbit_restart_on_failure | changed
   tags:
