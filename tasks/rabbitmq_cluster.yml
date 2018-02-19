@@ -13,24 +13,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# The output of 'rabbitmqctl -q cluster_status' looks like this:
+# [{nodes,[{disc,[rabbit@container1,rabbit@container2,rabbit@container3]}]},
+#  {running_nodes,[rabbit@container3,rabbit@container1,rabbit@container2]},
+#  {cluster_name,<<"rabbitmq_cluster1">>},
+#  {partitions,[]},
+#  {alarms,[{rabbit@container3,[]},
+#           {rabbit@container1,[]},
+#           {rabbit@container2,[]}]}]
+#
+# Our solution to get the cluster name out cleanly is inspired by
+# https://unix.stackexchange.com/a/13472
 - name: Get rabbitmq cluster name
   shell: |
-    return_code=0
-    if ! rabbitmqctl cluster_status | grep -w '<<"{{ rabbitmq_cluster_name }}">>'; then
-      rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
-      return_code=2
-    fi
-    exit ${return_code}
-  when: ansible_hostname == rabbitmq_primary_cluster_node
-  register: _set_cluster_name
-  changed_when: _set_cluster_name.rc == 2
-  failed_when: _set_cluster_name.rc not in [0, 2]
-  # We skip ansible lint testing for this task as it fails with
-  # ANSIBLE0014 Environment variables don't work as part of command
-  # which is nonsense.
-  tags:
-    - skip_ansible_lint
+    rabbitmqctl -q cluster_status | grep -oP '(?<={cluster_name,<<").*(?=">>})'
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: _cluster_name
 
-- include: rabbitmq_cluster_join.yml
+- name: Set rabbitmq cluster name on primary node
+  command: |
+    rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
+  when:
+    - "ansible_hostname == rabbitmq_primary_cluster_node"
+    - "_cluster_name.stdout != rabbitmq_cluster_name"
+
+- name: Join cluster on secondary nodes
+  include: rabbitmq_cluster_join.yml
   static: no
-  when: ansible_hostname != rabbitmq_primary_cluster_node
+  when:
+    - "ansible_hostname != rabbitmq_primary_cluster_node"
+    - "_cluster_name.stdout != rabbitmq_cluster_name"
