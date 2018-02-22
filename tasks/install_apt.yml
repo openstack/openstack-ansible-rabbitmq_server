@@ -46,27 +46,55 @@
       tags:
         - rabbitmq-apt-keys
 
+# When updating the cache in the apt_repository
+# task, and the update fails, a retry does not
+# detect a change the second attempt and therefore
+# does not update the cache, resulting in a changed
+# repo config, but no updated cache. To work around
+# this bug we implement the change of repo config
+# and the cache update as two seperate tasks.
 - name: Add rabbitmq repo
   apt_repository:
     repo: "{{ rabbitmq_repo.repo }}"
     state: "{{ rabbitmq_repo.state }}"
     filename: "{{ rabbitmq_repo.filename | default(omit) }}"
-  register: add_repos
-  until: add_repos|success
-  retries: 5
-  delay: 2
+    update_cache: no
+  register: add_rabbitmq_repos
   when:
     - rabbitmq_install_method == 'external_repo'
   tags:
     - rabbitmq-repos
 
+# When updating the cache in the apt_repository
+# task, and the update fails, a retry does not
+# detect a change the second attempt and therefore
+# does not update the cache, resulting in a changed
+# repo config, but no updated cache. To work around
+# this bug we implement the change of repo config
+# and the cache update as two seperate tasks.
 - name: Add erlang repo
   apt_repository:
     repo: "{{ rabbitmq_erlang_repo.repo }}"
     state: "{{ rabbitmq_erlang_repo.state }}"
     filename: "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
-  register: add_repos
-  until: add_repos|success
+    update_cache: no
+  register: add_erlang_repos
+  tags:
+    - rabbitmq-repos
+
+# Due to our Ansible strategy, a skipped task does not
+# have a dictionary result, so we have to cater to the
+# situation where either of the apt_repository tasks
+# may not have the results dict in the register. As
+# such we validate that the register is a mapping (dict).
+- name: Update Apt cache
+  apt:
+    update_cache: yes
+  when:
+    - (add_rabbitmq_repos is mapping and add_rabbitmq_repos | changed) or
+      (add_erlang_repos is mapping and add_erlang_repos | changed)
+  register: update_apt_cache
+  until: update_apt_cache | success
   retries: 5
   delay: 2
   tags:
@@ -79,7 +107,7 @@
     update_cache: yes
     cache_valid_time: "{{ cache_timeout }}"
   register: install_packages
-  until: install_packages|success
+  until: install_packages | success
   retries: 5
   delay: 2
   tags:
