@@ -58,6 +58,7 @@
     repo: "{{ rabbitmq_repo.repo }}"
     state: "{{ rabbitmq_repo.state }}"
     filename: "{{ rabbitmq_repo.filename | default(omit) }}"
+    update_cache: no
   register: add_rabbitmq_repos
   when:
     - rabbitmq_install_method == 'external_repo'
@@ -76,7 +77,26 @@
     repo: "{{ rabbitmq_erlang_repo.repo }}"
     state: "{{ rabbitmq_erlang_repo.state }}"
     filename: "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
+    update_cache: no
   register: add_erlang_repos
+  tags:
+    - rabbitmq-repos
+
+# Due to our Ansible strategy, a skipped task does not
+# have a dictionary result, so we have to cater to the
+# situation where either of the apt_repository tasks
+# may not have the results dict in the register. As
+# such we validate that the register is a mapping (dict).
+- name: Update Apt cache
+  apt:
+    update_cache: yes
+  when:
+    - (add_rabbitmq_repos is mapping and add_rabbitmq_repos | changed) or
+      (add_erlang_repos is mapping and add_erlang_repos | changed)
+  register: update_apt_cache
+  until: update_apt_cache | success
+  retries: 5
+  delay: 2
   tags:
     - rabbitmq-repos
 
@@ -85,7 +105,7 @@
     pkg: "{{ rabbitmq_dependencies | deprecated(rabbitmq_apt_packages, 'rabbitmq_apt_packages', 'rabbitmq_dependencies', 'Ocata') }}"
     state: "{{ rabbitmq_package_state }}"
     update_cache: yes
-    cache_valid_time: "{{ (add_rabbitmq_repos | changed or add_erlang_repos | changed) | ternary('0', cache_timeout) }}"
+    cache_valid_time: "{{ cache_timeout }}"
   register: install_packages
   until: install_packages | success
   retries: 5
