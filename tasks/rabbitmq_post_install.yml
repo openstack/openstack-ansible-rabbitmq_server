@@ -13,6 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Configure rabbitmq plugins
+  rabbitmq_plugin:
+    names: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ rabbitmq_plugins }}"
+  register: rabbitmq_plugin
+  tags:
+    - rabbitmq-config
+
+- name: Apply rabbitmq policies
+  rabbitmq_policy:
+    node: "rabbit@{{ ansible_hostname }}"
+    name: "{{ item.name }}"
+    pattern: "{{ item.pattern }}"
+    priority: "{{ item.priority | default(0) }}"
+    tags: "{{ item.tags }}"
+  register: rabbitmq_queue_mirror
+  with_items: "{{ rabbitmq_policies }}"
+  tags:
+    - rabbitmq-config
+    - rabbitmq-cluster
+
 - name: Create rabbitmq systemd service config dir
   file:
     path: "/etc/systemd/system/rabbitmq-server.service.d"
@@ -65,28 +87,6 @@
 - include: rabbitmq_restart.yml
   static: no
   when: rabbit_config_changed|changed or rabbitmq_plugin|changed or rabbitmq_queue_mirror|changed
-
-- name: Configure rabbitmq plugins
-  rabbitmq_plugin:
-    names: "{{ item.name }}"
-    state: "{{ item.state }}"
-  with_items: "{{ rabbitmq_plugins }}"
-  register: rabbitmq_plugin
-  tags:
-    - rabbitmq-config
-
-- name: Apply rabbitmq policies
-  rabbitmq_policy:
-    node: "rabbit@{{ ansible_hostname }}"
-    name: "{{ item.name }}"
-    pattern: "{{ item.pattern }}"
-    priority: "{{ item.priority | default(0) }}"
-    tags: "{{ item.tags }}"
-  register: rabbitmq_queue_mirror
-  with_items: "{{ rabbitmq_policies }}"
-  tags:
-    - rabbitmq-config
-    - rabbitmq-cluster
 
 # This is being done because the rabbitctl command used by the module
 # is not very effective at returning proper status codes for failure
