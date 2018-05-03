@@ -70,4 +70,7 @@
 
 - include: rabbitmq_upgrade_prep.yml
   static: no
-  when: rabbitmq_upgrade | bool
+  when:
+    - rabbitmq_upgrade | bool
+    - installed_rabbitmq.rc == 0
+    - not installed_rabbitmq.stdout | search(rabbitmq_package_version)
