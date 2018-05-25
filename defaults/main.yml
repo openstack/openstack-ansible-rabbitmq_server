@@ -158,3 +158,9 @@ rabbitmq_policies:
   - name: "HA"
     pattern: '^(?!(amq\.)|(.*_fanout_)|(reply_)).*'
     tags: "ha-mode=all"
+
+rabbitmq_port_bindings:
+  ssl_listeners:
+    "0.0.0.0": 5671
+  tcp_listeners:
+    "0.0.0.0": 5672
