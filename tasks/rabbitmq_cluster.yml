@@ -16,7 +16,8 @@
 # The output of 'rabbitmqctl -q cluster_status' looks like this:
 # [{nodes,[{disc,[rabbit@container1,rabbit@container2,rabbit@container3]}]},
 #  {running_nodes,[rabbit@container3,rabbit@container1,rabbit@container2]},
-#  {cluster_name,<<"rabbitmq_cluster1">>},
+#  {cluster_name,
+#        <<"rabbitmq_cluster1">>},
 #  {partitions,[]},
 #  {alarms,[{rabbit@container3,[]},
 #           {rabbit@container1,[]},
@@ -26,7 +27,7 @@
 # https://unix.stackexchange.com/a/13472
 - name: Get rabbitmq cluster name
   shell: |
-    rabbitmqctl -q cluster_status | grep -oP '(?<={cluster_name,<<").*(?=">>})'
+    rabbitmqctl -q cluster_status | paste -sd '' - | sed 's/ //g' | grep -oP '(?<={cluster_name,<<").*(?=">>})'
   args:
     executable: /bin/bash
   changed_when: false
