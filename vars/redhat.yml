@@ -46,6 +46,8 @@ _rabbitmq_erlang_repo:
   state: "present"
   filename: els-erlang
 
+_rabbitmq_erlang_version_spec: "erlang-19.3*"
+
 rabbitmq_distro_packages:
   - openssl
   - rabbitmq-server

@@ -42,6 +42,8 @@ _rabbitmq_erlang_repo:
   state: "present"
   filename: els_erlang
 
+_rabbitmq_erlang_version_spec: "1:19.3*"
+
 rabbitmq_dependencies:
   - erlang-base-hipe
   - erlang-nox

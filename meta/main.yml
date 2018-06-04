@@ -38,14 +38,3 @@ galaxy_info:
     - openstack
 dependencies:
   - pip_install
-  - role: apt_package_pinning
-    apt_package_pinning_file_name: "rabbitmq.pref"
-    apt_package_pinning_priority: 999
-    apt_pinned_packages:
-      - package: "*"
-        release: "Erlang Solutions Ltd."
-      - package: "erlang*"
-        version: "1:19.3*"
-        priority: 1000
-    when:
-      - ansible_pkg_mgr == 'apt'

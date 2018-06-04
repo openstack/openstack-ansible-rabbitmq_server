@@ -13,6 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Run the apt package pinning role
+  include_role:
+    name: apt_package_pinning
+    private: true
+  vars:
+    apt_package_pinning_file_name: "rabbitmq.pref"
+    apt_package_pinning_priority: 999
+    apt_pinned_packages:
+      - package: "*"
+        release: "Erlang Solutions Ltd."
+      - package: "erlang*"
+        version: "{{ rabbitmq_erlang_version_spec }}"
+        priority: 1000
+
 - block:
     - name: Add rabbitmq apt-keys
       apt_key:
