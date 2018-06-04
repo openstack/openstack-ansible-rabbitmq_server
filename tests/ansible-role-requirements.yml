@@ -21,4 +21,4 @@
 - name: previous_rabbitmq_server
   src: https://git.openstack.org/openstack/openstack-ansible-rabbitmq_server
   scm: git
-  version: stable/pike
+  version: stable/queens
