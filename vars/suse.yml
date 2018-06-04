@@ -17,10 +17,10 @@ _rabbitmq_install_method: distro
 
 # These are all here as alternative ways to get the required packages either by
 # installing the package directly or getting it from the CentOS mirror
-_rabbitmq_package_url: "http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.14/rabbitmq-server-3.6.14-1.suse.noarch.rpm"
-_rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-1].rsplit('.', 1)[0] }}"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/opensuse/42.2/rabbitmq-server-3.7.5-1.suse.noarch.rpm/download.rpm"
+_rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].rsplit('.', 1)[0] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
-_rabbitmq_package_sha256: "72d6e51b4eb723ebb4e6be1580dee3722b57412fdd26c53aead81f4c2a8ebe05"
+_rabbitmq_package_sha256: "58a1d5242c84cae1752f149eaf2f4d26d2d886eb5812c8eaf4c985494be2eabb"
 _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
 _rabbitmq_gpg_keys:
