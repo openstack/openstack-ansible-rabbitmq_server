@@ -23,6 +23,25 @@ rabbitmq_package_state: "latest"
 # Inventory group containing the hosts for the cluster
 rabbitmq_host_group: "rabbitmq_all"
 
+# The local address used for the rabbitmq cluster node
+rabbitmq_node_address: "{{ ansible_host }}"
+
+# Hosts file entries (set this to an empty list to disable /etc/hosts generation
+# for the rabbitmq cluster nodes)
+rabbitmq_hosts_entries: |-
+  {% set _var = [] %}
+  {% for cluster_host in groups[rabbitmq_host_group] %}
+  {%   set _addr = hostvars[cluster_host]['rabbitmq_node_address'] |
+                   default(hostvars[cluster_host]['ansible_host']) %}
+  {%   set _hostnames = [
+         hostvars[cluster_host]['ansible_hostname'],
+         hostvars[cluster_host]['ansible_hostname'].split('.')[0]
+       ]
+  %}
+  {%   set _ = _var.append({'address': _addr, 'hostnames': _hostnames}) %}
+  {% endfor %}
+  {{ _var }}
+
 rabbitmq_primary_cluster_node: "{{ hostvars[groups[rabbitmq_host_group][0]]['ansible_hostname'] }}"
 
 # Upgrading the RabbitMQ package requires shutting down the cluster. This variable makes upgrading

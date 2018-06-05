@@ -34,8 +34,8 @@
   lineinfile:
     dest: /etc/hosts
     state: present
-    line: "{{ hostvars[item]['ansible_host'] }} {{ hostvars[item]['ansible_hostname'] }} {{ hostvars[item]['ansible_hostname'].split('.')[0] }}"
-  with_items: "{{ groups[rabbitmq_host_group] }}"
+    line: "{{ item.address }} {{ item.hostnames | join(' ') }}"
+  with_items: "{{ rabbitmq_hosts_entries }}"
   tags:
     - rabbitmq-config
 
