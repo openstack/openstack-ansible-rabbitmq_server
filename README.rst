@@ -11,6 +11,8 @@ Team and repository tags
 OpenStack-Ansible RabbitMQ server
 =================================
 
+Ansible role to install OpenStack RabbitMQ server.
+
 Documentation for the project can be found at:
   https://docs.openstack.org/openstack-ansible-rabbitmq_server/latest
 
