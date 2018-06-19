@@ -14,5 +14,8 @@ OpenStack-Ansible RabbitMQ server
 Documentation for the project can be found at:
   https://docs.openstack.org/openstack-ansible-rabbitmq_server/latest
 
+Release notes for the project can be found at:
+  https://docs.openstack.org/releasenotes/openstack-ansible-rabbitmq_server
+
 The project home is at:
   http://launchpad.net/openstack-ansible
