@@ -25,10 +25,10 @@
 - include: rabbitmq_stopped.yml
   static: no
   when:
-    - cookie_set | changed
+    - cookie_set is changed
 
 - include: rabbitmq_started.yml
   static: no
   when:
-    - cookie_set | changed
+    - cookie_set is changed
 

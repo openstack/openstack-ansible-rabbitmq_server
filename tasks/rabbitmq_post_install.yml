@@ -55,8 +55,8 @@
   systemd:
     daemon_reload: yes
   when:
-    - rabbit_resource_limit | changed
-    - rabbit_restart_on_failure | changed
+    - rabbit_resource_limit is changed
+    - rabbit_restart_on_failure is changed
   tags:
     - rabbitmq-config
     # don't trigger ANSIBLE0016
@@ -86,7 +86,7 @@
 
 - include: rabbitmq_restart.yml
   static: no
-  when: rabbit_config|changed or rabbitmq_plugin|changed or rabbitmq_policy|changed
+  when: rabbit_config is changed or rabbitmq_plugin is changed or rabbitmq_policy is changed
 
 # This is being done because the rabbitctl command used by the module
 # is not very effective at returning proper status codes for failure

@@ -36,7 +36,7 @@
         url: "{{ item.url | default(omit) }}"
         state: "present"
       register: add_keys
-      until: add_keys | success
+      until: add_keys is success
       retries: 5
       delay: 2
       with_items: "{{ rabbitmq_gpg_keys }}"
@@ -51,7 +51,7 @@
         url: "{{ item.fallback_url | default(omit) }}"
         state: "present"
       register: add_keys_fallback
-      until: add_keys_fallback | success
+      until: add_keys_fallback is success
       retries: 5
       delay: 2
       with_items: "{{ rabbitmq_gpg_keys }}"
@@ -108,7 +108,7 @@
     - (add_rabbitmq_repos is mapping and add_rabbitmq_repos | changed) or
       (add_erlang_repos is mapping and add_erlang_repos | changed)
   register: update_apt_cache
-  until: update_apt_cache | success
+  until: update_apt_cache is success
   retries: 5
   delay: 2
   tags:
@@ -121,7 +121,7 @@
     update_cache: yes
     cache_valid_time: "{{ cache_timeout }}"
   register: install_packages
-  until: install_packages | success
+  until: install_packages is success
   retries: 5
   delay: 2
   tags:
@@ -142,7 +142,7 @@
     name: "{{ rabbitmq_distro_packages }}"
     state: "{{ rabbitmq_package_state }}"
   register: install_packages
-  until: install_packages|success
+  until: install_packages is success
   retries: 5
   delay: 2
   when:

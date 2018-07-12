@@ -22,7 +22,7 @@
   register: package_download
   retries: 3
   delay: 10
-  until: package_download|success
+  until: package_download is success
   when: rabbitmq_install_method == 'file'
   tags:
     - rabbitmq-package-deb

@@ -30,7 +30,7 @@
   command: >
     rabbitmqctl join_cluster "rabbit@{{ rabbitmq_primary_cluster_node.split('.')[0] }}"
   register: rabbit_join_cluster
-  until: rabbit_join_cluster|success
+  until: rabbit_join_cluster is success
   retries: 5
   delay: 2
   tags:
@@ -43,7 +43,7 @@
 - name: Start rabbitmq app
   command: rabbitmqctl start_app
   register: rabbit_start_app
-  until: rabbit_start_app|success
+  until: rabbit_start_app is success
   retries: 5
   delay: 2
   tags:

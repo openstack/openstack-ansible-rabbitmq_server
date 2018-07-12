@@ -19,7 +19,7 @@
         state: present
         key: "{{ item.keyserver }}/{{ item.key_name }}"
       register: add_keys
-      until: add_keys | success
+      until: add_keys is success
       retries: 5
       delay: 2
       with_items: "{{ rabbitmq_gpg_keys }}"
@@ -32,7 +32,7 @@
         state: present
         key: "{{ item.fallback_keyserver }}/{{ item.key_name }}"
       register: add_keys_fallback
-      until: add_keys_fallback | success
+      until: add_keys_fallback is success
       retries: 5
       delay: 2
       with_items: "{{ rabbitmq_gpg_keys }}"

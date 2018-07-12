@@ -25,7 +25,7 @@
   systemd:
     daemon_reload: yes
   when:
-    - install_rabbitmq | changed
+    - install_rabbitmq is changed
   tags:
     - rabbitmq-apt-packages
     - rabbitmq-yum-packages

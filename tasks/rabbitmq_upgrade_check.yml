@@ -50,8 +50,8 @@
   set_fact:
     installed_rabbitmq: "{{ item }}"
   when:
-    - not item | skipped
-    - item | changed
+    - not item is skipped
+    - item is changed
   with_items:
     - "{{ installed_rabbitmq_deb }}"
     - "{{ installed_rabbitmq_rpm }}"
