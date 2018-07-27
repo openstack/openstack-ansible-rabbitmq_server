@@ -14,10 +14,10 @@
 # limitations under the License.
 
 _rabbitmq_install_method: file
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/ubuntu/bionic/rabbitmq-server_3.7.5-1_all.deb/download.deb"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/ubuntu/bionic/rabbitmq-server_3.7.7-1_all.deb/download.deb"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
-_rabbitmq_package_sha256: "156163a595b5cd648ae80008eb7080392aab1de843b364b1760ec86f7d5beb32"
+_rabbitmq_package_sha256: "72939a9474110daa158a395a60c73baaf84c896aa530efcc9ef3130a6c6fb33a"
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
 _rabbitmq_gpg_keys:
