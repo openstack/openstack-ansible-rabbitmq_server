@@ -1,0 +1,53 @@
+---
+# Copyright 2016, Walmart Stores, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_rabbitmq_install_method: file
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/ubuntu/bionic/rabbitmq-server_3.7.7-1_all.deb/download.deb"
+_rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
+_rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
+_rabbitmq_package_sha256: "72939a9474110daa158a395a60c73baaf84c896aa530efcc9ef3130a6c6fb33a"
+_rabbitmq_package_path: "/opt/rabbitmq-server.deb"
+
+_rabbitmq_gpg_keys:
+  - key_name: 'rabbitmq'
+    keyserver: 'hkp://keyserver.ubuntu.com:80'
+    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
+    hash_id: '0x6B73A36E6026DFCA'
+  - key_name: 'erlang_solutions'
+    keyserver: 'hkp://keyserver.ubuntu.com:80'
+    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
+    hash_id: '0xd208507ca14f4fca'
+
+_rabbitmq_repo_url: "http://www.rabbitmq.com/debian"
+_rabbitmq_repo:
+  repo: "deb {{ rabbitmq_repo_url }} testing main"
+  state: "present"
+  filename: "RabbitMQ"
+
+_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/{{ ansible_distribution | lower }}"
+_rabbitmq_erlang_repo:
+  repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_distribution_release | lower }} contrib"
+  state: "present"
+  filename: els_erlang
+
+_rabbitmq_erlang_version_spec: "1:20.3*"
+
+rabbitmq_dependencies:
+  - erlang-base-hipe
+  - erlang-nox
+  - socat
+
+rabbitmq_distro_packages:
+  - rabbitmq-server
