@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: rabbitmq_upgrade_check.yml
+- include_tasks: rabbitmq_upgrade_check.yml
 
-- include: "install_{{ ansible_pkg_mgr }}.yml"
+- include_tasks: "install_{{ ansible_pkg_mgr }}.yml"
   tags:
     - rabbitmq-apt-packages
     - rabbitmq-yum-packages
@@ -41,6 +41,6 @@
     - rabbitmq-policy-file
     - rabbitmq_server-config
 
-- include: rabbitmq_started.yml
+- include_tasks: rabbitmq_started.yml
   tags:
     - rabbitmq_server-config

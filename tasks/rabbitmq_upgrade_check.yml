@@ -68,6 +68,5 @@
     - rabbitmq-package-rpm
     - rabbitmq-apt-packages
 
-- include: rabbitmq_upgrade_prep.yml
-  static: no
+- include_tasks: rabbitmq_upgrade_prep.yml
   when: rabbitmq_upgrade | bool
