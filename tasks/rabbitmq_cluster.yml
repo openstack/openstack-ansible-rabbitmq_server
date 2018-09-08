@@ -41,8 +41,7 @@
     - "_cluster_name.stdout != rabbitmq_cluster_name"
 
 - name: Join cluster on secondary nodes
-  include: rabbitmq_cluster_join.yml
-  static: no
+  include_tasks: rabbitmq_cluster_join.yml
   when:
     - "ansible_hostname != rabbitmq_primary_cluster_node"
     - "_cluster_name.stdout != rabbitmq_cluster_name"

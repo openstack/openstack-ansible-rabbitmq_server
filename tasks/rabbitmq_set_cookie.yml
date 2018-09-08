@@ -22,13 +22,11 @@
     group: rabbitmq
   register: cookie_set
 
-- include: rabbitmq_stopped.yml
-  static: no
+- include_tasks: rabbitmq_stopped.yml
   when:
     - cookie_set is changed
 
-- include: rabbitmq_started.yml
-  static: no
+- include_tasks: rabbitmq_started.yml
   when:
     - cookie_set is changed
 

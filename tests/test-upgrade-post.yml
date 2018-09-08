@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Install RabbitMQ server
-- include: common/test-install-rabbitmq.yml
+- import_playbook: common/test-install-rabbitmq.yml
 
 # Run functional tests
-- include: test-rabbitmq-functional.yml
+- import_playbook: test-rabbitmq-functional.yml
