@@ -18,9 +18,3 @@
       - check-requirements
       - publish-openstack-sphinx-docs
       - release-notes-jobs
-    check:
-      jobs:
-        - openstack-ansible-upgrade-ubuntu-xenial
-    gate:
-      jobs:
-        - openstack-ansible-upgrade-ubuntu-xenial

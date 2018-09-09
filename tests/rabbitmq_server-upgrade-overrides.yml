@@ -1,7 +1,0 @@
-rabbitmq_cookie_token: secrete
-rabbitmq_ssl_cert: /etc/rabbitmq/rabbitmq.pem
-rabbitmq_ssl_key: /etc/rabbitmq/rabbitmq.key
-
-rabbitmq_hipe_compile: True
-
-rabbitmq_erlang_version_spec: "{{ (ansible_pkg_mgr == 'apt') | ternary('1:19.3*','erlang-19*') }}"
