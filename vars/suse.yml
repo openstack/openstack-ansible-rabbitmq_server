@@ -17,7 +17,7 @@ _rabbitmq_install_method: distro
 
 # These are all here as alternative ways to get the required packages either by
 # installing the package directly or getting it from the CentOS mirror
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/opensuse/42.2/rabbitmq-server-3.7.5-1.suse.noarch.rpm/download.rpm"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/opensuse/{{ ansible_distribution_major_version }}/rabbitmq-server-3.7.5-1.suse.noarch.rpm/download.rpm"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].rsplit('.', 1)[0] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
 _rabbitmq_package_sha256: "58a1d5242c84cae1752f149eaf2f4d26d2d886eb5812c8eaf4c985494be2eabb"
