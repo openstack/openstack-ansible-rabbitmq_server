@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-_rabbitmq_install_method: external_repo
+_rabbitmq_install_method: distro
 _rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/el/7/rabbitmq-server-3.7.5-1.el7.noarch.rpm/download.rpm"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].rsplit('.', 1)[0] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"

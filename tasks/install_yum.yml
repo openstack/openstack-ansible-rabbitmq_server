@@ -41,6 +41,8 @@
       tags:
         - rabbitmq-gpg-keys
 
+  when: rabbitmq_install_method != 'distro'
+
 - name: Install RabbitMQ yum mirror
   yum_repository:
     name: "{{ rabbitmq_repo.name }}"
@@ -81,6 +83,8 @@
       --enable {{ item.name }}
       --setopt="{{ item.name }}.priority={{ item.priority }}"
   changed_when: false
+  when:
+    - rabbitmq_install_method != 'distro'
   with_items:
     - name: "{{ rabbitmq_repo.name }}"
       priority: 40
@@ -132,3 +136,27 @@
   tags:
     - rabbitmq-package-rpm
     - rabbitmq-yum-packages
+
+# NOTE(hwoarang) on RedHat, rabbitmq-server depends on epmd.service which
+# depends on epmd.socket which runs on localhost. It is just easier to let
+# the rabbitmq-server launch epmd directly since we are inside a container.
+- name: Add rabbitmq-server systemd service (RedHat)
+  template:
+    src: "rabbitmq-server.service.j2"
+    dest: "/etc/systemd/system/rabbitmq-server.service"
+  register: rabbitmq_server_service_added
+  # NOTE(hwoarang) Normally, this task should only be executed when
+  # rabbitmq_install_method == 'distro'. However, the upstream package
+  # does not contain a systemd file and as such we need to provide one.
+  # This should be reverted once https://github.com/rabbitmq/rabbitmq-server-release/pull/31
+  # is merged and new builds of rabbimq-server are available.
+  tags:
+    - rabbitmq-config
+
+- name: Reload the systemd daemon
+  systemd:
+    daemon_reload: yes
+  when:
+    - rabbitmq_server_service_added is changed
+  tags:
+    - rabbitmq-config
