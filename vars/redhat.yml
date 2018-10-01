@@ -35,7 +35,7 @@ _rabbitmq_repo:
   #sslverify: no
   #sslcacert: /etc/pki/tls/certs/ca-bundle.crt
 
-_rabbitmq_erlang_repo_url: "https://dl.bintray.com/rabbitmq/rpm/erlang/19/el/7"
+_rabbitmq_erlang_repo_url: "https://dl.bintray.com/rabbitmq/rpm/erlang/20/el/7"
 _rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
   description: "RabbitMQ Erlang Packages from Bintray"
@@ -43,7 +43,7 @@ _rabbitmq_erlang_repo:
   state: "present"
   filename: els-erlang
 
-_rabbitmq_erlang_version_spec: "erlang-20.1*"
+_rabbitmq_erlang_version_spec: "erlang-20.1.0-1*"
 
 rabbitmq_distro_packages:
   - openssl
