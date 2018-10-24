@@ -21,12 +21,3 @@
     owner: rabbitmq
     group: rabbitmq
   register: cookie_set
-
-- include_tasks: rabbitmq_stopped.yml
-  when:
-    - cookie_set is changed
-
-- include_tasks: rabbitmq_started.yml
-  when:
-    - cookie_set is changed
-
