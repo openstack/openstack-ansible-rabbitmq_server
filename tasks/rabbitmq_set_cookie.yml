@@ -21,14 +21,3 @@
     owner: rabbitmq
     group: rabbitmq
   register: cookie_set
-
-- include: rabbitmq_stopped.yml
-  static: no
-  when:
-    - cookie_set is changed
-
-- include: rabbitmq_started.yml
-  static: no
-  when:
-    - cookie_set is changed
-
