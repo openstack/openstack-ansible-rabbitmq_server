@@ -40,7 +40,3 @@
     - rabbitmq-upgrade
     - rabbitmq-policy-file
     - rabbitmq_server-config
-
-- include: rabbitmq_started.yml
-  tags:
-    - rabbitmq_server-config
