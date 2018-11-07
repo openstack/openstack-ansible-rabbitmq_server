@@ -21,10 +21,8 @@ _rabbitmq_package_sha256: "ed7b9cdf1870d6a5088833e5e54277dd62dc7fa21be660ad83fa7
 _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
 _rabbitmq_gpg_keys:
-  - key_name: 'rabbitmq-release-signing-key.asc'
-    keyserver: 'https://www.rabbitmq.com'
-  - key_name: 'gpgkey'
-    keyserver: 'https://packagecloud.io/rabbitmq/rabbitmq-server/'
+  - RPM-GPG-KEY-RabbitMQ
+  - RPM-GPG-KEY-PackageCloud
 
 _rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch"
 _rabbitmq_repo:
@@ -32,7 +30,6 @@ _rabbitmq_repo:
   description: "RabbitMQ Server Rolling Repository"
   baseurl: "{{ rabbitmq_repo_url }}"
   state: "present"
-  gpgkey: "https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey"
   filename: RabbitMQ
   # TODO(evrardjp) Move to ssl verify yes
   #sslverify: no
