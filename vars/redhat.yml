@@ -14,39 +14,6 @@
 # limitations under the License.
 
 _rabbitmq_install_method: distro
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/el/7/rabbitmq-server-3.7.5-1.el7.noarch.rpm/download.rpm"
-_rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].rsplit('.', 1)[0] }}"
-_rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[2] }}"
-_rabbitmq_package_sha256: "1a40596279f901e31d1ebc4f75b1360b603745f3bed79d4260f70a81db565f16"
-_rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
-
-_rabbitmq_gpg_keys:
-  - key_name: 'rabbitmq-release-signing-key.asc'
-    keyserver: 'https://www.rabbitmq.com'
-  - key_name: 'gpgkey'
-    keyserver: 'https://packagecloud.io/rabbitmq/rabbitmq-server/'
-
-_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch"
-_rabbitmq_repo:
-  name: rabbitmq_rabbitmq-server
-  description: "RabbitMQ Server Rolling Repository"
-  baseurl: "{{ rabbitmq_repo_url }}"
-  state: "present"
-  gpgkey: "https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey"
-  filename: RabbitMQ
-  # TODO(evrardjp) Move to ssl verify yes
-  #sslverify: no
-  #sslcacert: /etc/pki/tls/certs/ca-bundle.crt
-
-_rabbitmq_erlang_repo_url: "https://dl.bintray.com/rabbitmq/rpm/erlang/20/el/7"
-_rabbitmq_erlang_repo:
-  name: rabbitmq_els-erlang
-  description: "RabbitMQ Erlang Packages from Bintray"
-  baseurl: "{{ rabbitmq_erlang_repo_url }}"
-  state: "present"
-  filename: els-erlang
-
-_rabbitmq_erlang_version_spec: "erlang-20.3*"
 
 rabbitmq_distro_packages:
   - openssl
