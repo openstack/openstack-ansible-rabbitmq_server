@@ -116,7 +116,7 @@
 
 - name: Install RabbitMQ package dependencies
   apt:
-    pkg: "{{ rabbitmq_dependencies | deprecated(rabbitmq_apt_packages, 'rabbitmq_apt_packages', 'rabbitmq_dependencies', 'Ocata') }}"
+    pkg: "{{ rabbitmq_dependencies }}"
     state: "{{ rabbitmq_package_state }}"
     update_cache: yes
     cache_valid_time: "{{ cache_timeout }}"
