@@ -24,10 +24,8 @@ _rabbitmq_package_sha256: "58a1d5242c84cae1752f149eaf2f4d26d2d886eb5812c8eaf4c98
 _rabbitmq_package_path: "/opt/rabbitmq-server.rpm"
 
 _rabbitmq_gpg_keys:
-  - key_name: 'rabbitmq-release-signing-key.asc'
-    keyserver: 'https://www.rabbitmq.com'
-  - key_name: 'erlang_solutions.asc'
-    keyserver: 'https://packages.erlang-solutions.com/ubuntu'
+  - RPM-GPG-KEY-RabbitMQ
+  - RPM-GPG-KEY-Erlang
 
 rabbitmq_distro_packages:
   - rabbitmq-server
