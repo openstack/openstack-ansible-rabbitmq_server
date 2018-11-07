@@ -51,19 +51,19 @@ rabbitmq_release_version: "{{ _rabbitmq_release_version }}"
 rabbitmq_package_sha256: "{{ _rabbitmq_package_sha256 }}"
 rabbitmq_package_path: "{{ _rabbitmq_package_path }}"
 
-rabbitmq_gpg_keys: "{{ _rabbitmq_gpg_keys }}"
+rabbitmq_gpg_keys: "{{ _rabbitmq_gpg_keys | default([]) }}"
 
 # Set the URL for the RabbitMQ repository
-rabbitmq_repo_url: "{{ _rabbitmq_repo_url }}"
+rabbitmq_repo_url: "{{ _rabbitmq_repo_url | default(null) }}"
 
 # Set the repo information for the RabbitMQ repository
-rabbitmq_repo: "{{ _rabbitmq_repo }}"
+rabbitmq_repo: "{{ _rabbitmq_repo | default({}) }}"
 
 # Set the URL for the Erlang repository
-rabbitmq_erlang_repo_url: "{{ _rabbitmq_erlang_repo_url }}"
+rabbitmq_erlang_repo_url: "{{ _rabbitmq_erlang_repo_url | default(null) }}"
 
 # Set the repo information for the Erlang repository
-rabbitmq_erlang_repo: "{{ _rabbitmq_erlang_repo }}"
+rabbitmq_erlang_repo: "{{ _rabbitmq_erlang_repo | default({}) }}"
 
 # Set the elang version used on the deployment
 rabbitmq_erlang_version_spec: "{{ _rabbitmq_erlang_version_spec | default(null) }}"

@@ -13,121 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- block:
-    - name: Add rabbitmq gpg-keys
-      rpm_key:
-        state: present
-        key: "{{ item.keyserver }}/{{ item.key_name }}"
-      register: add_keys
-      until: add_keys is success
-      retries: 5
-      delay: 2
-      with_items: "{{ rabbitmq_gpg_keys }}"
-      tags:
-        - rabbitmq-gpg-keys
-
-  rescue:
-    - name: Add rabbitmq gpg-keys using fallback keyserver
-      rpm_key:
-        state: present
-        key: "{{ item.fallback_keyserver }}/{{ item.key_name }}"
-      register: add_keys_fallback
-      until: add_keys_fallback is success
-      retries: 5
-      delay: 2
-      with_items: "{{ rabbitmq_gpg_keys }}"
-      when:
-        - item.fallback_keyserver is defined
-      tags:
-        - rabbitmq-gpg-keys
-
+- name: Fail if installation method is not 'distro'
+  fail:
+    msg: "The only supported rabbitmq_install_method for RedHat is 'distro'."
   when: rabbitmq_install_method != 'distro'
 
-- name: Install RabbitMQ yum mirror
-  yum_repository:
-    name: "{{ rabbitmq_repo.name }}"
-    file:  "{{ rabbitmq_repo.filename | default(omit) }}"
-    description: "{{ rabbitmq_repo.description | default(omit) }}"
-    baseurl: "{{ rabbitmq_repo.baseurl }}"
-    repo_gpgcheck: "{{ rabbitmq_repo.repo_gpgcheck | default(omit) }}"
-    gpgcheck: "{{ rabbitmq_repo.gpgcheck | default(omit) }}"
-    state: "{{ rabbitmq_repo.state }}"
-    gpgkey: "{{ rabbitmq_repo.gpgkey | default(omit) }}"
-    sslverify: "{{ rabbitmq_repo.sslverify | default(omit) }}"
-    sslcacert: "{{ rabbitmq_repo.sslcacert | default(omit) }}"
-  when:
-    - rabbitmq_install_method == 'external_repo'
-  tags:
-    - rabbitmq-repos
-
-- name: Install erlang yum mirror
-  yum_repository:
-    name: "{{ rabbitmq_erlang_repo.name }}"
-    file:  "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
-    description: "{{ rabbitmq_erlang_repo.description | default(omit) }}"
-    baseurl: "{{ rabbitmq_erlang_repo.baseurl }}"
-    repo_gpgcheck: "{{ rabbitmq_erlang_repo.repo_gpgcheck | default(omit) }}"
-    gpgcheck: "{{ rabbitmq_erlang_repo.gpgcheck | default(omit) }}"
-    state: "{{ rabbitmq_erlang_repo.state }}"
-    gpgkey: "{{ rabbitmq_erlang_repo.gpgkey | default(omit) }}"
-    sslverify: "{{ rabbitmq_erlang_repo.sslverify | default(omit) }}"
-    sslcacert: "{{ rabbitmq_erlang_repo.sslcacert | default(omit) }}"
-  when:
-    - rabbitmq_install_method == 'external_repo'
-  tags:
-    - rabbitmq-repos
-
-- name: Enable and set erlang repo priority
-  command: |
-    yum-config-manager
-      --enable {{ item.name }}
-      --setopt="{{ item.name }}.priority={{ item.priority }}"
-  changed_when: false
-  when:
-    - rabbitmq_install_method != 'distro'
-  with_items:
-    - name: "{{ rabbitmq_repo.name }}"
-      priority: 40
-    - name: "{{ rabbitmq_erlang_repo.name }}"
-      priority: 40
-  tags:
-    - rabbitmq-repos
-
-- name: Install yum versionlock plugin
-  package:
-    name: "yum-plugin-versionlock"
-    state: "{{ rabbitmq_package_state }}"
-  tags:
-    - rabbitmq-yum-packages
-
-- name: Gather a list of the currently locked versions
-  command: yum versionlock list
-  args:
-    warn: no
-  register: yum_versionlock_list
-  tags:
-    - rabbitmq-yum-packages
-
-- name: Lock package versions
-  shell: |
-    yum versionlock delete {{ item.pkg_name }}
-    yum versionlock add {{ item.pkg_spec }}
-  args:
-    warn: no
-  when:
-    - item.pkg_spec not in yum_versionlock_list.stdout
-  with_items:
-    - pkg_name: 'erlang'
-      pkg_spec: "{{ rabbitmq_erlang_version_spec }}"
-    - pkg_name: 'rabbitmq-server'
-      pkg_spec: "rabbitmq-server-{{ rabbitmq_release_version }}*"
-  tags:
-    - rabbitmq-yum-packages
-
-# NOTE(mhayden): With the version locks applied, this step will install
-# the correct version of RabbitMQ along with the correct version of the
-# all-in-one erlang package. Also, the version of dnf that comes with CentOS
-# 7 doesn't have version lock support, so we must use yum here.
 - name: Install RabbitMQ packages
   yum:
     name: "{{ rabbitmq_distro_packages }}"
@@ -149,7 +39,7 @@
   # rabbitmq_install_method == 'distro'. However, the upstream package
   # does not contain a systemd file and as such we need to provide one.
   # This should be reverted once https://github.com/rabbitmq/rabbitmq-server-release/pull/31
-  # is merged and new builds of rabbimq-server are available.
+  # is merged and new builds of rabbitmq-server are available.
   tags:
     - rabbitmq-config
 
