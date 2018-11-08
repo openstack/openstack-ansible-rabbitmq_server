@@ -14,25 +14,24 @@
 # limitations under the License.
 
 _rabbitmq_install_method: file
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/ubuntu/xenial/rabbitmq-server_3.7.5-1_all.deb/download.deb"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/ubuntu/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.7.8-1_all.deb/download.deb"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
-_rabbitmq_package_sha256: "156163a595b5cd648ae80008eb7080392aab1de843b364b1760ec86f7d5beb32"
+_rabbitmq_package_sha256: "11f70dd68e098e4dc32e3eda49ab68c795e599f3ac0b8b858014c79432173928"
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
 _rabbitmq_gpg_keys:
-  - key_name: 'rabbitmq'
-    keyserver: 'hkp://keyserver.ubuntu.com:80'
-    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
-    hash_id: '0x6B73A36E6026DFCA'
+  - key_name: 'packagecloud-rabbitmq'
+    url: 'https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey'
+    hash_id: '0xC2E73424D59097AB'
   - key_name: 'erlang_solutions'
     keyserver: 'hkp://keyserver.ubuntu.com:80'
     fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
     hash_id: '0xd208507ca14f4fca'
 
-_rabbitmq_repo_url: "http://www.rabbitmq.com/debian"
+_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_distribution | lower }}"
 _rabbitmq_repo:
-  repo: "deb {{ rabbitmq_repo_url }} testing main"
+  repo: "deb {{ rabbitmq_repo_url }} {{ ansible_distribution_release | lower }} main"
   state: "present"
   filename: "RabbitMQ"
 
