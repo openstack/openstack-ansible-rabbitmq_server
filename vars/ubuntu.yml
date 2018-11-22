@@ -44,7 +44,7 @@ _rabbitmq_erlang_repo:
 _rabbitmq_erlang_version_spec: "1:20.3*"
 
 rabbitmq_dependencies:
-  - erlang-base-hipe
+  - "{{ (ansible_architecture == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
   - erlang-nox
   - socat
 
