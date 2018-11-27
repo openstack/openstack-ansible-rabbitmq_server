@@ -73,7 +73,7 @@
 
 - include: rabbitmq_restart.yml
   static: no
-  when: rabbit_config is changed or rabbitmq_plugin is changed or cookie_set is changed
+  when: rabbit_config is changed or rabbitmq_plugin is changed or cookie_set is changed or rabbitmq_upgrade | bool
 
 - name: Apply rabbitmq policies
   rabbitmq_policy:
