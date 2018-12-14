@@ -51,6 +51,15 @@ rabbitmq_release_version: "{{ _rabbitmq_release_version }}"
 rabbitmq_package_sha256: "{{ _rabbitmq_package_sha256 }}"
 rabbitmq_package_path: "{{ _rabbitmq_package_path }}"
 
+# Set the gpg keys needed to be imported
+# This should be a list of dicts, with each dict
+# giving a set of arguments to the applicable
+# package module. The following is an example for
+# systems using the apt package manager.
+# rabbitmq_gpg_keys:
+#   - id: '0xC2E73424D59097AB'
+#     keyserver: 'hkp://keyserver.ubuntu.com:80'
+#     validate_certs: no
 rabbitmq_gpg_keys: "{{ _rabbitmq_gpg_keys | default([]) }}"
 
 # Set the URL for the RabbitMQ repository
