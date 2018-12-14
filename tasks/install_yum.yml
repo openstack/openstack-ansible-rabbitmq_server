@@ -17,17 +17,22 @@
   when:
     - rabbitmq_install_method != 'distro'
   block:
-    - name: Copy GPG keys
+    - name: If a keyfile is provided, copy the gpg keyfile to the key location
       copy:
-        src: "{{ item }}"
-        dest: "/etc/pki/rpm-gpg/{{ item }}"
+        src: "gpg/{{ item.key | basename }}"
+        dest: "{{ item.key }}"
+        mode: '0644'
       with_items: "{{ rabbitmq_gpg_keys }}"
 
-    - name: Add GPG keys
-      rpm_key:
-        state: present
-        key: "/etc/pki/rpm-gpg/{{ item }}"
+    - name: Install gpg keys
+      rpm_key: "{{ key }}"
       with_items: "{{ rabbitmq_gpg_keys }}"
+      loop_control:
+        loop_var: key
+      register: _add_yum_keys
+      until: _add_yum_keys is success
+      retries: 5
+      delay: 2
 
 - name: Install RabbitMQ yum mirror
   yum_repository:

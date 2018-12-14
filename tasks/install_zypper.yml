@@ -22,17 +22,22 @@
   when:
     - rabbitmq_install_method != 'distro'
   block:
-    - name: Copy GPG keys
+    - name: If a keyfile is provided, copy the gpg keyfile to the key location
       copy:
-        src: "{{ item }}"
-        dest: "/etc/pki/rpm-gpg/{{ item }}"
+        src: "gpg/{{ item.key | basename }}"
+        dest: "{{ item.key }}"
+        mode: '0644'
       with_items: "{{ rabbitmq_gpg_keys }}"
 
-    - name: Add GPG keys
-      rpm_key:
-        state: present
-        key: "/etc/pki/rpm-gpg/{{ item }}"
+    - name: Install gpg keys
+      rpm_key: "{{ key }}"
       with_items: "{{ rabbitmq_gpg_keys }}"
+      loop_control:
+        loop_var: key
+      register: _add_zypper_keys
+      until: _add_zypper_keys is success
+      retries: 5
+      delay: 2
 
 # NOTE(hwoarang) For the upgrade job we fetch the old version from upstream and the new one from OBS. zypper gets upset if you
 # get the updaded package during an update so you need to pass --force to actually force such a change. However, --force forces a

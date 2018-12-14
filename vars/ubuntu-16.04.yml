@@ -21,14 +21,10 @@ _rabbitmq_package_sha256: "156163a595b5cd648ae80008eb7080392aab1de843b364b1760ec
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
 _rabbitmq_gpg_keys:
-  - key_name: 'rabbitmq'
-    keyserver: 'hkp://keyserver.ubuntu.com:80'
-    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
-    hash_id: '0x6B73A36E6026DFCA'
-  - key_name: 'erlang_solutions'
-    keyserver: 'hkp://keyserver.ubuntu.com:80'
-    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
-    hash_id: '0xd208507ca14f4fca'
+  - id: 4D206F89
+    file: /etc/ssl/packagecloud-key
+  - id: A14F4FCA
+    file: /etc/ssl/erlang-key
 
 _rabbitmq_repo_url: "http://www.rabbitmq.com/debian"
 _rabbitmq_repo:
