@@ -27,38 +27,26 @@
         version: "{{ rabbitmq_erlang_version_spec }}"
         priority: 1000
 
-- block:
-    - name: Add rabbitmq apt-keys
-      apt_key:
-        id: "{{ item.hash_id }}"
-        keyserver: "{{ item.keyserver | default(omit) }}"
-        data: "{{ item.data | default(omit) }}"
-        url: "{{ item.url | default(omit) }}"
-        state: "present"
-      register: add_keys
-      until: add_keys is success
-      retries: 5
-      delay: 2
-      with_items: "{{ rabbitmq_gpg_keys }}"
-      tags:
-        - rabbitmq-apt-keys
+- name: If a keyfile is provided, copy the gpg keyfile to the key location
+  copy:
+    src: "gpg/{{ item.id }}"
+    dest: "{{ item.file }}"
+    mode: '0644'
+  with_items: "{{ rabbitmq_gpg_keys | selectattr('file','defined') | list }}"
+  tags:
+    - rabbitmq-apt-keys
 
-  rescue:
-    - name: Add rabbitmq apt-keys using fallback keyserver
-      apt_key:
-        id: "{{ item.hash_id }}"
-        keyserver: "{{ item.fallback_keyserver | default(omit) }}"
-        url: "{{ item.fallback_url | default(omit) }}"
-        state: "present"
-      register: add_keys_fallback
-      until: add_keys_fallback is success
-      retries: 5
-      delay: 2
-      with_items: "{{ rabbitmq_gpg_keys }}"
-      when:
-        - (item.fallback_keyserver is defined or item.fallback_url is defined)
-      tags:
-        - rabbitmq-apt-keys
+- name: Install gpg keys
+  apt_key: "{{ key }}"
+  with_items: "{{ rabbitmq_gpg_keys }}"
+  loop_control:
+    loop_var: key
+  register: _add_apt_keys
+  until: _add_apt_keys is success
+  retries: 5
+  delay: 2
+  tags:
+    - rabbitmq-apt-keys
 
 # When updating the cache in the apt_repository
 # task, and the update fails, a retry does not
