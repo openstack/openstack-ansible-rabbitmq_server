@@ -16,7 +16,6 @@
 - name: Run the apt package pinning role
   include_role:
     name: apt_package_pinning
-    private: true
   vars:
     apt_package_pinning_file_name: "rabbitmq.pref"
     apt_package_pinning_priority: 999
