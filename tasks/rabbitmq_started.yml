@@ -15,7 +15,7 @@
 
 - name: "Ensure RabbitMQ node [0] is started"
   service:
-    name: rabbitmq-server
+    name: "{{ rabbitmq_service_name }}"
     state: started
     enabled: yes
   when:
@@ -27,7 +27,7 @@
 
 - name: "Ensure RabbitMQ nodes [1:] are started"
   service:
-    name: rabbitmq-server
+    name: "{{ rabbitmq_service_name }}"
     state: started
     enabled: yes
   when:

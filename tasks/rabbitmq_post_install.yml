@@ -23,6 +23,16 @@
   tags:
     - rabbitmq-config
 
+- name: Create rabbitmq config directory
+  file:
+    path: "/etc/rabbitmq"
+    state: directory
+    group: "rabbitmq"
+    owner: "rabbitmq"
+    mode: 0755
+  tags:
+    - rabbitmq-config
+
 - name: Create rabbitmq config
   register: rabbit_config
   template:
