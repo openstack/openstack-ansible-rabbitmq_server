@@ -153,5 +153,5 @@ rabbitmq_disable_non_tls_listeners: False
 #
 rabbitmq_policies:
   - name: "HA"
-    pattern: '^(?!amq\.).*'
+    pattern: '^(?!(amq\.)|(.*_fanout_)|(reply_)).*'
     tags: "ha-mode=all"
