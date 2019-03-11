@@ -115,6 +115,9 @@ rabbitmq_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ ansib
 rabbitmq_async_threads: 128
 rabbitmq_process_limit: 1048576
 
+# Limit memory consumption of the erlang VM
+rabbitmq_memory_high_watermark: 0.2
+
 # RabbitMQ collect statistics interval
 rabbitmq_collect_statistics_interval: 5000
 
