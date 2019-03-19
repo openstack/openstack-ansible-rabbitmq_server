@@ -154,7 +154,9 @@ rabbitmq_disable_non_tls_listeners: False
 #     tags: "ha-sync-mode=automatic"
 #     priority: 0
 #
-rabbitmq_policies:
+rabbitmq_policies: []
+rabbitmq_apply_openstack_policies: False
+rabbitmq_openstack_policies:
   - name: "HA"
     pattern: '^(?!(amq\.)|(.*_fanout_)|(reply_)).*'
     tags: "ha-mode=all"

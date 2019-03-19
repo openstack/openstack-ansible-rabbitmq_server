@@ -92,7 +92,7 @@
     priority: "{{ item.priority | default(0) }}"
     tags: "{{ item.tags }}"
   register: rabbitmq_policy
-  with_items: "{{ rabbitmq_policies }}"
+  loop: "{{ (rabbitmq_apply_openstack_policies | bool) | ternary(rabbitmq_openstack_policies + rabbitmq_policies, rabbitmq_policies) }}"
   tags:
     - rabbitmq-config
     - rabbitmq-cluster
