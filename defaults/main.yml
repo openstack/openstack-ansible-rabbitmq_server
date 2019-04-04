@@ -130,6 +130,7 @@ rabbitmq_hipe_compile: False
 # Disable non-TLS listeners
 rabbitmq_disable_non_tls_listeners: False
 
+
 # RabbitMQ policies
 # Used to tune performance characteristics of OpenStack messaging
 #
@@ -166,3 +167,13 @@ rabbitmq_port_bindings:
     "0.0.0.0": 5671
   tcp_listeners:
     "0.0.0.0": 5672
+
+# Mnesia configuration
+# The Mnesia dump_log_write_threshold option controls
+# how often the dumping occurs
+# Increase this value can increase the performances,
+# reducing the IO.
+# Increase it in case of:
+# Mnesia is overloaded: {dump_log,write_threshold}.
+# The default value is 100
+mnesia_dump_log_write_threshold: 300

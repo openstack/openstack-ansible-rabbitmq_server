@@ -40,5 +40,6 @@
   { rabbitmq_management, [
       { rates_mode, {{ rabbitmq_management_rates_mode }} }
     ]
-  }
+  },
+  {mnesia, [{dump_log_write_threshold, {{ mnesia_dump_log_write_threshold }} }]}
 ].
