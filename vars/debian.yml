@@ -14,7 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: file
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/ubuntu/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.7.8-1_all.deb/download.deb"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.7.8-1_all.deb/download.deb"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
 _rabbitmq_package_sha256: "11f70dd68e098e4dc32e3eda49ab68c795e599f3ac0b8b858014c79432173928"
