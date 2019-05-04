@@ -92,8 +92,8 @@
   apt:
     update_cache: yes
   when:
-    - (add_rabbitmq_repos is mapping and add_rabbitmq_repos | changed) or
-      (add_erlang_repos is mapping and add_erlang_repos | changed)
+    - (add_rabbitmq_repos is mapping and add_rabbitmq_repos is changed) or
+      (add_erlang_repos is mapping and add_erlang_repos is changed)
   register: update_apt_cache
   until: update_apt_cache is success
   retries: 5
