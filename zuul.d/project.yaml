@@ -15,7 +15,11 @@
 
 - project:
     templates:
+      # Clustering testing
       - openstack-ansible-role-jobs
+      # Integrated testing
+      - openstack-ansible-deploy-aio_distro_metal-jobs
+      - openstack-ansible-deploy-aio_metal-jobs
       - check-requirements
       - publish-openstack-docs-pti
       - release-notes-jobs-python3
