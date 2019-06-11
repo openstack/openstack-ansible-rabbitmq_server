@@ -13,10 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Fail if installation method is not 'distro'
+- name: Fail if installation method is not 'external_repo'
   fail:
-    msg: "The only supported rabbitmq_install_method for RedHat is 'distro'."
-  when: rabbitmq_install_method != 'distro'
+    msg: "The only supported rabbitmq_install_method for RedHat is 'external_repo'."
+  when: rabbitmq_install_method != 'external_repo'
+
+- name: Configure repositories
+  yum_repository:
+    name: "{{ item.name }}"
+    file: "{{ item.filename }}"
+    description: "{{ item.description }}"
+    baseurl: "{{ item.baseurl }}"
+    gpgcheck: "{{ item.gpgcheck | default('no') }}"
+  with_items:
+    - "{{ rabbitmq_erlang_repo }}"
+    - "{{ rabbitmq_repo }}"
+  tags:
+    - rabbitmq-repos
 
 - name: Install RabbitMQ packages
   yum:
