@@ -21,10 +21,8 @@ _rabbitmq_package_sha256: "11f70dd68e098e4dc32e3eda49ab68c795e599f3ac0b8b858014c
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
 _rabbitmq_gpg_keys:
-  - id: 4D206F89
-    file: /etc/ssl/packagecloud-key
-  - id: A14F4FCA
-    file: /etc/ssl/erlang-key
+  - file: gpg/4D206F89
+  - file: gpg/A14F4FCA
 
 _rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_distribution | lower }}"
 _rabbitmq_repo:
