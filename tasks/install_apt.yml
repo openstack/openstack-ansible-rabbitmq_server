@@ -26,24 +26,10 @@
         version: "{{ rabbitmq_erlang_version_spec }}"
         priority: 1000
 
-- name: If a keyfile is provided, copy the gpg keyfile to the key location
-  copy:
-    src: "gpg/{{ item.id }}"
-    dest: "{{ item.file }}"
-    mode: '0644'
-  with_items: "{{ rabbitmq_gpg_keys | selectattr('file','defined') | list }}"
-  tags:
-    - rabbitmq-apt-keys
-
-- name: Install gpg keys
-  apt_key: "{{ key }}"
-  with_items: "{{ rabbitmq_gpg_keys }}"
-  loop_control:
-    loop_var: key
-  register: _add_apt_keys
-  until: _add_apt_keys is success
-  retries: 5
-  delay: 2
+- name: Install GPG keys
+  apt_key:
+    data: "{{ lookup('file', item.file) }}"
+  with_items: "{{ rabbitmq_gpg_keys | selectattr('file', 'defined') | list }}"
   tags:
     - rabbitmq-apt-keys
 
