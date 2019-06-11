@@ -13,48 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Fail if installation method is not 'distro'
+- name: Fail if installation method is not 'external_repo'
   fail:
-    msg: "The only supported rabbitmq_install_method for openSUSE is 'distro'."
-  when: rabbitmq_install_method != 'distro'
+    msg: "The only supported rabbitmq_install_method for openSUSE is 'external_repo'."
+  when: rabbitmq_install_method != 'external_repo'
 
-- block:
-  - name: Install the RabbitMQ package
-    zypper:
-      name: "{{ rabbitmq_distro_packages }}"
-      state: "{{ rabbitmq_package_state }}"
-    register: install_rabbitmq
-  rescue:
-    - name: Install the RabbitMQ package (force)
-      package:
-        name: "{{ rabbitmq_distro_packages }}"
-        state: "{{ rabbitmq_package_state }}"
-        force: yes
-      register: install_rabbitmq
+- name: Configure repositories
+  zypper_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    repo: "{{ item.baseurl }}"
+    disable_gpg_check: "{{ item.gpgcheck | default('yes') }}"
+  with_items:
+    - "{{ rabbitmq_erlang_repo }}"
+    - "{{ rabbitmq_repo }}"
+  tags:
+    - rabbitmq-repos
+
+- name: Install RabbitMQ packages
+  zypper:
+    name: "{{ rabbitmq_distro_packages }}"
+    state: "{{ rabbitmq_package_state }}"
+  register: install_rabbitmq
   tags:
     - rabbitmq-package-rpm
     - rabbitmq-zypper-packages
-
-# NOTE(hwoarang) on openSUSE, rabbitmq-server depends on epmd.service which
-# depends on epmd.socket which runs on localhost. It is just easier to let
-# the rabbitmq-server launch epmd directly since we are inside a container.
-- name: Add rabbitmq-server systemd service (SUSE)
-  template:
-    src: "rabbitmq-server.service.j2"
-    dest: "/etc/systemd/system/rabbitmq-server.service"
-  register: rabbitmq_server_service_added
-  # NOTE(hwoarang) Normally, this task should only be executed when
-  # rabbitmq_install_method == 'distro'. However, the upstream package
-  # does not contain a systemd file and as such we need to provide one.
-  # This should be reverted once https://github.com/rabbitmq/rabbitmq-server-release/pull/31
-  # is merged and new builds of rabbimq-server are available.
-  tags:
-    - rabbitmq-config
-
-- name: Reload the systemd daemon
-  systemd:
-    daemon_reload: yes
-  when:
-    - rabbitmq_server_service_added is changed
-  tags:
-    - rabbitmq-config
