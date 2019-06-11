@@ -46,17 +46,6 @@
     - rabbitmq-zypper-packages
     - skip_ansible_lint
 
-- name: Get version of installed RabbitMQ package (portage)
-  shell: "equery l net-misc/rabbitmq-server --format '$version' | tail -n 1"
-  failed_when: false
-  register: installed_rabbitmq_portage
-  when:
-    - not rabbitmq_upgrade | bool
-    - ansible_pkg_mgr == 'portage'
-  tags:
-    - rabbitmq-package-portage
-    - rabbitmq-portage-packages
-
 - name: Register a fact for the installed RabbitMQ version
   set_fact:
     installed_rabbitmq: "{{ item }}"
@@ -66,7 +55,6 @@
   with_items:
     - "{{ installed_rabbitmq_deb }}"
     - "{{ installed_rabbitmq_rpm }}"
-    - "{{ installed_rabbitmq_portage }}"
 
 - name: Compare installed version of RabbitMQ with new version variable
   fail:
