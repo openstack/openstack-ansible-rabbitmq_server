@@ -18,5 +18,6 @@
 
 - name: Wait for rabbitmq to be started
   wait_for:
-    host: 0.0.0.0
-    port: 5672
+    host: "{{ item.key }}"
+    port: "{{ item.value }}"
+  loop: "{{ query('dict', rabbitmq_port_bindings.tcp_listeners) }}"
