@@ -38,8 +38,12 @@
     ]
   },
   { rabbitmq_management, [
-      { rates_mode, {{ rabbitmq_management_rates_mode }} }
+      { rates_mode, {{ rabbitmq_management_rates_mode }} },
+      { listener, [{ip, "{{ rabbitmq_management_bind_address }}" }]}
     ]
   },
+  {kernel, [
+     {inet_dist_use_interface, { {{ rabbitmq_management_bind_address|replace('.',',') }} } }
+  ]},
   {mnesia, [{dump_log_write_threshold, {{ mnesia_dump_log_write_threshold }} }]}
 ].
