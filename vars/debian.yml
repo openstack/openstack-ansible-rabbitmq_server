@@ -14,10 +14,10 @@
 # limitations under the License.
 
 _rabbitmq_install_method: file
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.7.8-1_all.deb/download.deb"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.7.19-1_all.deb/download.deb"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
-_rabbitmq_package_sha256: "11f70dd68e098e4dc32e3eda49ab68c795e599f3ac0b8b858014c79432173928"
+_rabbitmq_package_sha256: "c209540e797e2e1ebaccbb6173c89571990ffb3092e20f9d30fbb323acef4b5d"
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
 _rabbitmq_gpg_keys:
@@ -36,7 +36,7 @@ _rabbitmq_erlang_repo:
   state: "present"
   filename: els_erlang
 
-_rabbitmq_erlang_version_spec: "1:20.3*"
+_rabbitmq_erlang_version_spec: "1:22.0*"
 
 rabbitmq_dependencies:
   - "{{ (ansible_architecture == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
