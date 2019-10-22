@@ -15,6 +15,9 @@
 
 _rabbitmq_install_method: distro
 
+_rabbitmq_package_version: 3.7.19
+_rabbitmq_release_version: "{{ rabbitmq_package_version }}"
+
 rabbitmq_distro_packages:
-  - rabbitmq-server
+  - "rabbitmq-server={{ rabbitmq_package_version }}"
   - rabbitmq-server-plugins
