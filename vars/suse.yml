@@ -13,8 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-_rabbitmq_install_method: distro
+_rabbitmq_install_method: external_repo
+
+_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/opensuse/{{ ansible_distribution_version }}/$basearch"
+_rabbitmq_repo:
+  name: rabbitmq_rabbitmq-server
+  description: "RabbitMQ Server Rolling Repository"
+  baseurl: "{{ rabbitmq_repo_url }}"
+
+_rabbitmq_erlang_repo_url: "https://download.opensuse.org/repositories/devel:languages:erlang:Factory/openSUSE_Leap_{{ ansible_distribution_version }}/"
+_rabbitmq_erlang_repo:
+  name: devel_languages_erlang_Factory
+  description: "erlang devel project for Factory"
+  baseurl: "{{ rabbitmq_erlang_repo_url }}"
+
+_rabbitmq_package_version: 3.8.0-1
+_rabbitmq_release_version: "{{ rabbitmq_package_version }}"
 
 rabbitmq_distro_packages:
-  - rabbitmq-server
-  - rabbitmq-server-plugins
+  - erlang-22.1.5-lp151.1.1.x86_64
+  - "rabbitmq-server-{{ _rabbitmq_package_version }}.suse.noarch"

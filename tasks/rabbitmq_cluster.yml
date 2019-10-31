@@ -26,8 +26,7 @@
 # Our solution to get the cluster name out cleanly is inspired by
 # https://unix.stackexchange.com/a/13472
 - name: Get rabbitmq cluster name
-  shell: |
-    rabbitmqctl -q cluster_status | paste -sd '' - | sed 's/ //g' | grep -oP '(?<={cluster_name,<<").*(?=">>})'
+  shell: rabbitmqctl -q cluster_status | sed 's/ //g' | grep -oP '(?<=Clustername:).*'
   args:
     executable: /bin/bash
   changed_when: false
