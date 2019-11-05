@@ -74,7 +74,7 @@
   when:
     - not rabbitmq_upgrade | bool
     - installed_rabbitmq.rc == 0
-    - not installed_rabbitmq.stdout | search(rabbitmq_package_version)
+    - not installed_rabbitmq.stdout is search(rabbitmq_package_version)
     - rabbitmq_install_method != 'distro'
   tags:
     - rabbitmq-package-deb

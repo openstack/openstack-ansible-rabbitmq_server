@@ -88,4 +88,4 @@
     # Expected policy: "/       HA      all     ^(?!amq\\.).*   {"ha-mode":"all"}       0"
     - name: Validate that the expected policies are present
       assert:
-        that: rabbitmq_policies_output.stdout | search("amq")
+        that: rabbitmq_policies_output.stdout is search("amq")
