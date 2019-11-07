@@ -39,7 +39,7 @@
 # does not update the cache, resulting in a changed
 # repo config, but no updated cache. To work around
 # this bug we implement the change of repo config
-# and the cache update as two seperate tasks.
+# and the cache update as two separate tasks.
 - name: Add rabbitmq repo
   apt_repository:
     repo: "{{ rabbitmq_repo.repo }}"
@@ -58,7 +58,7 @@
 # does not update the cache, resulting in a changed
 # repo config, but no updated cache. To work around
 # this bug we implement the change of repo config
-# and the cache update as two seperate tasks.
+# and the cache update as two separate tasks.
 - name: Add erlang repo
   apt_repository:
     repo: "{{ rabbitmq_erlang_repo.repo }}"
