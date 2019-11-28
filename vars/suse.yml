@@ -21,13 +21,13 @@ _rabbitmq_repo:
   description: "RabbitMQ Server Rolling Repository"
   baseurl: "{{ rabbitmq_repo_url }}"
 
-_rabbitmq_erlang_repo_url: "https://download.opensuse.org/repositories/devel:languages:erlang:Factory/openSUSE_Leap_{{ ansible_distribution_version }}/"
+_rabbitmq_erlang_repo_url: "https://download.opensuse.org/repositories/network:/messaging:/amqp/openSUSE_Leap_{{ ansible_distribution_version }}/"
 _rabbitmq_erlang_repo:
-  name: devel_languages_erlang_Factory
-  description: "erlang devel project for Factory"
+  name: network_messaging_amqp
+  description: "AMQP Messaging Broker repository"
   baseurl: "{{ rabbitmq_erlang_repo_url }}"
 
-_rabbitmq_package_version: 3.8.0-1
+_rabbitmq_package_version: 3.8.1-1
 _rabbitmq_release_version: "{{ rabbitmq_package_version }}"
 
 rabbitmq_distro_packages:
