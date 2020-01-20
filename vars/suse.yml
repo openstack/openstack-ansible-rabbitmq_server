@@ -27,7 +27,7 @@ _rabbitmq_erlang_repo:
   description: "AMQP Messaging Broker repository"
   baseurl: "{{ rabbitmq_erlang_repo_url }}"
 
-_rabbitmq_package_version: 3.8.1-1
+_rabbitmq_package_version: 3.8.2-1
 _rabbitmq_release_version: "{{ rabbitmq_package_version }}"
 
 rabbitmq_distro_packages:
