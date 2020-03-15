@@ -18,6 +18,7 @@
 # 'skip_ansible_lint' tag
 - name: Get version of installed RabbitMQ package (deb)
   shell: "dpkg -l | grep rabbitmq-server"
+  changed_when: false
   failed_when: false
   register: installed_rabbitmq_deb
   when:
@@ -35,6 +36,7 @@
   shell: "rpm -qa | grep rabbitmq-server"
   args:
     warn: no
+  changed_when: false
   failed_when: false
   register: installed_rabbitmq_rpm
   when:
@@ -50,8 +52,7 @@
   set_fact:
     installed_rabbitmq: "{{ item }}"
   when:
-    - not item is skipped
-    - item is changed
+    - item is not skipped
   with_items:
     - "{{ installed_rabbitmq_deb }}"
     - "{{ installed_rabbitmq_rpm }}"
