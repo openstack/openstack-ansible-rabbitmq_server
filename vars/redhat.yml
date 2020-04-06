@@ -15,7 +15,7 @@
 
 _rabbitmq_install_method: external_repo
 
-_rabbitmq_package_version: 3.8.2-1
+_rabbitmq_package_version: 3.8.3-1
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
 
 
@@ -34,5 +34,5 @@ _rabbitmq_erlang_repo:
   filename: els-erlang
 
 rabbitmq_distro_packages:
-  - erlang-22.2.2-1.el7.x86_64
+  - erlang-22.3-1.el7.x86_64
   - "rabbitmq-server-{{ rabbitmq_package_version }}.el7.noarch"

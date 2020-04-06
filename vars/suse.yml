@@ -27,6 +27,10 @@ _rabbitmq_erlang_repo:
   description: "AMQP Messaging Broker repository"
   baseurl: "{{ rabbitmq_erlang_repo_url }}"
 
+# NOTE(noonedeadpunk): We didn't bump it's version as in 3.8.3+ we do have
+#                      `epmd` requirement which is called erlang-epmd is suse repo
+# https://packagecloud.io/rabbitmq/rabbitmq-server/packages/opensuse/15.1/rabbitmq-server-3.8.3-1.suse.noarch.rpm
+# https://download.opensuse.org/repositories/network:/messaging:/amqp/openSUSE_Leap_15.1/x86_64/
 _rabbitmq_package_version: 3.8.2-1
 _rabbitmq_release_version: "{{ rabbitmq_package_version }}"
 
