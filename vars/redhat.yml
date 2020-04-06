@@ -14,10 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-
 _rabbitmq_package_version: 3.8.3-1
-_rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
-
 
 _rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/{{ ansible_distribution_major_version }}/$basearch"
 _rabbitmq_repo:

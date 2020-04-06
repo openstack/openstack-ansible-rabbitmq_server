@@ -45,11 +45,10 @@ rabbitmq_upgrade: false
 #  upgrade/version state can be ignored by setting `rabbitmq_ignore_version_state=true`
 rabbitmq_ignore_version_state: false
 
-rabbitmq_package_url: "{{ _rabbitmq_package_url }}"
+rabbitmq_package_url: ""
 rabbitmq_package_version: "{{ _rabbitmq_package_version }}"
-rabbitmq_release_version: "{{ _rabbitmq_release_version }}"
-rabbitmq_package_sha256: "{{ _rabbitmq_package_sha256 }}"
-rabbitmq_package_path: "{{ _rabbitmq_package_path }}"
+rabbitmq_package_sha256: ""
+rabbitmq_package_path: ""
 
 # Set the gpg keys needed to be imported
 # This should be a list of dicts, with each dict
