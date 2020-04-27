@@ -25,6 +25,9 @@
       - package: "erlang*"
         version: "{{ rabbitmq_erlang_version_spec }}"
         priority: 1000
+      - package: "rabbitmq-server"
+        version: "{{ rabbitmq_package_version }}"
+        priority: 1000
 
 - name: Install GPG keys
   apt_key:

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-_rabbitmq_install_method: file
+_rabbitmq_install_method: external_repo
 _rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.8.0-1_all.deb/download.deb"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
@@ -38,12 +38,17 @@ _rabbitmq_erlang_repo:
 
 _rabbitmq_erlang_version_spec: "1:22.1*"
 
-rabbitmq_dependencies:
+_rabbitmq_distro_dependencies:
   - "{{ (ansible_architecture == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
   - erlang-diameter
   - erlang-eldap
   - erlang-nox
   - socat
+
+_rabbitmq_external_dependencies:
+  - erlang
+
+rabbitmq_dependencies: "{{ (rabbitmq_install_method == 'external_repo') | ternary(_rabbitmq_external_dependencies, _rabbitmq_distro_dependencies) }}"
 
 rabbitmq_distro_packages:
   - rabbitmq-server
