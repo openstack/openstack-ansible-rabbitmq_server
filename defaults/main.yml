@@ -89,6 +89,11 @@ rabbitmq_cluster_partition_handling: pause_minority
 rabbitmq_ulimit: 65536
 
 # Configure rabbitmq plugins
+# This should be a comma-separated list of plugin names.
+# Any plugin not listed will be disabled automatically.
+# rabbitmq_plugins:
+#   - name: rabbitmq_management,rabbitmq_prometheus
+#     state: enabled
 rabbitmq_plugins:
   - name: rabbitmq_management
     state: enabled
