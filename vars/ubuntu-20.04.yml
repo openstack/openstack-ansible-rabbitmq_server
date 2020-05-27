@@ -16,8 +16,8 @@
 # NOTE(jrosser) this is set to distro as there is no rabbitmq package currently for focal at packagecloud
 _rabbitmq_install_method: distro
 _rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.8.2-1_all.deb/download.deb"
-_rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
-_rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
+_rabbitmq_package_version: "{{ _rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
+_rabbitmq_release_version: "{{ _rabbitmq_package_version.split('-')[0] }}"
 _rabbitmq_package_sha256: "aebdb80be49fe3adbf99c859006d8a503f531be79a0cd0712a30341e4c72054f"
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
