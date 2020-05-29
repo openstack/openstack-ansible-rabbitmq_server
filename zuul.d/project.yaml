@@ -23,3 +23,11 @@
       - check-requirements
       - publish-openstack-docs-pti
       - release-notes-jobs-python3
+    check:
+      jobs:
+        - openstack-ansible-functional-ubuntu-bionic:
+            voting: false
+    gate:
+      jobs:
+        - openstack-ansible-functional-ubuntu-bionic:
+            voting: false
