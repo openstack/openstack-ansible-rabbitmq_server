@@ -6,8 +6,8 @@ Conflicts=epmd.service
 
 [Service]
 Type=notify
-User=rabbitmq
-Group=rabbitmq
+User={{ rabbit_system_user_name }}
+Group={{ rabbit_system_group_name }}
 LimitNOFILE=65535
 NotifyAccess=all
 WorkingDirectory=/var/lib/rabbitmq
