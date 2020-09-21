@@ -64,7 +64,18 @@
     # don't trigger ANSIBLE0016
     - skip_ansible_lint
 
-- name: Configure rabbitmq plugins
+- name: Configure rabbitmq plugins (ansible 2.10.x with rabbitmq collection)
+  rabbitmq_plugin:
+    names: "{{ item.name }}"
+    state: "{{ item.state }}"
+    broker_state: offline
+  with_items: "{{ rabbitmq_plugins }}"
+  register: rabbitmq_plugin
+  tags:
+    - rabbitmq-config
+  when: ansible_version.full is version('2.10', '>')
+
+- name: Configure rabbitmq plugins (ansible 2.9.x)
   rabbitmq_plugin:
     names: "{{ item.name }}"
     state: "{{ item.state }}"
@@ -72,6 +83,7 @@
   register: rabbitmq_plugin
   tags:
     - rabbitmq-config
+  when: ansible_version.full is version('2.10', '<')
 
 - include_tasks: rabbitmq_restart.yml
   when: rabbit_config is changed or rabbitmq_plugin is changed or cookie_set is changed or rabbitmq_upgrade | bool
