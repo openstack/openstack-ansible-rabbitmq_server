@@ -32,7 +32,7 @@ galaxy_info:
     - name: opensuse
       versions:
         - 15
-  categories:
+  galaxy_tags:
     - cloud
     - rabbitmq
     - development
