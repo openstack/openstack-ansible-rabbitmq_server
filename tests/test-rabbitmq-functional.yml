@@ -73,8 +73,10 @@
     - name: Ensure SSL cert/key checksums are identical across cluster
       assert:
         that:
-          - hostvars['container1']['rabbitmq_ssl_cert_checksum'] == hostvars['container2']['rabbitmq_ssl_cert_checksum'] == hostvars['container3']['rabbitmq_ssl_cert_checksum']
-          - hostvars['container1']['rabbitmq_ssl_key_checksum'] == hostvars['container2']['rabbitmq_ssl_key_checksum'] == hostvars['container3']['rabbitmq_ssl_key_checksum']
+          - hostvars['container1']['rabbitmq_ssl_cert_checksum'] == hostvars['container2']['rabbitmq_ssl_cert_checksum']
+          - hostvars['container2']['rabbitmq_ssl_cert_checksum'] == hostvars['container3']['rabbitmq_ssl_cert_checksum']
+          - hostvars['container1']['rabbitmq_ssl_key_checksum'] == hostvars['container2']['rabbitmq_ssl_key_checksum']
+          - hostvars['container2']['rabbitmq_ssl_key_checksum'] == hostvars['container3']['rabbitmq_ssl_key_checksum']
 
     - name: Get the policy list
       command: rabbitmqctl -q list_policies
