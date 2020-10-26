@@ -14,7 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: "3.8.4-1"
+_rabbitmq_package_version: "3.8.9-1"
 
 _rabbitmq_gpg_keys:
   - file: gpg/4D206F89
