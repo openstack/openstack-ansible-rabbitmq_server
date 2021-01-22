@@ -22,4 +22,4 @@
       - openstack-ansible-deploy-aio_metal-jobs
       - check-requirements
       - publish-openstack-docs-pti
-      - release-notes-jobs-python3
+      - build-release-notes-jobs-python3
