@@ -23,7 +23,7 @@
   register: installed_rabbitmq_deb
   when:
     - not rabbitmq_upgrade | bool
-    - ansible_pkg_mgr == 'apt'
+    - ansible_facts['pkg_mgr'] == 'apt'
   tags:
     - rabbitmq-package-deb
     - rabbitmq-apt-packages
@@ -41,7 +41,7 @@
   register: installed_rabbitmq_rpm
   when:
     - not rabbitmq_upgrade | bool
-    - ansible_pkg_mgr in ['yum', 'dnf', 'zypper']
+    - ansible_facts['pkg_mgr'] in ['yum', 'dnf', 'zypper']
   tags:
     - rabbitmq-package-rpm
     - rabbitmq-yum-packages

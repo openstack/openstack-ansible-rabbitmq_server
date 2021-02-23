@@ -34,11 +34,11 @@ rabbit_system_group_name: rabbitmq
 rabbitmq_hosts_entries: >-
   {{ groups[rabbitmq_host_group] | map('extract', hostvars) | list |
      json_query(
-       "[].{address: rabbitmq_node_address || ansible_host , hostnames: [ansible_hostname, ansible_fqdn] }"
+       "[].{address: rabbitmq_node_address || ansible_host , hostnames: [ansible_facts.hostname, ansible_facts.fqdn] }"
      )
   }}
 
-rabbitmq_primary_cluster_node: "{{ hostvars[groups[rabbitmq_host_group][0]]['ansible_hostname'] }}"
+rabbitmq_primary_cluster_node: "{{ hostvars[groups[rabbitmq_host_group][0]]['ansible_facts']['hostname'] }}"
 
 # Upgrading the RabbitMQ package requires shutting down the cluster. This variable makes upgrading
 #  the version an explicit action.
@@ -110,7 +110,7 @@ rabbitmq_ssl_ca_cert: /etc/rabbitmq/rabbitmq-ca.pem
 # SSL certificate for RabbitMQ when this playbook runs.  You can also change
 # the subject of the self-signed certificate here if you prefer.
 rabbitmq_ssl_self_signed_regen: false
-rabbitmq_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ ansible_hostname }}"
+rabbitmq_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ ansible_facts['hostname'] }}"
 
 # Define user-provided SSL certificates in:
 # /etc/openstack_deploy/user_variables.yml

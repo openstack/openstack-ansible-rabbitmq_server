@@ -79,7 +79,7 @@
 
 - name: Apply rabbitmq policies
   community.rabbitmq.rabbitmq_policy:
-    node: "rabbit@{{ ansible_hostname }}"
+    node: "rabbit@{{ ansible_facts['hostname'] }}"
     name: "{{ item.name }}"
     pattern: "{{ item.pattern }}"
     priority: "{{ item.priority | default(0) }}"
@@ -100,7 +100,7 @@
 # that the "guest" user is eradicated.
 - name: Ensure default rabbitmq guest user is removed
   community.rabbitmq.rabbitmq_user:
-    node: "rabbit@{{ ansible_hostname }}"
+    node: "rabbit@{{ ansible_facts['hostname'] }}"
     user: guest
     state: absent
   when: inventory_hostname == groups[rabbitmq_host_group][0]
@@ -109,7 +109,7 @@
 
 - name: Ensure default rabbitmq guest user is removed
   community.rabbitmq.rabbitmq_user:
-    node: "rabbit@{{ ansible_hostname }}"
+    node: "rabbit@{{ ansible_facts['hostname'] }}"
     user: guest
     state: absent
   when: inventory_hostname != groups[rabbitmq_host_group][0]

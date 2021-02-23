@@ -20,22 +20,22 @@ _rabbitmq_gpg_keys:
   - file: gpg/4D206F89
   - file: gpg/A14F4FCA
 
-_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_distribution | lower }}"
+_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_facts['distribution'] | lower }}"
 _rabbitmq_repo:
-  repo: "deb {{ rabbitmq_repo_url }} {{ ansible_distribution_release | lower }} main"
+  repo: "deb {{ rabbitmq_repo_url }} {{ ansible_facts['distribution_release'] | lower }} main"
   state: "present"
   filename: "RabbitMQ"
 
-_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/{{ ansible_distribution | lower }}"
+_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/{{ ansible_facts['distribution'] | lower }}"
 _rabbitmq_erlang_repo:
-  repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_distribution_release | lower }} contrib"
+  repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_facts['distribution_release'] | lower }} contrib"
   state: "present"
   filename: els_erlang
 
 _rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:22.3-1', '1:22.*') }}"
 
 _rabbitmq_distro_dependencies:
-  - "{{ (ansible_architecture == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
+  - "{{ (ansible_facts['architecture'] == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
   - erlang-diameter
   - erlang-eldap
   - erlang-nox

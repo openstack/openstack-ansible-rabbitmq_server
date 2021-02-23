@@ -15,7 +15,7 @@
 
 # NOTE(jrosser) this is set to distro as there is no rabbitmq package currently for focal at packagecloud
 _rabbitmq_install_method: distro
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.8.2-1_all.deb/download.deb"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}/rabbitmq-server_3.8.2-1_all.deb/download.deb"
 _rabbitmq_package_version: "{{ _rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
 _rabbitmq_release_version: "{{ _rabbitmq_package_version.split('-')[0] }}"
 _rabbitmq_package_sha256: "aebdb80be49fe3adbf99c859006d8a503f531be79a0cd0712a30341e4c72054f"
@@ -25,16 +25,16 @@ _rabbitmq_gpg_keys:
   - file: gpg/4D206F89
   - file: gpg/A14F4FCA
 
-_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_distribution | lower }}"
+_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_facts['distribution'] | lower }}"
 _rabbitmq_repo:
-  repo: "deb {{ rabbitmq_repo_url }} {{ ansible_distribution_release | lower }} main"
+  repo: "deb {{ rabbitmq_repo_url }} {{ ansible_facts['distribution_release'] | lower }} main"
   # NOTE(jrosser) this is set to absent as there is no rabbitmq package currently for focal at packagecloud
   state: "absent"
   filename: "RabbitMQ"
 
-_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/{{ ansible_distribution | lower }}"
+_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/{{ ansible_facts['distribution'] | lower }}"
 _rabbitmq_erlang_repo:
-  repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_distribution_release | lower }} contrib"
+  repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_facts['distribution_release'] | lower }} contrib"
   # NOTE(jrosser) this is set to absent as there is no erlang package currently for focal at packagecloud
   state: "absent"
   filename: els_erlang
@@ -42,7 +42,7 @@ _rabbitmq_erlang_repo:
 _rabbitmq_erlang_version_spec: "1:22.*"
 
 rabbitmq_dependencies:
-  - "{{ (ansible_architecture == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
+  - "{{ (ansible_facts['architecture'] == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
   - erlang-diameter
   - erlang-eldap
   - erlang-nox

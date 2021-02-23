@@ -16,14 +16,14 @@
 _rabbitmq_install_method: external_repo
 _rabbitmq_package_version: 3.8.9-1
 
-_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/{{ ansible_distribution_major_version }}/$basearch"
+_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/{{ ansible_facts['distribution_major_version'] }}/$basearch"
 _rabbitmq_repo:
   name: rabbitmq_rabbitmq-server
   description: "RabbitMQ Server Rolling Repository"
   baseurl: "{{ rabbitmq_repo_url }}"
   filename: RabbitMQ
 
-_rabbitmq_erlang_repo_url: "https://packagecloud.io/rabbitmq/erlang/el/{{ ansible_distribution_major_version }}/$basearch"
+_rabbitmq_erlang_repo_url: "https://packagecloud.io/rabbitmq/erlang/el/{{ ansible_facts['distribution_major_version'] }}/$basearch"
 _rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
   description: "RabbitMQ Erlang Packages from Bintray"

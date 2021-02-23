@@ -19,7 +19,7 @@
     state: stopped
   failed_when: false
   when:
-    - ansible_hostname != rabbitmq_primary_cluster_node
+    - ansible_facts['hostname'] != rabbitmq_primary_cluster_node
   tags:
     - rabbitmq-server-stopped
     - rabbitmq-upgrade
@@ -31,7 +31,7 @@
     state: stopped
   failed_when: false
   when:
-    - ansible_hostname == rabbitmq_primary_cluster_node
+    - ansible_facts['hostname'] == rabbitmq_primary_cluster_node
   tags:
     - rabbitmq-server-stopped
     - rabbitmq-upgrade

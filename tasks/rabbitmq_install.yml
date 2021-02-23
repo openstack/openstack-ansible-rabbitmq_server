@@ -15,7 +15,7 @@
 
 - include_tasks: rabbitmq_upgrade_check.yml
 
-- include_tasks: "install_{{ ansible_pkg_mgr }}.yml"
+- include_tasks: "install_{{ ansible_facts['pkg_mgr'] }}.yml"
   tags:
     - rabbitmq-apt-packages
     - rabbitmq-yum-packages
