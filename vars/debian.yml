@@ -14,7 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: "3.8.9-1"
+_rabbitmq_package_version: "3.8.14-1"
 
 _rabbitmq_gpg_keys:
   - file: gpg/4D206F89
@@ -32,7 +32,7 @@ _rabbitmq_erlang_repo:
   state: "present"
   filename: els_erlang
 
-_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:22.3-1', '1:22.*') }}"
+_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:23.2.3-1', '1:22.*') }}"
 
 _rabbitmq_distro_dependencies:
   - "{{ (ansible_architecture == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
