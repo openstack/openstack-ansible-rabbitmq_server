@@ -18,7 +18,7 @@
 - include_tasks: "install_{{ ansible_facts['pkg_mgr'] }}.yml"
   tags:
     - rabbitmq-apt-packages
-    - rabbitmq-yum-packages
+    - rabbitmq-dnf-packages
     - rabbitmq_server-install
 
 - name: Reload the systemd daemon
@@ -28,8 +28,7 @@
     - install_rabbitmq is changed
   tags:
     - rabbitmq-apt-packages
-    - rabbitmq-yum-packages
-    - rabbimtq-zypper-packages
+    - rabbitmq-dnf-packages
     - rabbitmq_server-install
 
 - name: Ensure there are no policy-rc files

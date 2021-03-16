@@ -41,11 +41,10 @@
   register: installed_rabbitmq_rpm
   when:
     - not rabbitmq_upgrade | bool
-    - ansible_facts['pkg_mgr'] in ['yum', 'dnf', 'zypper']
+    - ansible_facts['pkg_mgr'] == 'dnf'
   tags:
     - rabbitmq-package-rpm
-    - rabbitmq-yum-packages
-    - rabbitmq-zypper-packages
+    - rabbitmq-dnf-packages
     - skip_ansible_lint
 
 - name: Register a fact for the installed RabbitMQ version
