@@ -32,5 +32,5 @@ _rabbitmq_erlang_repo:
   filename: els-erlang
 
 rabbitmq_distro_packages:
-  - erlang-22.0.2-1.el7.x86_64
-  - rabbitmq-server-3.7.15-1.el7.noarch
+  - erlang-22.3.4-1.el7.x86_64
+  - rabbitmq-server-3.7.28-1.el7.noarch
