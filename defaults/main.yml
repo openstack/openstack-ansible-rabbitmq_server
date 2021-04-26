@@ -101,16 +101,84 @@ rabbitmq_plugins:
   - name: rabbitmq_management
     state: enabled
 
-# RabbitMQ SSL support
+# Storage location for SSL certificate authority
+rabbitmq_pki_dir: "{{ openstack_pki_dir | default('/etc/pki/rabbitmq-ca') }}"
+
+# Delegated host for operating the certificate authority
+rabbitmq_pki_setup_host: "{{ openstack_pki_setup_host | default('localhost') }}"
+
+# Create a certificate authority if one does not already exist
+rabbitmq_pki_create_ca: "{{ openstack_pki_authorities is not defined | bool }}"
+rabbitmq_pki_regen_ca: ''
+rabbitmq_pki_authorities:
+  - name: "RabbitMQRoot"
+    country: "GB"
+    state_or_province_name: "England"
+    organization_name: "Example Corporation"
+    organizational_unit_name: "IT Security"
+    cn: "RabbitMQ Root CA"
+    provider: selfsigned
+    basic_constraints: "CA:TRUE"
+    key_usage:
+      - digitalSignature
+      - cRLSign
+      - keyCertSign
+    not_after: "+3650d"
+  - name: "RabbitMQIntermediate"
+    country: "GB"
+    state_or_province_name: "England"
+    organization_name: "Example Corporation"
+    organizational_unit_name: "IT Security"
+    cn: "RabbitMQ Intermediate CA"
+    provider: ownca
+    basic_constraints: "CA:TRUE,pathlen:0"
+    key_usage:
+      - digitalSignature
+      - cRLSign
+      - keyCertSign
+    not_after: "+3650d"
+    signed_by: "RabbitMQRoot"
+
+# Installation details for certificate authorities
+rabbitmq_pki_install_ca:
+  - name: "RabbitMQRoot"
+    condition: "{{ rabbitmq_pki_create_ca }}"
+
+# Rabbitmq server certificate
+rabbitmq_pki_keys_path: "{{ rabbitmq_pki_dir ~ '/certs/private/' }}"
+rabbitmq_pki_certs_path: "{{ rabbitmq_pki_dir ~ '/certs/certs/' }}"
+rabbitmq_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('RabbitMQIntermediate') }}"
+rabbitmq_pki_intermediate_cert_path: "{{ rabbitmq_pki_dir ~ '/roots/' ~ rabbitmq_pki_intermediate_cert_name ~ '/certs/' ~ rabbitmq_pki_intermediate_cert_name ~ '.crt' }}"
+rabbitmq_pki_regen_cert: ''
+rabbitmq_pki_certificates:
+  - name: "rabbitmq_{{ ansible_facts['hostname'] }}"
+    provider: ownca
+    cn: "{{ ansible_facts['hostname'] }}"
+    san: "{{ 'DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ rabbitmq_node_address }}"
+    signed_by: "{{ rabbitmq_pki_intermediate_cert_name }}"
+
+# RabbitMQ destination files for SSL certificates
 rabbitmq_ssl_cert: /etc/rabbitmq/rabbitmq.pem
 rabbitmq_ssl_key: /etc/rabbitmq/rabbitmq.key
 rabbitmq_ssl_ca_cert: /etc/rabbitmq/rabbitmq-ca.pem
 
-# Set rabbitmq_ssl_self_signed_regen to true if you want to generate a new
-# SSL certificate for RabbitMQ when this playbook runs.  You can also change
-# the subject of the self-signed certificate here if you prefer.
-rabbitmq_ssl_self_signed_regen: false
-rabbitmq_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ ansible_facts['hostname'] }}"
+# Installation details for SSL certificates
+rabbitmq_pki_install_certificates:
+  - src: "{{ rabbitmq_user_ssl_cert | default(rabbitmq_pki_certs_path ~ 'rabbitmq_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+    dest: "{{ rabbitmq_ssl_cert }}"
+    owner: "rabbitmq"
+    group: "rabbitmq"
+    mode: "0644"
+  - src: "{{ rabbitmq_user_ssl_key | default(rabbitmq_pki_keys_path ~ 'rabbitmq_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+    dest: "{{ rabbitmq_ssl_key }}"
+    owner: "rabbitmq"
+    group: "rabbitmq"
+    mode: "0600"
+  - src: "{{ rabbitmq_user_ssl_ca_cert | default(rabbitmq_pki_intermediate_cert_path) }}"
+    dest: "{{ rabbitmq_ssl_ca_cert }}"
+    owner: "rabbitmq"
+    group: "rabbitmq"
+    mode: "0644"
 
 # Define user-provided SSL certificates in:
 # /etc/openstack_deploy/user_variables.yml
