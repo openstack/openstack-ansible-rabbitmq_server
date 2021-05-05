@@ -14,16 +14,33 @@
       { ssl_options, [
           { certfile, "{{ rabbitmq_ssl_cert }}" },
           { keyfile, "{{ rabbitmq_ssl_key }}" },
+          { honor_cipher_order, true},
+          { honor_ecc_order, true},
+{% if "tlsv1.3" not in rabbitmq_ssl_tls_versions %}
+          { client_renegotiation, {{ rabbitmq_ssl_client_renegotiation | lower }} },
+          { secure_renegotiate, {{ rabbitmq_ssl_secure_renegotiate | lower }} },
+{% endif %}
 {% if rabbitmq_user_ssl_ca_cert is defined -%}
           { cacertfile, "{{ rabbitmq_ssl_ca_cert }}" },
 {% endif %}
           { versions, [
-              'tlsv1.2',
-              'tlsv1.1'
+{% for version in rabbitmq_ssl_tls_versions %}
+              '{{ version }}'{% if not loop.last -%},{%- endif %}
+
+{% endfor %}
             ]
           },
-          { verify, verify_none },
-          { fail_if_no_peer_cert, false }
+{% if rabbitmq_ssl_ciphers | length > 0 %}
+          { ciphers, [
+{%   for cipher in rabbitmq_ssl_ciphers %}
+              "{{ cipher }}"{% if not loop.last -%},{%- endif %}
+
+{%   endfor %}
+            ]
+          },
+{% endif %}
+          { verify, {{ rabbitmq_ssl_verify | lower }} },
+          { fail_if_no_peer_cert, {{ rabbitmq_ssl_fail_if_no_peer_cert | lower }} }
         ]
       },
       { vm_memory_high_watermark, {{ rabbitmq_memory_high_watermark }} }
