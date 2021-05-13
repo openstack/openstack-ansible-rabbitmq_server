@@ -118,6 +118,35 @@ rabbitmq_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ ansib
 #rabbitmq_user_ssl_key: <path to cert on ansible deployment host>
 #rabbitmq_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
+# These are highly recommended for TLSv1.2 but cannot be used
+# with TLSv1.3. If TLSv1.3 is enabled, these lines will not be
+# inserted into the config
+rabbitmq_ssl_client_renegotiation: false
+rabbitmq_ssl_secure_renegotiate: true
+
+# Supported TLS protocol versions
+rabbitmq_ssl_tls_versions:
+  - "tlsv1.2"
+
+# Mutual TLS control
+rabbitmq_ssl_verify: "verify_none"
+rabbitmq_ssl_fail_if_no_peer_cert: False
+
+# Recommended ciphers taken from https://www.rabbitmq.com/ssl.html
+rabbitmq_ssl_ciphers:
+  - "ECDHE-ECDSA-AES256-GCM-SHA384"
+  - "ECDHE-RSA-AES256-GCM-SHA384"
+  - "ECDH-ECDSA-AES256-GCM-SHA384"
+  - "ECDH-RSA-AES256-GCM-SHA384"
+  - "DHE-RSA-AES256-GCM-SHA384"
+  - "DHE-DSS-AES256-GCM-SHA384"
+  - "ECDHE-ECDSA-AES128-GCM-SHA256"
+  - "ECDHE-RSA-AES128-GCM-SHA256"
+  - "ECDH-ECDSA-AES128-GCM-SHA256"
+  - "ECDH-RSA-AES128-GCM-SHA256"
+  - "DHE-RSA-AES128-GCM-SHA256"
+  - "DHE-DSS-AES128-GCM-SHA256"
+
 # RabbitMQ erlang VM parameters
 rabbitmq_async_threads: 128
 rabbitmq_process_limit: 1048576
