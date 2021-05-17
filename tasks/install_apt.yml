@@ -69,6 +69,8 @@
     filename: "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
     update_cache: no
   register: add_erlang_repos
+  when:
+    - rabbitmq_erlang_repo.repo is defined
   tags:
     - rabbitmq-repos
 
