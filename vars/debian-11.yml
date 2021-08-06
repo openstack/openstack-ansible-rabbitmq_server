@@ -21,7 +21,7 @@ _rabbitmq_erlang_version_spec: "23.2.6+dfsg-1"
 _rabbitmq_gpg_keys: []
 
 rabbitmq_dependencies:
-  - "{{ (ansible_facts['architecture'] == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
+  - erlang-base
   - erlang-diameter
   - erlang-eldap
   - erlang-nox
