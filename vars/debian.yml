@@ -34,17 +34,12 @@ _rabbitmq_erlang_repo:
 
 _rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:23.2.3-1', '1:22.*') }}"
 
-_rabbitmq_distro_dependencies:
-  - "{{ (ansible_facts['architecture'] == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
+rabbitmq_dependencies:
+  - erlang-base
   - erlang-diameter
   - erlang-eldap
   - erlang-nox
   - socat
-
-_rabbitmq_external_dependencies:
-  - erlang
-
-rabbitmq_dependencies: "{{ (rabbitmq_install_method == 'external_repo') | ternary(_rabbitmq_external_dependencies, _rabbitmq_distro_dependencies) }}"
 
 rabbitmq_distro_packages:
   - rabbitmq-server
