@@ -44,7 +44,7 @@
     pki_authorities: "{{ rabbitmq_pki_authorities }}"
     pki_install_ca: "{{ rabbitmq_pki_install_ca }}"
     pki_create_certificates: "{{ rabbitmq_user_ssl_cert is not defined and rabbitmq_user_ssl_key is not defined }}"
-    pki_regen_certificates: "{{ rabbitmq_pki_regen_cert }}"
+    pki_regen_cert: "{{ rabbitmq_pki_regen_cert }}"
     pki_certificates: "{{ rabbitmq_pki_certificates }}"
     pki_install_certificates: "{{ rabbitmq_pki_install_certificates }}"
 
