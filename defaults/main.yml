@@ -261,6 +261,12 @@ rabbitmq_disable_non_tls_listeners: False
 #     pattern: '^(event|metering|notifications)\.'
 #     tags: "ha-sync-mode=automatic"
 #     priority: 0
+#     state:present
+# If policy needs to be removed, provide `state: absent`
+#   - name: "HA"
+#     pattern: '^(?!(amq\.)|(.*_fanout_)|(reply_)).*'
+#     tags: "ha-mode=all"
+#     state: absent
 #
 rabbitmq_policies: []
 rabbitmq_apply_openstack_policies: False

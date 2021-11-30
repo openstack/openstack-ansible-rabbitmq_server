@@ -88,6 +88,7 @@
     name: "{{ item.name }}"
     pattern: "{{ item.pattern }}"
     priority: "{{ item.priority | default(0) }}"
+    state: "{{ item.state | default(omit) }}"
     tags: "{{ item.tags }}"
   register: rabbitmq_policy
   loop: "{{ (rabbitmq_apply_openstack_policies | bool) | ternary(rabbitmq_openstack_policies + rabbitmq_policies, rabbitmq_policies) }}"
