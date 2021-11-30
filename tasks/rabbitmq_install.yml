@@ -13,13 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include_tasks: rabbitmq_upgrade_check.yml
+- import_tasks: rabbitmq_upgrade_check.yml
 
 - include_tasks: "install_{{ ansible_facts['pkg_mgr'] }}.yml"
+  args:
+    apply:
+      tags:
+        - rabbitmq-apt-packages
+        - rabbitmq-dnf-packages
+        - rabbitmq_server-install
   tags:
-    - rabbitmq-apt-packages
-    - rabbitmq-dnf-packages
-    - rabbitmq_server-install
+    - always
 
 - name: Reload the systemd daemon
   systemd:

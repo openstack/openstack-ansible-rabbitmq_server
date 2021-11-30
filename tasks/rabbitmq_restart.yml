@@ -14,7 +14,20 @@
 # limitations under the License.
 
 - include_tasks: rabbitmq_stopped.yml
+  args:
+    apply:
+      tags:
+        - rabbitmq-restart
+  tags:
+    - always
+
 - include_tasks: rabbitmq_started.yml
+  args:
+    apply:
+      tags:
+        - rabbitmq-restart
+  tags:
+    - always
 
 - name: Wait for rabbitmq to be started
   wait_for:

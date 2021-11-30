@@ -70,4 +70,10 @@
     - rabbitmq-apt-packages
 
 - include_tasks: rabbitmq_upgrade_prep.yml
+  args:
+    apply:
+      tags:
+        - rabbitmq-upgrade
   when: rabbitmq_upgrade | bool
+  tags:
+    - always
