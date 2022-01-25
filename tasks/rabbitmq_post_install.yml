@@ -30,12 +30,20 @@
     dest: "{{ item.dest }}"
     owner: "{{ rabbit_system_user_name }}"
     group: "{{ rabbit_system_group_name }}"
+    mode: "{{ item.mode | default('0640') }}"
   with_items:
-    - { src: "rabbitmq.config.j2", dest: "/etc/rabbitmq/rabbitmq.config" }
-    - { src: "rabbitmq-server.j2", dest: "/etc/default/rabbitmq-server" }
+    - { src: "rabbitmq.conf.j2", dest: "/etc/rabbitmq/rabbitmq.conf" }
+    - { src: "advanced.config.j2", dest: "/etc/rabbitmq/advanced.config" }
+    - { src: "rabbitmq-server.j2", dest: "/etc/default/rabbitmq-server", mode: "0644" }
     - { src: "rabbitmq-env.j2", dest: "/etc/rabbitmq/rabbitmq-env.conf" }
   tags:
     - rabbitmq-config
+
+# TODO(noonedeadpunk): Remove after Z release
+- name: Remove old rabbitmq config
+  file:
+    path: /etc/rabbitmq/rabbitmq.config
+    state: absent
 
 - name: Apply resource limits (systemd)
   template:

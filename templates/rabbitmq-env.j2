@@ -4,7 +4,3 @@
 NODENAME=rabbit@{{ ansible_facts['hostname'] }}
 RABBITMQ_IO_THREAD_POOL_SIZE={{ rabbitmq_async_threads }}
 RABBITMQ_SERVER_ERL_ARGS="+P {{ rabbitmq_process_limit }}"
-
-{% if (rabbitmq_management_bind_address != '0.0.0.0') %}
-export ERL_EPMD_ADDRESS={{ rabbitmq_management_bind_address }}
-{% endif %}

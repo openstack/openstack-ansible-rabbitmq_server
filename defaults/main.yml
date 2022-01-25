@@ -227,6 +227,9 @@ rabbitmq_collect_statistics_interval: 5000
 
 # RabbitMQ Management service bind address
 rabbitmq_management_bind_address: 0.0.0.0
+rabbitmq_management_bind_tcp_port: 15672
+rabbitmq_management_bind_tls_port: 15671
+rabbitmq_management_ssl: true
 
 # RabbitMQ Management rates mode
 rabbitmq_management_rates_mode: basic
