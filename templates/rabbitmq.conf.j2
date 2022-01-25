@@ -1,6 +1,9 @@
 
 collect_statistics_interval = {{ rabbitmq_collect_statistics_interval }}
 
+log.journald = true
+log.file = false
+
 {% for key, value in rabbitmq_port_bindings.items() %}
 {%   if 'tcp' in key %}
 {%     set _opt = 'tcp' %}
