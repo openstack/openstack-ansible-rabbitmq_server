@@ -81,6 +81,7 @@ rabbitmq_erlang_version_spec: "{{ _rabbitmq_erlang_version_spec | default(null) 
 
 # Choose file, distro, external_repo for rabbitmq_install_method.
 rabbitmq_install_method: "{{ _rabbitmq_install_method }}"
+rabbitmq_erlang_install_method: "{{ _rabbitmq_erlang_install_method | default(rabbitmq_install_method) }}"
 
 # Name of the rabbitmq cluster
 rabbitmq_cluster_name: rabbitmq_cluster1

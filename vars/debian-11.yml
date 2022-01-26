@@ -13,12 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-_rabbitmq_install_method: distro
-_rabbitmq_package_version: "3.8.9-3"
+_rabbitmq_install_method: external_repo
+_rabbitmq_package_version: "3.9.8-1"
 
+_rabbitmq_erlang_install_method: distro
 _rabbitmq_erlang_version_spec: "23.2.6+dfsg-1"
 
-_rabbitmq_gpg_keys: []
+_rabbitmq_gpg_keys:
+  - file: gpg/C072C960 # RabbitMQ Cloudsmith repo
+  - file: gpg/0A9AF211 # RabbitMQ Release Signing Key
+
+# NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
+
+_rabbitmq_repo_url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/{{ ansible_facts['distribution'] | lower }}"
+_rabbitmq_repo:
+  repo: "deb {{ rabbitmq_repo_url }} {{ ansible_facts['distribution_release'] | lower }} main"
+  state: "present"
+  filename: "RabbitMQ"
 
 rabbitmq_dependencies:
   - erlang-base
