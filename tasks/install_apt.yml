@@ -21,9 +21,12 @@
     apt_package_pinning_priority: 999
     apt_pinned_packages:
       - package: "*"
-        release: "Erlang Solutions Ltd."
+        release: "cloudsmith/rabbitmq/rabbitmq-erlang"
       - package: "erlang*"
         version: "{{ rabbitmq_erlang_version_spec }}"
+        priority: 1000
+      - package: "rabbitmq-server"
+        version: "{{ rabbitmq_package_version }}"
         priority: 1000
 
 - name: Install GPG keys

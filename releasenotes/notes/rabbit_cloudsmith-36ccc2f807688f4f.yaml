@@ -1,0 +1,6 @@
+---
+other:
+  - |
+    Default source of rabbitmq and erlang packages has been switched to
+    cloudsmith.io
+    With that rabbitmq version was upgraded from 3.7 to 3.8 series.
