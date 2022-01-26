@@ -14,7 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: "3.9.8-1"
+_rabbitmq_package_version: "3.9.13-1"
 
 _rabbitmq_erlang_install_method: distro
 _rabbitmq_erlang_version_spec: "23.2.6+dfsg-1"
