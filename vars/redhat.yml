@@ -17,21 +17,31 @@ _rabbitmq_install_method: external_repo
 _rabbitmq_package_version: 3.9.8-1
 _erlang_package_version: 24.1-1
 
-_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/{{ ansible_facts['distribution_major_version'] }}/$basearch"
+# NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
+
+_rabbitmq_repo_url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/rpm/el/{{ ansible_facts['distribution_major_version'] }}/noarch"
 _rabbitmq_repo:
   name: rabbitmq_rabbitmq-server
   description: "RabbitMQ Server Rolling Repository"
   baseurl: "{{ rabbitmq_repo_url }}"
   filename: RabbitMQ
+  gpgcheck: yes
+  gpgkey:
+    - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
+    - https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
 
-_rabbitmq_erlang_repo_url: "https://packagecloud.io/rabbitmq/erlang/el/{{ ansible_facts['distribution_major_version'] }}/$basearch"
+_rabbitmq_erlang_repo_url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/rpm/el/{{ ansible_facts['distribution_major_version'] }}/$basearch"
 _rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
-  description: "RabbitMQ Erlang Packages from Bintray"
+  description: "RabbitMQ Erlang Packages"
   baseurl: "{{ rabbitmq_erlang_repo_url }}"
   filename: els-erlang
+  gpgcheck: yes
+  gpgkey:
+    - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49CC4BBE5B.key
+    - https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
 
 rabbitmq_distro_packages:
   - openssl
-  - "erlang-{{ _erlang_package_version }}.el{{ ansible_facts['distribution_major_version'] }}.x86_64"
+  - "erlang-{{ _erlang_package_version }}.el{{ ansible_facts['distribution_major_version'] }}.{{ ansible_facts['architecture'] }}"
   - "rabbitmq-server-{{ rabbitmq_package_version }}.el{{ ansible_facts['distribution_major_version'] }}.noarch"
