@@ -14,29 +14,32 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.8.0-1_all.deb/download.deb"
+_rabbitmq_package_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/rabbitmq-server_3.8.14-1_all.deb/download.deb"
 _rabbitmq_package_version: "{{ rabbitmq_package_url.split('/')[-2].split('_')[1] }}"
 _rabbitmq_release_version: "{{ rabbitmq_package_version.split('-')[0] }}"
 _rabbitmq_package_sha256: "53ee653c2cbf4c3f703afa4b58073e0d049881c7e66bc74e4f533f7a9042cc4d"
 _rabbitmq_package_path: "/opt/rabbitmq-server.deb"
 
 _rabbitmq_gpg_keys:
-  - file: gpg/4D206F89
-  - file: gpg/A14F4FCA
+  - file: gpg/C072C960 # RabbitMQ Cloudsmith repo
+  - file: gpg/A16A4251 # Erlang Cloudsmith repo
+  - file: gpg/0A9AF211 # RabbitMQ Release Signing Key
 
-_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_distribution | lower }}"
+
+# NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
+_rabbitmq_repo_url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/{{ ansible_distribution | lower }}"
 _rabbitmq_repo:
   repo: "deb {{ rabbitmq_repo_url }} {{ ansible_distribution_release | lower }} main"
   state: "present"
   filename: "RabbitMQ"
 
-_rabbitmq_erlang_repo_url: "https://packages.erlang-solutions.com/{{ ansible_distribution | lower }}"
+_rabbitmq_erlang_repo_url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/deb/{{ ansible_distribution | lower }}"
 _rabbitmq_erlang_repo:
-  repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_distribution_release | lower }} contrib"
+  repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_distribution_release | lower }} main"
   state: "present"
   filename: els_erlang
 
-_rabbitmq_erlang_version_spec: "1:22.3*"
+_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:23.3.4.15-1', '1:22.*') }}"
 
 _rabbitmq_distro_dependencies:
   - "{{ (ansible_architecture == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
