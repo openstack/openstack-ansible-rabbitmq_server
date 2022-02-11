@@ -30,21 +30,27 @@
     - rabbitmq-package-rpm
     - rabbitmq-package-rpm-get
 
-- name: Fix /etc/hosts
-  lineinfile:
-    dest: /etc/hosts
-    state: present
-    line: "{{ item.address }} {{ item.hostnames | join(' ') }}"
-  with_items: "{{ rabbitmq_hosts_entries }}"
-  tags:
-    - rabbitmq-config
-
-- name: Ensure localhost /etc/hosts entry is correct
-  lineinfile:
-    dest: /etc/hosts
-    state: present
-    line: '127.0.0.1 localhost'
-    regexp: '^127.0.0.1'
+- name: Manage /etc/hosts files
+  block:
+    - name: Fail if hosts file is not managed yet
+      command: grep "OPENSTACK-ANSIBLE MANAGED BLOCK" /etc/hosts
+      changed_when: false
+  rescue:
+    - name: Rescue failure and add required records
+      lineinfile:
+        dest: /etc/hosts
+        state: present
+        line: "{{ item.address }} {{ item.hostnames | join(' ') }}"
+      with_items: "{{ rabbitmq_hosts_entries }}"
+  always:
+    - name: Ensure localhost /etc/hosts entry is correct
+      lineinfile:
+        dest: /etc/hosts
+        state: present
+        line: '127.0.0.1 localhost'
+        regexp: '^127\.0\.0\.1'
+  when:
+    - rabbitmq_manage_hosts_entries | bool
   tags:
     - rabbitmq-config
 
