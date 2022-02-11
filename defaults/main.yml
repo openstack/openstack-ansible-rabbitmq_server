@@ -29,8 +29,10 @@ rabbitmq_node_address: "{{ ansible_host }}"
 rabbit_system_user_name: rabbitmq
 rabbit_system_group_name: rabbitmq
 
-# Hosts file entries (set this to an empty list to disable /etc/hosts generation
-# for the rabbitmq cluster nodes)
+# Allow role to adjust /etc/hosts file
+rabbitmq_manage_hosts_entries: True
+
+# Hosts file entries
 rabbitmq_hosts_entries: >-
   {{ groups[rabbitmq_host_group] | map('extract', hostvars) | list |
      json_query(
