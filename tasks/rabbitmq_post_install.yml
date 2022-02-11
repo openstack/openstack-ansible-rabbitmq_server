@@ -13,16 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Create rabbitmq systemd service config dir
-  file:
-    path: "/etc/systemd/system/rabbitmq-server.service.d"
-    state: "directory"
-    group: "root"
-    owner: "root"
-    mode: "0755"
-  tags:
-    - rabbitmq-config
-
 - name: Create rabbitmq config
   register: rabbit_config
   template:
@@ -45,32 +35,26 @@
     path: /etc/rabbitmq/rabbitmq.config
     state: absent
 
-- name: Apply resource limits (systemd)
-  template:
-    src: "limits.conf.j2"
-    dest: "/etc/systemd/system/rabbitmq-server.service.d/limits.conf"
-  register: rabbit_resource_limit
-  tags:
-    - rabbitmq-config
+# TODO(noonedeadpunk): Remove task after Z release
+- name: Remove old systemd overrides
+  file:
+    path: "/etc/systemd/system/rabbitmq-server.service.d/{{ item }}"
+    state: absent
+  with_items:
+    - limits.conf
+    - systemd-restart-on-failure.conf
+  when: rabbitmq_upgrade | bool
 
-- name: Add automatic restart on failure
-  template:
-    src: systemd-restart-on-failure.conf.j2
-    dest: "/etc/systemd/system/rabbitmq-server.service.d/systemd-restart-on-failure.conf"
-  register: rabbit_restart_on_failure
-  tags:
-    - rabbitmq-config
-
-- name: Reload the systemd daemon
-  systemd:
-    daemon_reload: yes
-  when:
-    - rabbit_resource_limit is changed
-    - rabbit_restart_on_failure is changed
-  tags:
-    - rabbitmq-config
-    # don't trigger ANSIBLE0016
-    - skip_ansible_lint
+- name: Apply systemctl overrides
+  import_role:
+    name: systemd_service
+  vars:
+    systemd_user_name: "{{ rabbit_system_user_name }}"
+    systemd_group_name: "{{ rabbit_system_group_name }}"
+    systemd_services:
+      - service_name: rabbitmq-server
+        systemd_overrides_only: true
+        systemd_overrides: "{{ rabbitmq_init_overrides }}"
 
 - name: Configure rabbitmq plugins
   community.rabbitmq.rabbitmq_plugin:

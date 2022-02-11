@@ -285,6 +285,12 @@ rabbitmq_port_bindings:
   tcp_listeners:
     "0.0.0.0": 5672
 
+rabbitmq_init_overrides:
+  Service:
+    LimitNOFILE: "{{ rabbitmq_ulimit }}"
+    Restart: on-failure
+    RestartSec: 2
+
 # Mnesia configuration
 # The Mnesia dump_log_write_threshold option controls
 # how often the dumping occurs
