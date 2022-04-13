@@ -17,7 +17,7 @@
 # so we skip this task in the ansible-lint check by using the
 # 'skip_ansible_lint' tag
 - name: Get version of installed RabbitMQ package (deb)
-  shell: "dpkg -l | grep rabbitmq-server"
+  command: "dpkg-query -W rabbitmq-server"
   changed_when: false
   check_mode: false
   failed_when: false
@@ -34,7 +34,7 @@
 # so we skip this task in the ansible-lint check by using the
 # 'skip_ansible_lint' tag
 - name: Get version of installed RabbitMQ package (rpm)
-  shell: "rpm -qa | grep rabbitmq-server"
+  command: "rpm -q rabbitmq-server"
   args:
     warn: no
   changed_when: false
