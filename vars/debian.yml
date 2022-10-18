@@ -14,7 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: "3.8.30-1"
+_rabbitmq_package_version: "3.8.14-1"
 
 _rabbitmq_gpg_keys:
   - file: gpg/C072C960 # RabbitMQ Cloudsmith repo

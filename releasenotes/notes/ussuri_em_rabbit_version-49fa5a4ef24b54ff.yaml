@@ -1,0 +1,11 @@
+---
+
+upgrade:
+  - |
+    Under Extended Maintenance RabbitMQ version was bumped to 3.8.30 which is
+    higher version then used on V or W releases. This only affects users who
+    track stable/ussuri branch instead of being on specific tags.
+    RabbitMQ version is now downggraded from 3.8.30 to 3.8.14. If you have
+    already upgraded to newer RabbitMQ version we suggest defining
+    ``rabbitmq_package_version: 3.8.30-1`` in your user_variables and keep
+    that for Victoria and Wallaby releases.
