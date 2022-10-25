@@ -35,7 +35,7 @@ _rabbitmq_erlang_repo:
   state: "present"
   filename: els_erlang
 
-_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:23.3.4.11-1', '1:22.*') }}"
+_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:23.3.4.12-1', '1:22.*') }}"
 
 _rabbitmq_distro_dependencies:
   - "{{ (ansible_architecture == 'aarch64') | ternary('erlang-base', 'erlang-base-hipe') }}"
