@@ -3,6 +3,9 @@ collect_statistics_interval = {{ rabbitmq_collect_statistics_interval }}
 
 log.journald = true
 log.file = false
+heartbeat = 640
+ssl_handshake_timeout = 20000
+handshake_timeout = 40000
 
 {% for key, value in rabbitmq_port_bindings.items() %}
 {%   if 'tcp' in key %}
