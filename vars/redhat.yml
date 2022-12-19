@@ -14,8 +14,8 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: 3.9.8-1
-_erlang_package_version: 24.2.2-1
+_rabbitmq_package_version: 3.9.21-1
+_erlang_package_version: 24.3.*
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
 
