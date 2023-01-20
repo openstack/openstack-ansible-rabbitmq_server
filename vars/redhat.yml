@@ -15,7 +15,7 @@
 
 _rabbitmq_install_method: external_repo
 _rabbitmq_package_version: 3.10.2-1
-_erlang_package_version: 24.3.4-1
+_erlang_package_version: 24.3.4.7-1
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
 
