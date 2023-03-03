@@ -14,7 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: "3.10.2-1"
+_rabbitmq_package_version: "3.10.7-1"
 
 _rabbitmq_gpg_keys:
   - file: gpg/C072C960 # RabbitMQ Cloudsmith repo
@@ -35,7 +35,7 @@ _rabbitmq_erlang_repo:
   state: "present"
   filename: els_erlang
 
-_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:24.3.4.7-1', '1:22.*') }}"
+_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:25.0.4-1', '1:22.*') }}"
 
 rabbitmq_dependencies:
   - erlang-base
