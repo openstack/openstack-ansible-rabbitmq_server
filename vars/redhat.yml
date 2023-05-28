@@ -17,7 +17,6 @@ _rabbitmq_install_method: external_repo
 _rabbitmq_package_version: 3.10.7-1
 _erlang_package_version: 25.0.4-1
 
-# NOTE(noonedeadpunk): List of available packages can be searched here: https://packagecloud.io/rabbitmq/rabbitmq-server
 
 # NOTE(jrosser): Before updating the distribution release from '8' or using ansible_distribution_release, check
 # the rabbitmq install docs (https://www.rabbitmq.com/install-rpm.html#package-cloud) which say:
@@ -26,7 +25,8 @@ _erlang_package_version: 25.0.4-1
 #     dependency from Cloudsmith, and targets CentOS Stream 8. The same repository definition
 #     can be used by recent Fedora releases and CentOS Stream 9.
 
-_rabbitmq_repo_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/el/8/$basearch"
+# NOTE(noonedeadpunk): List of available packages can be searched here: https://packagecloud.io/rabbitmq/rabbitmq-server
+_rabbitmq_repo_url: "https://yum1.novemberain.com/rabbitmq/el/8/noarch"
 _rabbitmq_repo:
   name: rabbitmq_rabbitmq-server
   description: "RabbitMQ Server Rolling Repository"
@@ -35,9 +35,10 @@ _rabbitmq_repo:
   gpgcheck: yes
   gpgkey:
     - https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+    - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
-_rabbitmq_erlang_repo_url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/rpm/el/8/$basearch"
+_rabbitmq_erlang_repo_url: "https://yum1.novemberain.com/erlang/el/8/$basearch"
 _rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
   description: "RabbitMQ Erlang Packages"
