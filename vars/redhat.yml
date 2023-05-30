@@ -14,8 +14,8 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: 3.11.10-1
-_erlang_package_version: 25.2.3-1
+_rabbitmq_package_version: 3.11.17-1
+_erlang_package_version: 25.3.2-1
 
 
 # NOTE(jrosser): Before updating the distribution release from '8' or using ansible_distribution_release, check
