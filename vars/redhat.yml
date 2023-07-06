@@ -14,12 +14,12 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: "3.11.17*"
+_rabbitmq_package_version: "3.11.17-1"
 # NOTE(nhanlon) 2023-05-30: although the package repository is marked
 # el9, the packages themselves still have an el8 dist tag for rabbitmq
 _rabbitmq_package_dist_tag: "el8"
 
-_erlang_package_version: "25.3.2*"
+_erlang_package_version: "25.3.2.*-1"
 _erlang_package_dist_tag: "el{{ ansible_facts['distribution_major_version'] }}"
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
