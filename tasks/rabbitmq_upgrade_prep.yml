@@ -23,7 +23,8 @@
     - rabbitmq-policy-file
     - rabbitmq-upgrade
 
-- include_tasks: rabbitmq_stopped.yml
+- name: Including rabbitmq_stopped tasks
+  include_tasks: rabbitmq_stopped.yml
 
 - name: Ensure erlang epmd is stopped
   shell: |

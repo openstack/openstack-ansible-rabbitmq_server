@@ -82,10 +82,14 @@
     filename: "{{ item.filename | default(omit) }}"
     update_cache: no
   with_items:
-    - repo: "deb https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] | lower }} main"
+    - repo: >-
+        deb https://packagecloud.io/rabbitmq/rabbitmq-server/{{ ansible_facts['distribution'] | lower }}
+        {{ ansible_facts['distribution_release'] | lower }} main
       filename: "{{ rabbitmq_repo.filename | default(omit) }}"
       condition: "{{ (rabbitmq_install_method == 'external_repo') }}"
-    - repo: "deb https://packages.erlang-solutions.com/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] | lower }} contrib"
+    - repo: >-
+        deb https://packages.erlang-solutions.com/{{ ansible_facts['distribution'] | lower }}
+        {{ ansible_facts['distribution_release'] | lower }} contrib
       filename: "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
       condition: "{{ (rabbitmq_erlang_install_method == 'external_repo') }}"
   when:

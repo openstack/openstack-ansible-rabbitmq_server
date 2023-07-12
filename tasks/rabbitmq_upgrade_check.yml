@@ -69,7 +69,8 @@
     - rabbitmq-package-rpm
     - rabbitmq-apt-packages
 
-- include_tasks: rabbitmq_upgrade_prep.yml
+- name: Including rabbitmq_upgrade_prep tasks
+  include_tasks: rabbitmq_upgrade_prep.yml
   args:
     apply:
       tags:

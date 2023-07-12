@@ -151,7 +151,8 @@ rabbitmq_pki_install_ca:
 rabbitmq_pki_keys_path: "{{ rabbitmq_pki_dir ~ '/certs/private/' }}"
 rabbitmq_pki_certs_path: "{{ rabbitmq_pki_dir ~ '/certs/certs/' }}"
 rabbitmq_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('RabbitMQIntermediate') }}"
-rabbitmq_pki_intermediate_cert_path: "{{ rabbitmq_pki_dir ~ '/roots/' ~ rabbitmq_pki_intermediate_cert_name ~ '/certs/' ~ rabbitmq_pki_intermediate_cert_name ~ '.crt' }}"
+rabbitmq_pki_intermediate_cert_path: >-
+  {{ rabbitmq_pki_dir ~ '/roots/' ~ rabbitmq_pki_intermediate_cert_name ~ '/certs/' ~ rabbitmq_pki_intermediate_cert_name ~ '.crt' }}
 rabbitmq_pki_regen_cert: ''
 rabbitmq_pki_certificates:
   - name: "rabbitmq_{{ ansible_facts['hostname'] }}"
@@ -185,9 +186,9 @@ rabbitmq_pki_install_certificates:
 
 # Define user-provided SSL certificates in:
 # /etc/openstack_deploy/user_variables.yml
-#rabbitmq_user_ssl_cert: <path to cert on ansible deployment host>
-#rabbitmq_user_ssl_key: <path to cert on ansible deployment host>
-#rabbitmq_user_ssl_ca_cert: <path to cert on ansible deployment host>
+# rabbitmq_user_ssl_cert: <path to cert on ansible deployment host>
+# rabbitmq_user_ssl_key: <path to cert on ansible deployment host>
+# rabbitmq_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
 # These are highly recommended for TLSv1.2 but cannot be used
 # with TLSv1.3. If TLSv1.3 is enabled, these lines will not be

@@ -13,9 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- import_tasks: rabbitmq_upgrade_check.yml
+- name: Importing rabbitmq_upgrade_check tasks
+  import_tasks: rabbitmq_upgrade_check.yml
 
-- include_tasks: "install_{{ ansible_facts['pkg_mgr'] }}.yml"
+- name: Including install tasks
+  include_tasks: "install_{{ ansible_facts['pkg_mgr'] }}.yml"
   args:
     apply:
       tags:

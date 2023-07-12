@@ -32,7 +32,7 @@
   changed_when: false
   register: _cluster_name
 
-- name: Set rabbitmq cluster name on primary node
+- name: Set rabbitmq cluster name on primary node # noqa: no-changed-when
   command: |
     rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
   when:
