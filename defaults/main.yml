@@ -226,6 +226,10 @@ rabbitmq_process_limit: 1048576
 # Limit memory consumption of the erlang VM
 rabbitmq_memory_high_watermark: 0.2
 
+# Extra arguments passed to Erlang on startup
+# rabbitmq_erlang_extra_args: "+sbwt none +sbwtdcpu none +sbwtdio none +stbt nnts"
+rabbitmq_erlang_extra_args: ""
+
 # RabbitMQ collect statistics interval
 rabbitmq_collect_statistics_interval: 5000
 
