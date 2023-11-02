@@ -287,6 +287,8 @@ rabbitmq_port_bindings:
   tcp_listeners:
     "0.0.0.0": 5672
 
+rabbitmq_additional_config: {}
+
 rabbitmq_init_overrides:
   Service:
     LimitNOFILE: "{{ rabbitmq_ulimit }}"
