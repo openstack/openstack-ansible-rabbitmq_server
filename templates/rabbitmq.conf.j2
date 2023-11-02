@@ -74,3 +74,11 @@ management.ssl.fail_if_no_peer_cert = {{ rabbitmq_ssl_fail_if_no_peer_cert | low
 management.tcp.ip = {{ rabbitmq_management_bind_address }}
 management.tcp.port = {{ rabbitmq_management_bind_tcp_port }}
 {% endif %}
+
+{% if rabbitmq_additional_config | length > 0 %}
+# Custom configuration
+
+{% for config_key, config_value in rabbitmq_additional_config.items() %}
+{{ config_key }} = {{ config_value }}
+{% endfor %}
+{% endif %}
