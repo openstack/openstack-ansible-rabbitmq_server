@@ -34,3 +34,17 @@ between each OpenStack service and RabbitMQ.
 Setting this variable to ``false`` disables SSL encryption between
 OpenStack services and RabbitMQ and configures all services to
 use the plain text port, 5672.
+
+Add custom configuration to RabbitMQ
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To add custom configuration, e.g. to configure installed plugins,
+can be accomplished by defining a variable ``rabbitmq_additional_config``
+and add you configuration as a block to this variable. Make sure to
+not add redundent configuration
+
+.. code-block:: yaml
+
+   rabbitmq_additional_config:
+      prometheus.tcp.port: 15680
+      prometheus.tcp.ip: 0.0.0.0
