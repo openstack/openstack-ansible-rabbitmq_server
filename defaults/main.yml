@@ -158,7 +158,7 @@ rabbitmq_pki_certificates:
   - name: "rabbitmq_{{ ansible_facts['hostname'] }}"
     provider: ownca
     cn: "{{ ansible_facts['hostname'] }}"
-    san: "{{ 'DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ rabbitmq_node_address }}"
+    san: "{{ 'DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ rabbitmq_node_address ~ ',DNS:' ~ ansible_facts['fqdn'] }}"
     signed_by: "{{ rabbitmq_pki_intermediate_cert_name }}"
 
 # RabbitMQ destination files for SSL certificates
@@ -225,6 +225,8 @@ rabbitmq_process_limit: 1048576
 
 # Limit memory consumption of the erlang VM
 rabbitmq_memory_high_watermark: 0.2
+
+rabbitmq_env_use_longname: false
 
 # Extra arguments passed to Erlang on startup
 # rabbitmq_erlang_extra_args: "+sbwt none +sbwtdcpu none +sbwtdio none +stbt nnts"

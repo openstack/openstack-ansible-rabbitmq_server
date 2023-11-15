@@ -1,9 +1,11 @@
 # {{ ansible_managed }}
 
 # Set ERLANG VM parameters
-NODENAME=rabbit@{{ ansible_facts['hostname'] }}
+NODENAME=rabbit@{{ ansible_facts['fqdn'] if rabbitmq_env_use_longname else ansible_facts['hostname'] }}
 RABBITMQ_IO_THREAD_POOL_SIZE={{ rabbitmq_async_threads }}
 RABBITMQ_SERVER_ERL_ARGS="+P {{ rabbitmq_process_limit }}"
+
+USE_LONGNAME={{ rabbitmq_env_use_longname | bool | lower }}
 
 {% if rabbitmq_erlang_extra_args %}
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="{{ rabbitmq_erlang_extra_args }}"
