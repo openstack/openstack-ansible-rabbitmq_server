@@ -250,6 +250,11 @@ rabbitmq_hipe_compile: False
 # Disable non-TLS listeners
 rabbitmq_disable_non_tls_listeners: False
 
+# RabbitMQ logging options
+# See https://www.rabbitmq.com/logging.html for the logging options
+rabbitmq_log:
+  journald: True
+  file: False
 
 # RabbitMQ policies
 # Used to tune performance characteristics of OpenStack messaging
