@@ -13,14 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Validate repo config is deb822 format
+  vars:
+    _repo_check: "{{ (rabbitmq_repo + rabbitmq_erlang_repo) | selectattr('repo', 'defined') | map(attribute='repo') }}"
+  ansible.builtin.assert:
+    that: _repo_check | length == 0
+    fail_msg: "The following repository definitions must be updated to deb822 format {{ _repo_check }}"
+
 - name: Run the apt package pinning role
   include_role:
     name: apt_package_pinning
-  when:
-    - rabbitmq_install_method == 'external_repo'
   vars:
     apt_package_pinning_file_name: "rabbitmq.pref"
     apt_package_pinning_priority: 999
+    apt_package_pinning_state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
     apt_pinned_packages:
       - package: "*"
         release: "cloudsmith/rabbitmq/rabbitmq-erlang"
@@ -31,70 +37,56 @@
         version: "{{ rabbitmq_package_version }}"
         priority: 1000
 
-- name: Install GPG keys
-  apt_key:
-    data: "{{ lookup('file', item.file) }}"
-  when:
-    - rabbitmq_install_method == 'external_repo'
-  with_items: "{{ rabbitmq_gpg_keys | selectattr('file', 'defined') | list }}"
-  tags:
-    - rabbitmq-apt-keys
+# NOTE(jrosser) remove this task for the 2025.2 release
+- name: Clean up legacy repository config not in deb822 format
+  vars:
+    rabbitmq_apt_repo_cleanup:
+      - RabbitMQ.list
+      - els_erlang.list
+  file:
+    path: "/etc/apt/sources.list.d/{{ item }}"
+    state: absent
+  with_items: "{{ rabbitmq_apt_repo_cleanup }}"
+  register: apt_repo_removed
 
-# When updating the cache in the apt_repository
-# task, and the update fails, a retry does not
-# detect a change the second attempt and therefore
-# does not update the cache, resulting in a changed
-# repo config, but no updated cache. To work around
-# this bug we implement the change of repo config
-# and the cache update as two separate tasks.
-- name: Add rabbitmq repo
-  apt_repository:
-    repo: "{{ rabbitmq_repo.repo }}"
-    state: "{{ rabbitmq_repo.state }}"
-    filename: "{{ rabbitmq_repo.filename | default(omit) }}"
-    update_cache: no
-  register: add_rabbitmq_repos
-  when:
-    - rabbitmq_install_method == 'external_repo'
-  tags:
-    - rabbitmq-repos
+- name: Ensure python3-debian package is available
+  apt:
+    name: python3-debian
 
-# When updating the cache in the apt_repository
-# task, and the update fails, a retry does not
-# detect a change the second attempt and therefore
-# does not update the cache, resulting in a changed
-# repo config, but no updated cache. To work around
-# this bug we implement the change of repo config
-# and the cache update as two separate tasks.
-- name: Add erlang repo
-  apt_repository:
-    repo: "{{ rabbitmq_erlang_repo.repo }}"
-    state: "{{ rabbitmq_erlang_repo.state }}"
-    filename: "{{ rabbitmq_erlang_repo.filename | default(omit) }}"
-    update_cache: no
-  register: add_erlang_repos
-  when:
-    - rabbitmq_erlang_install_method == 'external_repo'
-  tags:
-    - rabbitmq-repos
+- name: Manage apt repositories
+  vars:
+    _a: "{{ item.architectures }}"
+    _architecture_fixup: "{{ ((_a | d([])) is iterable and (_a | d([])) is not string) | ternary(_a, [_a]) | map('replace', 'x86_64', 'amd64') }}"
+  ansible.builtin.deb822_repository:
+    allow_downgrade_to_insecure: "{{ item.allow_downgrade_to_insecure | default(omit) }}"
+    allow_insecure: "{{ item.allow_insecure | default(omit) }}"
+    allow_weak: "{{ item.allow_weak | default(omit) }}"
+    architectures: "{{ (_architecture_fixup | length > 0) | ternary(_architecture_fixup, omit) }}"
+    by_hash: "{{ item.by_hash | default(omit) }}"
+    check_date: "{{ item.check_date | default(omit) }}"
+    check_valid_until: "{{ item.check_valid_until | default(omit) }}"
+    components: "{{ item.components | default(omit) }}"
+    date_max_future: "{{ item.date_max_future | default(omit) }}"
+    enabled: "{{ item.enabled | default(omit) }}"
+    inrelease_path: "{{ item.inrelease_path | default(omit) }}"
+    languages: "{{ item.languages | default(omit) }}"
+    mode: "{{ item.mode | default(omit) }}"
+    name: "{{ item.name }}"
+    pdiffs: "{{ item.pdiffs | default(omit) }}"
+    signed_by: "{{ item.signed_by | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    suites: "{{ item.suites | default(omit) }}"
+    targets: "{{ item.targets | default(omit) }}"
+    trusted: "{{ item.trusted | default(omit) }}"
+    types: "{{ item.types | default(omit) }}"
+    uris: "{{ item.uris | default(omit) }}"
+  with_items: "{{ rabbitmq_repo + rabbitmq_erlang_repo }}"
+  register: deb822_repos
 
-# Due to our Ansible strategy, a skipped task does not
-# have a dictionary result, so we have to cater to the
-# situation where either of the apt_repository tasks
-# may not have the results dict in the register. As
-# such we validate that the register is a mapping (dict).
-- name: Update Apt cache
+- name: Update apt repositories when config is changed
   apt:
     update_cache: yes
-  when:
-    - (add_rabbitmq_repos is mapping and add_rabbitmq_repos is changed) or
-      (add_erlang_repos is mapping and add_erlang_repos is changed)
-  register: update_apt_cache
-  until: update_apt_cache is success
-  retries: 5
-  delay: 2
-  tags:
-    - rabbitmq-repos
+  when: (apt_repo_removed is changed) or (deb822_repos is changed)
 
 - name: Install RabbitMQ package dependencies
   apt:
