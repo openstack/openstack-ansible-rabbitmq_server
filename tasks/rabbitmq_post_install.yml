@@ -80,6 +80,7 @@
     node: "rabbit@{{ ansible_facts['hostname'] }}"
     name: "{{ item.name }}"
     pattern: "{{ item.pattern }}"
+    apply_to: "{{ item.apply_to | default(omit) }}"
     priority: "{{ item.priority | default(0) }}"
     state: "{{ item.state | default(omit) }}"
     tags: "{{ item.tags }}"
