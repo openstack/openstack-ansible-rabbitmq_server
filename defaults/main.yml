@@ -278,7 +278,7 @@ rabbitmq_policies: []
 rabbitmq_apply_openstack_policies: False
 rabbitmq_openstack_policies:
   - name: "HA"
-    pattern: '^(?!(amq\.)|(.*_fanout_)|(reply_)).*'
+    pattern: '^(?!(amq\.)|(.*_fanout_)).*'
     tags: "ha-mode=all"
 
 rabbitmq_port_bindings:
