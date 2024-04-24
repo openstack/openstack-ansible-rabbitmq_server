@@ -46,7 +46,16 @@ _rabbitmq_erlang_repo:
     - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49CC4BBE5B.key
     - https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
 
-rabbitmq_distro_packages:
-  - openssl
-  - "erlang-{{ _erlang_package_version }}.{{ _erlang_package_dist_tag }}.{{ ansible_facts['architecture'] }}"
-  - "rabbitmq-server-{{ rabbitmq_package_version }}.{{ _rabbitmq_package_dist_tag }}.noarch"
+rabbitmq_distro_packages_mapping:
+  distro:
+    - openssl
+    - rabbitmq-server
+  external_repo:
+    - openssl
+    - "erlang-{{ _erlang_package_version }}.{{ _erlang_package_dist_tag }}.{{ ansible_facts['architecture'] }}"
+    - "rabbitmq-server-{{ rabbitmq_package_version }}.{{ _rabbitmq_package_dist_tag }}.noarch"
+
+rabbitmq_distro_packages: "{{ rabbitmq_distro_packages_mapping[rabbitmq_install_method] }}"
+
+rabbitmq_distro_extras_repo:
+  - centos-release-rabbitmq-*
