@@ -16,6 +16,8 @@
 - name: Run the apt package pinning role
   include_role:
     name: apt_package_pinning
+  when:
+    - rabbitmq_install_method == 'external_repo'
   vars:
     apt_package_pinning_file_name: "rabbitmq.pref"
     apt_package_pinning_priority: 999
@@ -32,6 +34,8 @@
 - name: Install GPG keys
   apt_key:
     data: "{{ lookup('file', item.file) }}"
+  when:
+    - rabbitmq_install_method == 'external_repo'
   with_items: "{{ rabbitmq_gpg_keys | selectattr('file', 'defined') | list }}"
   tags:
     - rabbitmq-apt-keys
