@@ -81,3 +81,7 @@
 
 - name: Flush handlers
   meta: flush_handlers
+
+- name: Importing rabbitmq_feature_flags tasks
+  import_tasks: rabbitmq_feature_flags.yml
+  when: _rabbitmq_is_last_play_host
