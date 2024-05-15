@@ -1,0 +1,45 @@
+---
+# Copyright 2024, BBC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: "Gather cluster status"
+  command: "rabbitmqctl cluster_status --formatter json"
+  register: _cluster_status
+  changed_when: False
+  tags:
+    - rabbitmq-upgrade
+
+- name: "Only enable feature flags if all cluster members are up and stable"
+  block:
+    - name: "Check for disabled RabbitMQ feature flags"
+      shell: "rabbitmqctl list_feature_flags | grep disabled"
+      args:
+        executable: /bin/bash
+      register: _feature_flags
+      changed_when: False
+      failed_when: False
+
+    # NOTE: changed_when required despite the above check because 'unstable'
+    # feature flags will remain disabled each time this runs
+    - name: "Enable all RabbitMQ feature flags"
+      command: "rabbitmqctl enable_feature_flag all"
+      changed_when: False
+      when:
+        - (_feature_flags.stdout_lines | length) > 0
+  when:
+    - ((_cluster_status.stdout | from_json)['running_nodes'] | length) == (groups[rabbitmq_host_group] | length)
+    - ((_cluster_status.stdout | from_json)['alarms'] | length) == 0
+    - ((_cluster_status.stdout | from_json)['partitions'] | length) == 0
+  tags:
+    - rabbitmq-upgrade
