@@ -17,6 +17,9 @@
   command: "rabbitmqctl cluster_status --formatter json"
   register: _cluster_status
   changed_when: False
+  until: _cluster_status is success
+  retries: 5
+  delay: 2
   tags:
     - rabbitmq-upgrade
 
