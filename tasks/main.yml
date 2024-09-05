@@ -83,5 +83,13 @@
   meta: flush_handlers
 
 - name: Importing rabbitmq_feature_flags tasks
-  import_tasks: rabbitmq_feature_flags.yml
-  when: _rabbitmq_is_last_play_host
+  include_tasks: rabbitmq_feature_flags.yml
+  args:
+    apply:
+      tags:
+        - rabbitmq-upgrade
+  tags:
+    - rabbitmq-upgrade
+  when:
+    - _rabbitmq_is_last_play_host
+    - rabbitmq_upgrade
