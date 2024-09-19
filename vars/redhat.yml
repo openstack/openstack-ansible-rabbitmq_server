@@ -29,6 +29,7 @@ _rabbitmq_repo:
   description: "RabbitMQ Server Rolling Repository"
   baseurl: "{{ rabbitmq_repo_url }}"
   filename: RabbitMQ
+  state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
   gpgcheck: yes
   gpgkey:
     - https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
@@ -41,6 +42,7 @@ _rabbitmq_erlang_repo:
   description: "RabbitMQ Erlang Packages"
   baseurl: "{{ rabbitmq_erlang_repo_url }}"
   filename: els-erlang
+  state: "{{ (rabbitmq_erlang_install_method == 'external_repo') | ternary('present', 'absent') }}"
   gpgcheck: yes
   gpgkey:
     - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49CC4BBE5B.key

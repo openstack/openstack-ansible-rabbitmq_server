@@ -28,11 +28,10 @@
     baseurl: "{{ item.baseurl }}"
     gpgcheck: "{{ item.gpgcheck | default('no') }}"
     gpgkey: "{{ item.gpgkey | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
   with_items:
     - "{{ rabbitmq_erlang_repo }}"
     - "{{ rabbitmq_repo }}"
-  when:
-    - rabbitmq_install_method == 'external_repo'
   tags:
     - rabbitmq-repos
 
