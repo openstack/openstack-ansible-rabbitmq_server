@@ -23,7 +23,7 @@ _rabbitmq_repo:
     uris: "{{ rabbitmq_repo_url }}"
     signed_by: "{{ lookup('file', 'gpg/C072C960') }}"
     components: main
-    architectures: "{{ ansible_facts['architecture'] }}"
+    architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
     state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
 
 _rabbitmq_erlang_repo_url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-erlang/deb/{{ ansible_facts['distribution'] | lower }}"
@@ -33,7 +33,7 @@ _rabbitmq_erlang_repo:
     uris: "{{ rabbitmq_erlang_repo_url }}"
     signed_by: "{{ lookup('file', 'gpg/A16A4251') }}"
     components: main
-    architectures: "{{ ansible_facts['architecture'] }}"
+    architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
     state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
 
 _rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:26.2.*-1', '1:24.*') }}"
