@@ -14,7 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: "3.13.3-1"
+_rabbitmq_package_version: "3.13.7-1"
 
 _rabbitmq_repo_url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-server/deb/{{ ansible_facts['distribution'] | lower }}"
 _rabbitmq_repo:
