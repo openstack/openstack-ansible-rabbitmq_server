@@ -23,7 +23,7 @@ _erlang_package_version: "26.2.*-1"
 _erlang_package_dist_tag: "el{{ ansible_facts['distribution_major_version'] }}"
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
-_rabbitmq_repo_url: "https://yum1.novemberain.com/rabbitmq/el/{{ ansible_facts['distribution_major_version'] | lower }}/noarch"
+_rabbitmq_repo_url: "https://yum1.rabbitmq.com/rabbitmq/el/{{ ansible_facts['distribution_major_version'] | lower }}/noarch"
 _rabbitmq_repo:
   name: rabbitmq_rabbitmq-server
   description: "RabbitMQ Server Rolling Repository"
@@ -36,7 +36,7 @@ _rabbitmq_repo:
     - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
-_rabbitmq_erlang_repo_url: "https://yum1.novemberain.com/erlang/el/{{ ansible_facts['distribution_major_version'] | lower }}/$basearch"
+_rabbitmq_erlang_repo_url: "https://yum1.rabbitmq.com/erlang/el/{{ ansible_facts['distribution_major_version'] | lower }}/$basearch"
 _rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
   description: "RabbitMQ Erlang Packages"
