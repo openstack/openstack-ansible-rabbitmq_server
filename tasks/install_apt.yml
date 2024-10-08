@@ -31,7 +31,7 @@
       - package: "*"
         release: "cloudsmith/rabbitmq/rabbitmq-erlang"
       - package: "erlang*"
-        version: "{{ rabbitmq_erlang_version_spec }}"
+        version: "1:{{ rabbitmq_erlang_package_version }}"
         priority: 1000
       - package: "rabbitmq-server"
         version: "{{ rabbitmq_package_version }}"
