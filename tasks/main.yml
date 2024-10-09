@@ -61,17 +61,14 @@
     pki_certificates: "{{ rabbitmq_pki_certificates }}"
     pki_install_certificates: "{{ rabbitmq_pki_install_certificates }}"
 
-- name: Importing rabbitmq_set_cookie tasks
-  import_tasks: rabbitmq_set_cookie.yml
-  tags:
-    - rabbitmq_server-config
-    - rabbitmq-config
-
 - name: Importing rabbitmq_post_install tasks
   import_tasks: rabbitmq_post_install.yml
   tags:
     - rabbitmq_server-config
     - rabbitmq-config
+
+- name: Flush handlers
+  meta: flush_handlers
 
 - name: Importing rabbitmq_cluster tasks
   import_tasks: rabbitmq_cluster.yml
@@ -79,8 +76,16 @@
     - rabbitmq_server-config
     - rabbitmq-cluster
 
-- name: Flush handlers
-  meta: flush_handlers
+- name: Including rabbitmq_setup tasks
+  include_tasks: rabbitmq_setup.yml
+  when:
+    - _rabbitmq_is_last_play_host
+  args:
+    apply:
+      tags:
+        - rabbitmq_server-config
+  tags:
+    - rabbitmq_server-config
 
 - name: Ensure all flags are set after upgrade is done
   when:

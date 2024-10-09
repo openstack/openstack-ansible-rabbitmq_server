@@ -48,6 +48,8 @@
   yum:
     name: "{{ rabbitmq_distro_packages }}"
     state: "{{ rabbitmq_package_state }}"
+  notify:
+    - RabbitMQ restart
   register: install_rabbitmq
   tags:
     - rabbitmq-package-rpm

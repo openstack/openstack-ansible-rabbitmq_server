@@ -1,5 +1,5 @@
 ---
-# Copyright 2014, Rackspace US, Inc.
+# Copyright 2024, Cleura AB
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,26 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: "Ensure RabbitMQ node [0] is started"
+- name: "Ensure RabbitMQ is stopped"
   service:
     name: rabbitmq-server
-    state: started
-    enabled: yes
-  when:
-    - ansible_facts['hostname'] == rabbitmq_primary_cluster_node
-  tags:
-    - rabbitmq-server-started
-    - rabbitmq-upgrade
-    - rabbitmq-start
+    state: stopped
+  listen:
+    - RabbitMQ stop
+    - RabbitMQ restart
 
-- name: "Ensure RabbitMQ nodes [1:] are started"
+- name: "Ensure RabbitMQ is started"
   service:
     name: rabbitmq-server
     state: started
     enabled: yes
-  when:
-    - ansible_facts['hostname'] != rabbitmq_primary_cluster_node
-  tags:
-    - rabbitmq-server-started
-    - rabbitmq-upgrade
-    - rabbitmq-start
+  listen:
+    - RabbitMQ start
+    - RabbitMQ restart
+
+- name: Wait for rabbitmq to be started
+  wait_for:
+    host: "{{ item.key }}"
+    port: "{{ item.value }}"
+  loop: "{{ query('dict', rabbitmq_port_bindings.tcp_listeners) }}"
+  listen:
+    - RabbitMQ start
+    - RabbitMQ restart
