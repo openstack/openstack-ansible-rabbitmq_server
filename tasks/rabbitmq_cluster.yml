@@ -13,34 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# The output of 'rabbitmqctl -q cluster_status' looks like this:
-# [{nodes,[{disc,[rabbit@container1,rabbit@container2,rabbit@container3]}]},
-#  {running_nodes,[rabbit@container3,rabbit@container1,rabbit@container2]},
-#  {cluster_name,
-#        <<"rabbitmq_cluster1">>},
-#  {partitions,[]},
-#  {alarms,[{rabbit@container3,[]},
-#           {rabbit@container1,[]},
-#           {rabbit@container2,[]}]}]
-#
-# Our solution to get the cluster name out cleanly is inspired by
-# https://unix.stackexchange.com/a/13472
-- name: Get rabbitmq cluster name
-  shell: rabbitmqctl -q cluster_status | sed 's/ //g' | grep -oP '(?<=Clustername:).*'
-  args:
-    executable: /bin/bash
-  changed_when: false
-  register: _cluster_name
+- name: Importing rabbitmq_cluster_state tasks
+  import_tasks: rabbitmq_cluster_state.yml
 
 - name: Set rabbitmq cluster name on primary node # noqa: no-changed-when
   command: |
     rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
   when:
     - "ansible_facts['hostname'] == rabbitmq_primary_cluster_node"
-    - "_cluster_name.stdout != rabbitmq_cluster_name"
+    - "_cluster_state.get('cluster_name') != rabbitmq_cluster_name"
 
 - name: Join cluster on secondary nodes
   include_tasks: rabbitmq_cluster_join.yml
   when:
     - "ansible_facts['hostname'] != rabbitmq_primary_cluster_node"
-    - "_cluster_name.stdout != rabbitmq_cluster_name"
+    - "_cluster_state.get('cluster_name') != rabbitmq_cluster_name"
