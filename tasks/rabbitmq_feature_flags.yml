@@ -13,32 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: "Gather cluster status"
-  command: "rabbitmqctl cluster_status --formatter json"
-  register: _cluster_status
+- name: "Check for disabled RabbitMQ feature flags"
+  command: "rabbitmqctl list_feature_flags --formatter json name state stability"
+  register: _feature_flags
   changed_when: False
   failed_when: False
-  tags:
-    - rabbitmq-upgrade
 
-- name: "Only enable feature flags if all cluster members are up and stable"
-  block:
-    - name: "Check for disabled RabbitMQ feature flags"
-      command: "rabbitmqctl list_feature_flags --formatter json name state stability"
-      register: _feature_flags
-      changed_when: False
-      failed_when: False
-
-    - name: "Enable missing RabbitMQ feature flags"
-      command: "rabbitmqctl enable_feature_flag {{ flag['name'] }}"
-      changed_when: True
-      loop: "{{ _feature_flags.stdout | from_json | rejectattr('stability', 'eq', 'experimental') | selectattr('state', 'eq', 'disabled') }}"
-      loop_control:
-        loop_var: flag
-  when:
-    - _cluster_status.rc == 0
-    - ((_cluster_status.stdout | from_json)['running_nodes'] | length) == (groups[rabbitmq_host_group] | length)
-    - ((_cluster_status.stdout | from_json)['alarms'] | length) == 0
-    - ((_cluster_status.stdout | from_json)['partitions'] | length) == 0
-  tags:
-    - rabbitmq-upgrade
+# NOTE: changed_when required despite the above check because 'unstable'
+# feature flags will remain disabled each time this runs
+- name: "Enable missing RabbitMQ feature flags"
+  command: "rabbitmqctl enable_feature_flag {{ flag['name'] }}"
+  changed_when: False
+  loop: "{{ _feature_flags.stdout | from_json | rejectattr('stability', 'eq', 'experimental') | selectattr('state', 'eq', 'disabled') }}"
+  loop_control:
+    loop_var: flag
