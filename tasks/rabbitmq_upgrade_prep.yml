@@ -23,13 +23,13 @@
     - rabbitmq-policy-file
     - rabbitmq-upgrade
 
-- name: Including rabbitmq_stopped tasks
-  include_tasks: rabbitmq_stopped.yml
+- name: Set node for maintenance state
+  command: rabbitmq-upgrade drain --quiet
+  changed_when: False
 
-- name: Ensure erlang epmd is stopped
-  shell: |
-    pkill $(pgrep -lf "erlang" | awk '{print $2}')
-  changed_when: false
-  failed_when: false
-  tags:
-    - rabbitmq-upgrade
+- name: Pause to allow node to sync
+  pause:
+    seconds: 10
+
+- name: Including rabbitmq_stopped tasks
+  import_tasks: rabbitmq_stopped.yml

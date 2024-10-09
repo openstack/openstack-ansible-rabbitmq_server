@@ -69,12 +69,41 @@
     - rabbitmq-package-rpm
     - rabbitmq-apt-packages
 
-- name: Including rabbitmq_upgrade_prep tasks
-  include_tasks: rabbitmq_upgrade_prep.yml
+- name: Including rabbitmq_cluster_state tasks
+  include_tasks: rabbitmq_cluster_state.yml
   args:
     apply:
       tags:
         - rabbitmq-upgrade
-  when: rabbitmq_upgrade | bool
+  when:
+    - rabbitmq_upgrade | bool
   tags:
-    - always
+    - rabbitmq-upgrade
+
+- name: Prepare node for upgrade
+  when:
+    - rabbitmq_upgrade | bool
+    - _cluster_state
+    - (_cluster_state.get('running_nodes', []) | length) == (groups[rabbitmq_host_group] | length)
+    - (_cluster_state.get('alarms', []) | length) == 0
+    - (_cluster_state.get('partitions', []) | length) == 0
+  block:
+    - name: Including rabbitmq_feature_flags tasks
+      include_tasks: rabbitmq_feature_flags.yml
+      args:
+        apply:
+          tags:
+            - rabbitmq-upgrade
+      when:
+        - _rabbitmq_is_first_play_host
+      tags:
+        - rabbitmq-upgrade
+
+    - name: Including rabbitmq_upgrade_prep tasks
+      include_tasks: rabbitmq_upgrade_prep.yml
+      args:
+        apply:
+          tags:
+            - rabbitmq-upgrade
+      tags:
+        - always
