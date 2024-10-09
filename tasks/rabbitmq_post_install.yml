@@ -29,22 +29,6 @@
   tags:
     - rabbitmq-config
 
-# TODO(noonedeadpunk): Remove after Z release
-- name: Remove old rabbitmq config
-  file:
-    path: /etc/rabbitmq/rabbitmq.config
-    state: absent
-
-# TODO(noonedeadpunk): Remove task after Z release
-- name: Remove old systemd overrides
-  file:
-    path: "/etc/systemd/system/rabbitmq-server.service.d/{{ item }}"
-    state: absent
-  with_items:
-    - limits.conf
-    - systemd-restart-on-failure.conf
-  when: rabbitmq_upgrade | bool
-
 - name: Apply systemctl overrides
   import_role:
     name: systemd_service
