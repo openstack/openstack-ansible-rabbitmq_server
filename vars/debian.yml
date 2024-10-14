@@ -15,6 +15,7 @@
 
 _rabbitmq_install_method: external_repo
 _rabbitmq_package_version: "3.13.7-1"
+_rabbitmq_erlang_package_version: "26.2.*-1"
 
 _rabbitmq_repo_url: "https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-server/deb/{{ ansible_facts['distribution'] | lower }}"
 _rabbitmq_repo:
@@ -35,8 +36,6 @@ _rabbitmq_erlang_repo:
     components: main
     architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
     state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
-
-_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('1:26.2.*-1', '1:24.*') }}"
 
 rabbitmq_dependencies:
   - erlang-base

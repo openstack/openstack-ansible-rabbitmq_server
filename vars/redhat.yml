@@ -19,8 +19,8 @@ _rabbitmq_package_version: "3.13.7-1"
 # el9, the packages themselves still have an el8 dist tag for rabbitmq
 _rabbitmq_package_dist_tag: "el8"
 
-_erlang_package_version: "26.2.*-1"
-_erlang_package_dist_tag: "el{{ ansible_facts['distribution_major_version'] }}"
+_rabbitmq_erlang_package_version: "26.2.*-1"
+_rabbitmq_erlang_package_dist_tag: "el{{ ansible_facts['distribution_major_version'] }}"
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
 _rabbitmq_repo_url: "https://yum1.rabbitmq.com/rabbitmq/el/{{ ansible_facts['distribution_major_version'] | lower }}/noarch"
@@ -54,7 +54,7 @@ rabbitmq_distro_packages_mapping:
     - rabbitmq-server
   external_repo:
     - openssl
-    - "erlang-{{ _erlang_package_version }}.{{ _erlang_package_dist_tag }}.{{ ansible_facts['architecture'] }}"
+    - "erlang-{{ rabbitmq_erlang_package_version }}.{{ _rabbitmq_erlang_package_dist_tag }}.{{ ansible_facts['architecture'] }}"
     - "rabbitmq-server-{{ rabbitmq_package_version }}.{{ _rabbitmq_package_dist_tag }}.noarch"
 
 rabbitmq_distro_packages: "{{ rabbitmq_distro_packages_mapping[rabbitmq_install_method] }}"

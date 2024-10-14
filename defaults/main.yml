@@ -87,7 +87,7 @@ rabbitmq_erlang_repo_url: "{{ _rabbitmq_erlang_repo_url | default(null) }}"
 rabbitmq_erlang_repo: "{{ _rabbitmq_erlang_repo | default({}) }}"
 
 # Set the elang version used on the deployment
-rabbitmq_erlang_version_spec: "{{ _rabbitmq_erlang_version_spec | default(null) }}"
+rabbitmq_erlang_package_version: "{{ _rabbitmq_erlang_package_version }}"
 
 # Choose file, distro, external_repo for rabbitmq_install_method.
 rabbitmq_install_method: "{{ _rabbitmq_install_method }}"
