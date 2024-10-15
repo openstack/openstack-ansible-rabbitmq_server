@@ -37,12 +37,14 @@ _rabbitmq_erlang_repo:
     architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
     state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
 
+_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('=1:' ~ rabbitmq_erlang_package_version, '') }}"
+
 rabbitmq_dependencies:
-  - erlang-base
-  - erlang-diameter
-  - erlang-eldap
-  - erlang-nox
+  - "erlang-base{{ _rabbitmq_erlang_version_spec }}"
+  - "erlang-diameter{{ _rabbitmq_erlang_version_spec }}"
+  - "erlang-eldap{{ _rabbitmq_erlang_version_spec }}"
+  - "erlang-nox{{ _rabbitmq_erlang_version_spec }}"
   - socat
 
 rabbitmq_distro_packages:
-  - rabbitmq-server
+  - "rabbitmq-server{{ (rabbitmq_install_method == 'external_repo') | ternary('=' ~ rabbitmq_package_version, '') }}"
