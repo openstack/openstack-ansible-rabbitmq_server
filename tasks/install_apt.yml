@@ -30,6 +30,8 @@
     apt_pinned_packages:
       - package: "*"
         release: "cloudsmith/rabbitmq/rabbitmq-erlang"
+      - package: "*"
+        release: "cloudsmith/rabbitmq/rabbitmq-server"
       - package: "erlang*"
         version: "1:{{ rabbitmq_erlang_package_version }}"
         priority: 1000
