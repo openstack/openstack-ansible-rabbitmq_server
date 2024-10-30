@@ -24,20 +24,17 @@
 - name: "Only enable feature flags if all cluster members are up and stable"
   block:
     - name: "Check for disabled RabbitMQ feature flags"
-      shell: "rabbitmqctl list_feature_flags | grep disabled"
-      args:
-        executable: /bin/bash
+      command: "rabbitmqctl list_feature_flags --formatter json name state stability"
       register: _feature_flags
       changed_when: False
       failed_when: False
 
-    # NOTE: changed_when required despite the above check because 'unstable'
-    # feature flags will remain disabled each time this runs
-    - name: "Enable all RabbitMQ feature flags"
-      command: "rabbitmqctl enable_feature_flag all"
-      changed_when: False
-      when:
-        - (_feature_flags.stdout_lines | length) > 0
+    - name: "Enable missing RabbitMQ feature flags"
+      command: "rabbitmqctl enable_feature_flag {{ flag['name'] }}"
+      changed_when: True
+      loop: "{{ _feature_flags.stdout | from_json | rejectattr('stability', 'eq', 'experimental') | selectattr('state', 'eq', 'disabled') }}"
+      loop_control:
+        loop_var: flag
   when:
     - _cluster_status.rc == 0
     - ((_cluster_status.stdout | from_json)['running_nodes'] | length) == (groups[rabbitmq_host_group] | length)
