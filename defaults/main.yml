@@ -297,9 +297,11 @@ rabbitmq_log:
 rabbitmq_policies: []
 rabbitmq_apply_openstack_policies: False
 rabbitmq_openstack_policies:
-  - name: "HA"
-    pattern: '^(?!(amq\.)|(.*_fanout_)).*'
-    tags: "ha-mode=all"
+  - name: CQv2
+    pattern: '.*'
+    priority: 0
+    tags:
+      queue-version: 2
 
 rabbitmq_port_bindings:
   ssl_listeners:

@@ -22,3 +22,15 @@ _rabbitmq_is_last_play_host: >-
   {{
     (inventory_hostname == (groups[rabbitmq_host_group] | intersect(ansible_play_hosts)) | last) | bool
   }}
+
+_rabbitmq_upgrade_minimal_requirement_mapping:
+  - target: "4.0"
+    requirement: "3.13"
+  - target: "3.13"
+    requirement: "3.11"
+  - target: "3.12"
+    requirement: "3.11"
+  - target: "3.11"
+    requirement: "3.10"
+  - target: "3.10"
+    requirement: "3.7"
