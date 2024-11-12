@@ -14,7 +14,7 @@
 # limitations under the License.
 
 _rabbitmq_install_method: external_repo
-_rabbitmq_package_version: "3.12.14-1"
+_rabbitmq_package_version: "3.13.7-1"
 # NOTE(nhanlon) 2023-05-30: although the package repository is marked
 # el9, the packages themselves still have an el8 dist tag for rabbitmq
 _rabbitmq_package_dist_tag: "el8"
