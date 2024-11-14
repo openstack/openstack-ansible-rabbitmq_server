@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+_rabbitmq_is_first_play_host: >-
+  {{
+    (inventory_hostname == (groups[rabbitmq_host_group] | intersect(ansible_play_hosts)) | first) | bool
+  }}
+
 _rabbitmq_is_last_play_host: >-
   {{
     (inventory_hostname == (groups[rabbitmq_host_group] | intersect(ansible_play_hosts)) | last) | bool
