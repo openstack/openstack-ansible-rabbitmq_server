@@ -1,0 +1,52 @@
+---
+# Copyright 2024, Cleura AB
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Apply rabbitmq policies
+  community.rabbitmq.rabbitmq_policy:
+    node: "rabbit@{{ ansible_facts['hostname'] }}"
+    name: "{{ item.name }}"
+    pattern: "{{ item.pattern }}"
+    apply_to: "{{ item.apply_to | default(omit) }}"
+    priority: "{{ item.priority | default(0) }}"
+    state: "{{ item.state | default(omit) }}"
+    tags: "{{ item.tags }}"
+  register: rabbitmq_policy
+  loop: "{{ (rabbitmq_apply_openstack_policies | bool) | ternary(rabbitmq_openstack_policies + rabbitmq_policies, rabbitmq_policies) }}"
+  tags:
+    - rabbitmq-config
+    - rabbitmq-cluster
+
+# This is being done because the rabbitctl command used by the module
+# is not very effective at returning proper status codes for failure
+# and the module does not error detection. until we can go upstream
+# to fix this issue this task being being done in two parts to ensure
+# that the "guest" user is eradicated.
+- name: Ensure default rabbitmq guest user is removed
+  community.rabbitmq.rabbitmq_user:
+    node: "rabbit@{{ ansible_facts['hostname'] }}"
+    user: guest
+    state: absent
+  when: inventory_hostname == groups[rabbitmq_host_group][0]
+  tags:
+    - rabbitmq-user
+
+- name: Ensure default rabbitmq guest user is removed
+  community.rabbitmq.rabbitmq_user:
+    node: "rabbit@{{ ansible_facts['hostname'] }}"
+    user: guest
+    state: absent
+  when: inventory_hostname != groups[rabbitmq_host_group][0]
+  tags:
+    - rabbitmq-user

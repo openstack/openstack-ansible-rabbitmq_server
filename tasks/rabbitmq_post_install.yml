@@ -13,8 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Set rabbit cookie
+  copy:
+    content: "{{ rabbitmq_cookie_token }}"
+    dest: /var/lib/rabbitmq/.erlang.cookie
+    mode: "0400"
+    owner: rabbitmq
+    group: rabbitmq
+  register: cookie_set
+  notify:
+    - RabbitMQ restart
+  tags:
+    - rabbitmq-config
+
 - name: Create rabbitmq config
-  register: rabbit_config
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -26,6 +38,8 @@
     - { src: "advanced.config.j2", dest: "/etc/rabbitmq/advanced.config" }
     - { src: "rabbitmq-server.j2", dest: "/etc/default/rabbitmq-server", mode: "0644" }
     - { src: "rabbitmq-env.j2", dest: "/etc/rabbitmq/rabbitmq-env.conf" }
+  notify:
+    - RabbitMQ restart
   tags:
     - rabbitmq-config
 
@@ -46,53 +60,7 @@
     state: "{{ item.state }}"
     broker_state: offline
   with_items: "{{ rabbitmq_plugins }}"
-  register: rabbitmq_plugin
+  notify:
+    - RabbitMQ restart
   tags:
     - rabbitmq-config
-
-- name: Including rabbitmq_restart tasks
-  include_tasks:
-    file: rabbitmq_restart.yml
-    apply:
-      tags: rabbitmq-config
-  when: rabbit_config is changed or rabbitmq_plugin is changed or (cookie_set is defined and cookie_set is changed) or rabbitmq_upgrade | bool
-  tags:
-    - rabbitmq-config
-
-- name: Apply rabbitmq policies
-  community.rabbitmq.rabbitmq_policy:
-    node: "rabbit@{{ ansible_facts['hostname'] }}"
-    name: "{{ item.name }}"
-    pattern: "{{ item.pattern }}"
-    apply_to: "{{ item.apply_to | default(omit) }}"
-    priority: "{{ item.priority | default(0) }}"
-    state: "{{ item.state | default(omit) }}"
-    tags: "{{ item.tags }}"
-  register: rabbitmq_policy
-  loop: "{{ (rabbitmq_apply_openstack_policies | bool) | ternary(rabbitmq_openstack_policies + rabbitmq_policies, rabbitmq_policies) }}"
-  tags:
-    - rabbitmq-config
-    - rabbitmq-cluster
-
-# This is being done because the rabbitctl command used by the module
-# is not very effective at returning proper status codes for failure
-# and the module does not error detection. until we can go upstream
-# to fix this issue this task being being done in two parts to ensure
-# that the "guest" user is eradicated.
-- name: Ensure default rabbitmq guest user is removed
-  community.rabbitmq.rabbitmq_user:
-    node: "rabbit@{{ ansible_facts['hostname'] }}"
-    user: guest
-    state: absent
-  when: inventory_hostname == groups[rabbitmq_host_group][0]
-  tags:
-    - rabbitmq-user
-
-- name: Ensure default rabbitmq guest user is removed
-  community.rabbitmq.rabbitmq_user:
-    node: "rabbit@{{ ansible_facts['hostname'] }}"
-    user: guest
-    state: absent
-  when: inventory_hostname != groups[rabbitmq_host_group][0]
-  tags:
-    - rabbitmq-user

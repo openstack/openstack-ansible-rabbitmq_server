@@ -95,6 +95,8 @@
   until: install_packages is success
   retries: 5
   delay: 2
+  notify:
+    - RabbitMQ restart
   tags:
     - rabbitmq-apt-packages
 
@@ -102,6 +104,8 @@
   apt:
     deb: "{{ rabbitmq_package_path }}"
   register: install_rabbitmq
+  notify:
+    - RabbitMQ restart
   when:
     - rabbitmq_install_method == 'file'
   tags:
@@ -116,6 +120,8 @@
   until: install_packages is success
   retries: 5
   delay: 2
+  notify:
+    - RabbitMQ restart
   when:
     - rabbitmq_install_method != 'file'
   tags:
