@@ -18,7 +18,7 @@ cache_timeout: 600
 
 # Set the package install state for distribution packages
 # Options are 'present' and 'latest'
-rabbitmq_package_state: "latest"
+rabbitmq_package_state: "{{ package_state | default('latest') }}"
 
 # Defined versions of RabbitMQ and Erlang
 rabbitmq_package_version: "4.0.3-1"
