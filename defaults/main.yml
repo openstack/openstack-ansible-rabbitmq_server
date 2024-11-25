@@ -20,6 +20,10 @@ cache_timeout: 600
 # Options are 'present' and 'latest'
 rabbitmq_package_state: "latest"
 
+# Defined versions of RabbitMQ and Erlang
+rabbitmq_package_version: "4.0.3-1"
+rabbitmq_erlang_package_version: "26.2.*-1"
+
 # Inventory group containing the hosts for the cluster
 rabbitmq_host_group: "rabbitmq_all"
 
@@ -51,7 +55,6 @@ rabbitmq_upgrade: false
 rabbitmq_ignore_version_state: false
 
 rabbitmq_package_url: ""
-rabbitmq_package_version: "{{ _rabbitmq_package_version }}"
 rabbitmq_package_sha256: ""
 rabbitmq_package_path: ""
 
@@ -85,9 +88,6 @@ rabbitmq_erlang_repo_url: "{{ _rabbitmq_erlang_repo_url | default(null) }}"
 
 # Set the repo information for the Erlang repository
 rabbitmq_erlang_repo: "{{ _rabbitmq_erlang_repo | default({}) }}"
-
-# Set the elang version used on the deployment
-rabbitmq_erlang_package_version: "{{ _rabbitmq_erlang_package_version }}"
 
 # Choose file, distro, external_repo for rabbitmq_install_method.
 rabbitmq_install_method: "{{ _rabbitmq_install_method }}"
