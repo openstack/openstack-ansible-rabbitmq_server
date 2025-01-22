@@ -13,11 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Setup the host
-- import_playbook: common/test-setup-host.yml
-
-# Install RabbitMQ server
-- import_playbook: common/test-install-rabbitmq.yml
-
-# Run functional tests
-- import_playbook: test-rabbitmq-functional.yml
+- name: Install RabbitMQ server
+  hosts: rabbitmq_all
+  user: root
+  roles:
+    - "{{ playbook_dir | dirname | basename }}"

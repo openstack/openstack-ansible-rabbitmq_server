@@ -16,6 +16,7 @@
 - project:
     templates:
       - openstack-ansible-linters-jobs
+      - openstack-ansible-molecule
       - openstack-ansible-deploy-infra_lxc-jobs
       - openstack-ansible-deploy-aio_metal-jobs
       - openstack-ansible-deploy-infra_distro_lxc-jobs

@@ -1,0 +1,30 @@
+---
+collections:
+  - name: https://opendev.org/openstack/ansible-config_template
+    version: master
+    type: git
+  - name: community.crypto
+    source: https://github.com/ansible-collections/community.crypto
+    type: git
+    version: 2.22.3
+  - name: community.general
+    source: https://github.com/ansible-collections/community.general
+    type: git
+    version: 10.0.1
+  - name: community.rabbitmq
+    source: https://github.com/ansible-collections/community.rabbitmq
+    type: git
+    version: 1.3.0
+roles:
+  - name: apt_package_pinning
+    src: https://opendev.org/openstack/openstack-ansible-apt_package_pinning
+    scm: git
+    version: master
+  - name: systemd_service
+    src: https://opendev.org/openstack/ansible-role-systemd_service
+    scm: git
+    version: master
+  - name: pki
+    src: https://opendev.org/openstack/ansible-role-pki
+    scm: git
+    version: master

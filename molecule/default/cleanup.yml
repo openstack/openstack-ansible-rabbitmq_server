@@ -1,0 +1,8 @@
+---
+- name: Prepare
+  hosts: localhost
+  tasks:
+    - name: Delete generated certs, if any
+      ansible.builtin.file:
+        path: /tmp/pki/rabbitmq-ca
+        state: absent

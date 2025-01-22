@@ -1,6 +1,9 @@
 - name: Install RabbitMQ server
   hosts: rabbitmq_all
   user: root
+  serial:
+    - 1
+    - 100%
   roles:
     - role: rabbitmq_server
       tags:

@@ -18,76 +18,67 @@
   any_errors_fatal: true
   user: root
   gather_facts: true
-  become: true
   tasks:
+
     - name: Check rabbitmq is running
       command: "pgrep -f rabbit"
-      delegate_to: "{{ item }}"
-      when: ansible_host == item
-      with_items:
-        - 10.1.0.2
-        - 10.1.0.3
-        - 10.1.0.4
 
     - name: Open rabbitmq.config
       slurp:
-        src: "/etc/rabbitmq/rabbitmq.config"
+        src: "/etc/rabbitmq/rabbitmq.conf"
       register: rabbitmq_config
 
-    - name: Open enabled_plugins
-      slurp:
-        src: "/etc/rabbitmq/enabled_plugins"
-      register: enabled_plugins
-
     - name: Read rabbitmq_ssl_cert
-      stat:
-        path: "{{ rabbitmq_ssl_cert }}"
+      community.crypto.x509_certificate_info:
+        path: "/etc/rabbitmq/rabbitmq.pem"
       register: rabbitmq_ssl_cert_stat
-
-    - name: Read rabbitmq_ssl_key
-      stat:
-        path: "{{ rabbitmq_ssl_key }}"
-      register: rabbitmq_ssl_key_stat
 
     - name: Read rabbit files
       set_fact:
-        enabled_plugins_contents: "{{ enabled_plugins.content | b64decode }}"
         rabbitmq_config_contents: "{{ rabbitmq_config.content | b64decode }}"
-        rabbitmq_ssl_cert_checksum: "{{ rabbitmq_ssl_cert_stat.stat.checksum }}"
-        rabbitmq_ssl_key_checksum: "{{ rabbitmq_ssl_key_stat.stat.checksum }}"
 
     - name: Check files contents
       assert:
         that:
-          - "'rabbitmq_management' in enabled_plugins_contents"
+          - "'ssl_options.certfile   = /etc/rabbitmq/rabbitmq.pem' in rabbitmq_config_contents"
+          - "'ssl_options.keyfile    = /etc/rabbitmq/rabbitmq.key' in rabbitmq_config_contents"
+          - not rabbitmq_ssl_cert_stat['expired']
+          - rabbitmq_ssl_cert_stat['issuer']['commonName'] == 'RabbitMQ Intermediate CA'
+          - rabbitmq_ssl_cert_stat['subject']['commonName'] == inventory_hostname
+          - "'IP:' ~ rabbitmq_node_address in rabbitmq_ssl_cert_stat['subject_alt_name']"
 
     - name: Get status of rabbitmq
-      command: rabbitmqctl status
+      command: rabbitmqctl status --formatter json
       register: rabbitmqctl_status
       changed_when: false
 
-    - name: Print rabbitmqctl status
-      debug:
-        var: rabbitmqctl_status
+    - name: Get cluster status of rabbitmq
+      command: rabbitmqctl cluster_status --formatter json
+      register: rabbitmqctl_cluster_status
+      changed_when: false
 
-    - name: Ensure SSL cert/key checksums are identical across cluster
+    - name: Ensure proper resulting state of deployment
+      vars:
+        cluster_status: "{{ rabbitmqctl_cluster_status.stdout | from_json }}"
+        node_status: "{{ rabbitmqctl_status.stdout | from_json }}"
+        cluster_rabbit_versions: "{{ cluster_status['versions'].values() | map(attribute='rabbitmq_version') | unique }}"
+        cluster_erlang_versions: "{{ cluster_status['versions'].values() | map(attribute='erlang_version') | unique }}"
       assert:
         that:
-          - hostvars['container1']['rabbitmq_ssl_cert_checksum'] == hostvars['container2']['rabbitmq_ssl_cert_checksum']
-          - hostvars['container2']['rabbitmq_ssl_cert_checksum'] == hostvars['container3']['rabbitmq_ssl_cert_checksum']
-          - hostvars['container1']['rabbitmq_ssl_key_checksum'] == hostvars['container2']['rabbitmq_ssl_key_checksum']
-          - hostvars['container2']['rabbitmq_ssl_key_checksum'] == hostvars['container3']['rabbitmq_ssl_key_checksum']
+          - not node_status['is_under_maintenance']
+          - node_status['alarms'] | length == 0
+          - "'rabbitmq_management' in node_status['active_plugins']"
+          - cluster_rabbit_versions | length == 1
+          - cluster_erlang_versions | length == 1
+          - cluster_status['running_nodes'] | length == 3
+          - cluster_status['disk_nodes'] | length == 3
 
     - name: Get the policy list
-      command: rabbitmqctl -q list_policies
+      command: rabbitmqctl -q list_policies --formatter json
       register: rabbitmq_policies_output
       changed_when: false
 
-    - name: Show the policies
-      debug:
-        var: rabbitmq_policies.stdout
-
-    # Expected policy: "/       HA      all     ^(?!amq\\.).*   {"ha-mode":"all"}       0"
+    # Expected policy: "/       CQv2    .*      all     {"queue-version":2}     0"
     - name: Validate that the expected policies are present
       assert:
-        that: rabbitmq_policies_output.stdout is search("amq")
+        that: rabbitmq_policies_output.stdout | from_json | selectattr('name', 'eq', 'CQv2') | length > 0

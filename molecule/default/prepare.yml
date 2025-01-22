@@ -1,0 +1,21 @@
+---
+- name: Prepare
+  hosts: all
+  vars:
+    procps_package:
+      debian: procps
+      redhat: procps-ng
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when:
+        - ansible_facts['os_family'] | lower == 'debian'
+
+    - name: Install python3-cryptography
+      ansible.builtin.package:
+        name:
+          - python3-cryptography
+          - "{{ procps_package[ansible_facts['os_family'] | lower] }}"
+        state: present

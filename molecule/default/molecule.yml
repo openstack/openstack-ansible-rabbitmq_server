@@ -1,0 +1,78 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: rabbitmq01
+    groups:
+      - rabbitmq_all
+    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:bookworm}"
+    command: ${DOCKER_COMMAND:-""}
+    privileged: true
+    pre_build_image: true
+    docker_networks:
+      - name: 'rabbitmq'
+        ipam_config:
+          - subnet: '10.1.0.0/24'
+    networks:
+      - name: "rabbitmq"
+        ipv4_address: '10.1.0.2'
+  - name: rabbitmq02
+    groups:
+      - rabbitmq_all
+    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:bookworm}"
+    command: ${DOCKER_COMMAND:-""}
+    privileged: true
+    pre_build_image: true
+    docker_networks:
+      - name: 'rabbitmq'
+        ipam_config:
+          - subnet: '10.1.0.0/24'
+    networks:
+      - name: "rabbitmq"
+        ipv4_address: '10.1.0.3'
+  - name: rabbitmq03
+    groups:
+      - rabbitmq_all
+    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:bookworm}"
+    command: ${DOCKER_COMMAND:-""}
+    privileged: true
+    pre_build_image: true
+    docker_networks:
+      - name: 'rabbitmq'
+        ipam_config:
+          - subnet: '10.1.0.0/24'
+    networks:
+      - name: "rabbitmq"
+        ipv4_address: '10.1.0.4'
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      rabbitmq_all:
+        rabbitmq_apply_openstack_policies: True
+        rabbitmq_cookie_token: secrete
+        rabbitmq_manage_hosts_entries: False
+        rabbitmq_pki_dir: /tmp/pki/rabbitmq-ca
+    host_vars:
+      rabbitmq01:
+        rabbitmq_node_address: 10.1.0.2
+      rabbitmq02:
+        rabbitmq_node_address: 10.1.0.3
+      rabbitmq03:
+        rabbitmq_node_address: 10.1.0.4
+  lint:
+    name: ansible-lint
+  playbooks:
+    prepare: prepare.yml
+    converge: ../../tests/test.yml
+    verify: ../../tests/test-rabbitmq-functional.yml
+    cleanup: cleanup.yml
+  config_options:
+    defaults:
+      inject_facts_as_vars: false
+scenario:
+  name: default
