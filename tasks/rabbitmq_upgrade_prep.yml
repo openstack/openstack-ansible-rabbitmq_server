@@ -26,6 +26,16 @@
 - name: Set node for maintenance state
   ansible.builtin.command: rabbitmq-upgrade drain --quiet
   changed_when: false
+  # NOTE(mossblaser) The rabbitmq-upgrade drain command appears to occasionally
+  # return status 69 despite success:
+  #
+  #    https://github.com/rabbitmq/rabbitmq-server/issues/3369
+  #
+  # Since missing this step in the worst case should just result in a less
+  # graceful failover, tolerating the failure is appropriate whilst this issue
+  # remains.
+  register: _rabbitmq_upgrade_drain
+  failed_when: _rabbitmq_upgrade_drain.rc not in [0, 69]
 
 - name: Pause to allow node to sync
   ansible.builtin.pause:
