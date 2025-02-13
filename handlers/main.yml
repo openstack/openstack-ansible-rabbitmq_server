@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: "Ensure RabbitMQ is stopped"
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
     state: stopped
   listen:
@@ -22,7 +22,7 @@
     - RabbitMQ restart
 
 - name: "Ensure RabbitMQ is started"
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
     state: started
     enabled: true
@@ -31,7 +31,7 @@
     - RabbitMQ restart
 
 - name: Wait for rabbitmq to be started
-  wait_for:
+  ansible.builtin.wait_for:
     host: "{{ item.key }}"
     port: "{{ item.value }}"
   loop: "{{ query('dict', rabbitmq_port_bindings.tcp_listeners) }}"

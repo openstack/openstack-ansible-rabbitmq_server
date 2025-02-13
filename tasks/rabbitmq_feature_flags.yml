@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: "Check for disabled RabbitMQ feature flags"
-  command: "rabbitmqctl list_feature_flags --formatter json name state stability"
+  ansible.builtin.command: "rabbitmqctl list_feature_flags --formatter json name state stability"
   register: _feature_flags
   changed_when: false
   failed_when: false
@@ -22,7 +22,7 @@
 # NOTE: changed_when required despite the above check because 'unstable'
 # feature flags will remain disabled each time this runs
 - name: "Enable missing RabbitMQ feature flags"
-  command: "rabbitmqctl enable_feature_flag {{ flag['name'] }}"
+  ansible.builtin.command: "rabbitmqctl enable_feature_flag {{ flag['name'] }}"
   changed_when: false
   loop: "{{ _feature_flags.stdout | from_json | rejectattr('stability', 'eq', 'experimental') | selectattr('state', 'eq', 'disabled') }}"
   loop_control:

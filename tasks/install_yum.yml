@@ -14,14 +14,14 @@
 # limitations under the License.
 
 - name: Fail if installation method is not 'external_repo' or 'distro'
-  fail:
+  ansible.builtin.fail:
     msg: "The only supported rabbitmq_install_method for RedHat is 'external_repo' and 'distro'."
   when:
     - rabbitmq_install_method != 'external_repo'
     - rabbitmq_install_method != 'distro'
 
 - name: Configure repositories
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: "{{ item.name }}"
     file: "{{ item.filename }}"
     description: "{{ item.description }}"
@@ -36,7 +36,7 @@
     - rabbitmq-repos
 
 - name: Install RabbitMQ packages
-  yum:
+  ansible.builtin.dnf:
     name: "{{ rabbitmq_distro_extras_repo }}"
     state: "{{ rabbitmq_package_state }}"
   when:
@@ -45,7 +45,7 @@
     - rabbitmq-repos
 
 - name: Install RabbitMQ packages
-  yum:
+  ansible.builtin.dnf:
     name: "{{ rabbitmq_distro_packages }}"
     state: "{{ rabbitmq_package_state }}"
   notify:

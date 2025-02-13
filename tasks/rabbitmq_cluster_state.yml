@@ -14,11 +14,11 @@
 # limitations under the License.
 
 - name: "Gather cluster status"
-  command: "rabbitmqctl cluster_status --formatter json"
+  ansible.builtin.command: "rabbitmqctl cluster_status --formatter json"
   register: _cluster_status
   changed_when: false
   failed_when: false
 
 - name: Define cluster_state fact
-  set_fact:
+  ansible.builtin.set_fact:
     _cluster_state: "{{ (_cluster_status.rc == 0) | ternary(_cluster_status.stdout, {} | string) | from_json }}"

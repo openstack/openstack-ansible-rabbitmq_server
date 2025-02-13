@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Download the RabbitMQ package
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ rabbitmq_package_url }}"
     dest: "{{ rabbitmq_package_path }}"
     mode: "0644"
@@ -33,24 +33,24 @@
 - name: Manage /etc/hosts files
   block:
     - name: Fail if hosts file is not managed yet
-      command: grep "OPENSTACK-ANSIBLE MANAGED BLOCK" /etc/hosts
+      ansible.builtin.command: grep "OPENSTACK-ANSIBLE MANAGED BLOCK" /etc/hosts
       changed_when: false
   rescue:
     - name: Rescue failure and add required records
-      lineinfile:
+      ansible.builtin.lineinfile:
         dest: /etc/hosts
         state: present
         line: "{{ item.address }} {{ item.hostnames | join(' ') }}"
       with_items: "{{ rabbitmq_hosts_entries }}"
   always:
     - name: Ensure localhost /etc/hosts entry is correct
-      lineinfile:
+      ansible.builtin.lineinfile:
         dest: /etc/hosts
         state: present
         line: "127.0.0.1 localhost"
         regexp: "^127\\.0\\.0\\.1"
     - name: Remove hostname record for 127.0.1.1
-      replace:
+      ansible.builtin.replace:
         path: /etc/hosts
         regexp: '^(127\.0\.1\.1)\s*(\S*)\s*({{ ansible_facts["hostname"] }})($|\s.*)'
         replace: "\\1 \\2 \\4"
@@ -60,13 +60,13 @@
     - rabbitmq-config
 
 - name: Create the system group
-  group:
+  ansible.builtin.group:
     name: "{{ rabbit_system_group_name }}"
     state: "present"
     system: "yes"
 
 - name: Create the rabbit system user
-  user:
+  ansible.builtin.user:
     name: "{{ rabbit_system_user_name }}"
     group: "{{ rabbit_system_group_name }}"
     comment: "RabbitMQ messaging server"
@@ -76,7 +76,7 @@
     home: "/var/lib/rabbitmq"
 
 - name: Create the local directories
-  file:
+  ansible.builtin.file:
     path: "/etc/rabbitmq/"
     state: "directory"
     owner: "root"

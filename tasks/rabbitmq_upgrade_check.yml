@@ -17,7 +17,7 @@
 # so we skip this task in the ansible-lint check by using the
 # 'skip_ansible_lint' tag
 - name: Get version of installed RabbitMQ package (deb)
-  command: "dpkg-query -f='${Version}' -W rabbitmq-server"
+  ansible.builtin.command: "dpkg-query -f='${Version}' -W rabbitmq-server"
   changed_when: false
   check_mode: false
   failed_when: false
@@ -33,7 +33,7 @@
 # so we skip this task in the ansible-lint check by using the
 # 'skip_ansible_lint' tag
 - name: Get version of installed RabbitMQ package (rpm)
-  command: "rpm --queryformat '%{VERSION}' -q rabbitmq-server"
+  ansible.builtin.command: "rpm --queryformat '%{VERSION}' -q rabbitmq-server"
   changed_when: false
   check_mode: false
   failed_when: false
@@ -46,7 +46,7 @@
     - skip_ansible_lint
 
 - name: Register a fact for the installed RabbitMQ version
-  set_fact:
+  ansible.builtin.set_fact:
     installed_rabbitmq: "{{ item }}"
   when:
     - item is not skipped
@@ -55,7 +55,7 @@
     - "{{ installed_rabbitmq_rpm }}"
 
 - name: Ensure installed RabbitMQ version is same as expected
-  fail:
+  ansible.builtin.fail:
     msg: "To install a new major/minor version of RabbitMQ set '-e rabbitmq_upgrade=true'."
   when:
     - not rabbitmq_upgrade | bool
@@ -68,7 +68,7 @@
     - rabbitmq-apt-packages
 
 - name: Ensure that RabbitMQ is running minimal required version for upgrade
-  fail:
+  ansible.builtin.fail:
     msg: |
       Minimal required version for proceeding with RabbitMQ upgrade to {{ rabbitmq_package_version }} is {{ _minimal_required_version }}.
       Please, upgrade to the version {{ _minimal_required_version }} before proceeding with further upgrade.
@@ -87,7 +87,7 @@
     - rabbitmq-apt-packages
 
 - name: Including rabbitmq_cluster_state tasks
-  include_tasks: rabbitmq_cluster_state.yml
+  ansible.builtin.include_tasks: rabbitmq_cluster_state.yml
   args:
     apply:
       tags:
@@ -106,7 +106,7 @@
     - (_cluster_state.get('partitions', []) | length) == 0
   block:
     - name: Including rabbitmq_feature_flags tasks
-      include_tasks: rabbitmq_feature_flags.yml
+      ansible.builtin.include_tasks: rabbitmq_feature_flags.yml
       args:
         apply:
           tags:
@@ -117,7 +117,7 @@
         - rabbitmq-upgrade
 
     - name: Including rabbitmq_upgrade_prep tasks
-      include_tasks: rabbitmq_upgrade_prep.yml
+      ansible.builtin.include_tasks: rabbitmq_upgrade_prep.yml
       args:
         apply:
           tags:

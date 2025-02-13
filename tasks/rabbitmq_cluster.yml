@@ -14,17 +14,17 @@
 # limitations under the License.
 
 - name: Importing rabbitmq_cluster_state tasks
-  import_tasks: rabbitmq_cluster_state.yml
+  ansible.builtin.import_tasks: rabbitmq_cluster_state.yml
 
 - name: Set rabbitmq cluster name on primary node # noqa: no-changed-when
-  command: |
+  ansible.builtin.command: |
     rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
   when:
     - "ansible_facts['hostname'] == rabbitmq_primary_cluster_node"
     - "_cluster_state.get('cluster_name') != rabbitmq_cluster_name"
 
 - name: Join cluster on secondary nodes
-  include_tasks: rabbitmq_cluster_join.yml
+  ansible.builtin.include_tasks: rabbitmq_cluster_join.yml
   when:
     - "ansible_facts['hostname'] != rabbitmq_primary_cluster_node"
     - "_cluster_state.get('cluster_name') != rabbitmq_cluster_name"

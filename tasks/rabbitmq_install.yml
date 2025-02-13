@@ -14,10 +14,10 @@
 # limitations under the License.
 
 - name: Importing rabbitmq_upgrade_check tasks
-  import_tasks: rabbitmq_upgrade_check.yml
+  ansible.builtin.import_tasks: rabbitmq_upgrade_check.yml
 
 - name: Including install tasks
-  include_tasks: "install_{{ ansible_facts['pkg_mgr'] }}.yml"
+  ansible.builtin.include_tasks: "install_{{ ansible_facts['pkg_mgr'] }}.yml"
   args:
     apply:
       tags:
@@ -28,7 +28,7 @@
     - always
 
 - name: Reload the systemd daemon
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
   when:
     - install_rabbitmq is changed
@@ -38,7 +38,7 @@
     - rabbitmq_server-install
 
 - name: Ensure there are no policy-rc files
-  file:
+  ansible.builtin.file:
     path: "/usr/sbin/policy-rc.d"
     state: absent
   tags:

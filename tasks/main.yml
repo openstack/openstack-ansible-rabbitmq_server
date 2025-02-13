@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Gather variables for each operating system
-  include_vars: "{{ lookup('first_found', params) }}"
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
     params:
       files:
@@ -29,13 +29,13 @@
     - always
 
 - name: Importing rabbitmq_pre_install tasks
-  import_tasks: rabbitmq_pre_install.yml
+  ansible.builtin.import_tasks: rabbitmq_pre_install.yml
   tags:
     - rabbitmq_server-install
 
 # The install process will be skipped if `rabbitmq_ignore_version_state=true`
 - name: Including rabbitmq_install tasks
-  include_tasks: rabbitmq_install.yml
+  ansible.builtin.include_tasks: rabbitmq_install.yml
   when: not rabbitmq_ignore_version_state | bool
   args:
     apply:
@@ -46,7 +46,7 @@
     - always
 
 - name: Create and install SSL certificates
-  include_role:
+  ansible.builtin.include_role:
     name: pki
     tasks_from: "{{ rabbitmq_pki_create_ca | ternary('main.yml', 'main_certs.yml') }}"
   vars:
@@ -62,22 +62,22 @@
     pki_install_certificates: "{{ rabbitmq_pki_install_certificates }}"
 
 - name: Importing rabbitmq_post_install tasks
-  import_tasks: rabbitmq_post_install.yml
+  ansible.builtin.import_tasks: rabbitmq_post_install.yml
   tags:
     - rabbitmq_server-config
     - rabbitmq-config
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Importing rabbitmq_cluster tasks
-  import_tasks: rabbitmq_cluster.yml
+  ansible.builtin.import_tasks: rabbitmq_cluster.yml
   tags:
     - rabbitmq_server-config
     - rabbitmq-cluster
 
 - name: Including rabbitmq_setup tasks
-  include_tasks: rabbitmq_setup.yml
+  ansible.builtin.include_tasks: rabbitmq_setup.yml
   when:
     - _rabbitmq_is_last_play_host
   args:
@@ -93,7 +93,7 @@
     - rabbitmq_upgrade
   block:
     - name: Including rabbitmq_cluster_state tasks
-      include_tasks: rabbitmq_cluster_state.yml
+      ansible.builtin.include_tasks: rabbitmq_cluster_state.yml
       args:
         apply:
           tags:
@@ -102,7 +102,7 @@
         - rabbitmq-upgrade
 
     - name: Importing rabbitmq_feature_flags tasks
-      include_tasks: rabbitmq_feature_flags.yml
+      ansible.builtin.include_tasks: rabbitmq_feature_flags.yml
       args:
         apply:
           tags:

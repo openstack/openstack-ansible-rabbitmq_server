@@ -21,7 +21,7 @@
     fail_msg: "The following repository definitions must be updated to deb822 format {{ _repo_check }}"
 
 - name: Run the apt package pinning role
-  include_role:
+  ansible.builtin.include_role:
     name: apt_package_pinning
   vars:
     apt_package_pinning_file_name: "rabbitmq.pref"
@@ -45,14 +45,14 @@
     rabbitmq_apt_repo_cleanup:
       - RabbitMQ.list
       - els_erlang.list
-  file:
+  ansible.builtin.file:
     path: "/etc/apt/sources.list.d/{{ item }}"
     state: absent
   with_items: "{{ rabbitmq_apt_repo_cleanup }}"
   register: apt_repo_removed
 
 - name: Ensure python3-debian package is available
-  apt:
+  ansible.builtin.apt:
     name: python3-debian
 
 - name: Manage apt repositories
@@ -83,12 +83,12 @@
   register: deb822_repos
 
 - name: Update apt repositories when config is changed
-  apt:
+  ansible.builtin.apt:
     update_cache: true
   when: (apt_repo_removed is changed) or (deb822_repos is changed)
 
 - name: Install RabbitMQ package dependencies
-  apt:
+  ansible.builtin.apt:
     pkg: "{{ rabbitmq_dependencies }}"
     state: "{{ rabbitmq_package_state }}"
     update_cache: true
@@ -103,7 +103,7 @@
     - rabbitmq-apt-packages
 
 - name: Install the RabbitMQ package deb
-  apt:
+  ansible.builtin.apt:
     deb: "{{ rabbitmq_package_path }}"
   register: install_rabbitmq
   notify:
@@ -115,7 +115,7 @@
     - rabbitmq-apt-packages
 
 - name: Install RabbitMQ packages
-  package:
+  ansible.builtin.package:
     name: "{{ rabbitmq_distro_packages }}"
     state: "{{ rabbitmq_package_state }}"
   register: install_packages

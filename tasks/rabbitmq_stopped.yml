@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: "Ensure RabbitMQ nodes [1:] are stopped"
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
     state: stopped
   failed_when: false
@@ -26,7 +26,7 @@
     - rabbitmq-stop
 
 - name: "Ensure RabbitMQ node [0] is stopped"
-  service:
+  ansible.builtin.service:
     name: rabbitmq-server
     state: stopped
   failed_when: false

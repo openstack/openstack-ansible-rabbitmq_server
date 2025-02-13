@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Set rabbit cookie
-  copy:
+  ansible.builtin.copy:
     content: "{{ rabbitmq_cookie_token }}"
     dest: /var/lib/rabbitmq/.erlang.cookie
     mode: "0400"
@@ -27,7 +27,7 @@
     - rabbitmq-config
 
 - name: Create rabbitmq config
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{ rabbit_system_user_name }}"
@@ -44,7 +44,7 @@
     - rabbitmq-config
 
 - name: Apply systemctl overrides
-  import_role:
+  ansible.builtin.import_role:
     name: systemd_service
   vars:
     systemd_user_name: "{{ rabbit_system_user_name }}"
