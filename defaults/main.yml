@@ -34,7 +34,7 @@ rabbit_system_user_name: rabbitmq
 rabbit_system_group_name: rabbitmq
 
 # Allow role to adjust /etc/hosts file
-rabbitmq_manage_hosts_entries: True
+rabbitmq_manage_hosts_entries: true
 
 # Hosts file entries
 rabbitmq_hosts_entries: >-
@@ -120,7 +120,7 @@ rabbitmq_pki_setup_host: "{{ openstack_pki_setup_host | default('localhost') }}"
 
 # Create a certificate authority if one does not already exist
 rabbitmq_pki_create_ca: "{{ openstack_pki_authorities is not defined | bool }}"
-rabbitmq_pki_regen_ca: ''
+rabbitmq_pki_regen_ca: ""
 rabbitmq_pki_authorities:
   - name: "RabbitMQRoot"
     country: "GB"
@@ -161,7 +161,7 @@ rabbitmq_pki_certs_path: "{{ rabbitmq_pki_dir ~ '/certs/certs/' }}"
 rabbitmq_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('RabbitMQIntermediate') }}"
 rabbitmq_pki_intermediate_cert_path: >-
   {{ rabbitmq_pki_dir ~ '/roots/' ~ rabbitmq_pki_intermediate_cert_name ~ '/certs/' ~ rabbitmq_pki_intermediate_cert_name ~ '.crt' }}
-rabbitmq_pki_regen_cert: ''
+rabbitmq_pki_regen_cert: ""
 rabbitmq_pki_certificates:
   - name: "rabbitmq_{{ ansible_facts['hostname'] }}"
     provider: ownca
@@ -210,7 +210,7 @@ rabbitmq_ssl_tls_versions:
 
 # Mutual TLS control
 rabbitmq_ssl_verify: "verify_none"
-rabbitmq_ssl_fail_if_no_peer_cert: False
+rabbitmq_ssl_fail_if_no_peer_cert: false
 
 # Recommended ciphers taken from https://www.rabbitmq.com/ssl.html
 rabbitmq_ssl_ciphers:
@@ -253,16 +253,16 @@ rabbitmq_management_ssl: true
 rabbitmq_management_rates_mode: basic
 
 # Precompile RabbitMQ with HiPE
-rabbitmq_hipe_compile: False
+rabbitmq_hipe_compile: false
 
 # Disable non-TLS listeners
-rabbitmq_disable_non_tls_listeners: False
+rabbitmq_disable_non_tls_listeners: false
 
 # RabbitMQ logging options
 # See https://www.rabbitmq.com/logging.html for the logging options
 rabbitmq_log:
-  journald: True
-  file: False
+  journald: true
+  file: false
 
 # RabbitMQ policies
 # Used to tune performance characteristics of OpenStack messaging
@@ -295,10 +295,10 @@ rabbitmq_log:
 #     state: absent
 #
 rabbitmq_policies: []
-rabbitmq_apply_openstack_policies: False
+rabbitmq_apply_openstack_policies: false
 rabbitmq_openstack_policies:
   - name: CQv2
-    pattern: '.*'
+    pattern: ".*"
     priority: 0
     tags:
       queue-version: 2

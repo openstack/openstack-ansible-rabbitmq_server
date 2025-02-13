@@ -25,7 +25,7 @@
   service:
     name: rabbitmq-server
     state: started
-    enabled: yes
+    enabled: true
   listen:
     - RabbitMQ start
     - RabbitMQ restart

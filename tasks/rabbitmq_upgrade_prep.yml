@@ -18,14 +18,14 @@
     src: "policy-rc.d"
     dest: "/usr/sbin/policy-rc.d"
     mode: "0755"
-    backup: yes
+    backup: true
   tags:
     - rabbitmq-policy-file
     - rabbitmq-upgrade
 
 - name: Set node for maintenance state
   command: rabbitmq-upgrade drain --quiet
-  changed_when: False
+  changed_when: false
 
 - name: Pause to allow node to sync
   pause:

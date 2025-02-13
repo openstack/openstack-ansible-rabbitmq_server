@@ -47,13 +47,13 @@
       lineinfile:
         dest: /etc/hosts
         state: present
-        line: '127.0.0.1 localhost'
-        regexp: '^127\.0\.0\.1'
+        line: "127.0.0.1 localhost"
+        regexp: "^127\\.0\\.0\\.1"
     - name: Remove hostname record for 127.0.1.1
       replace:
         path: /etc/hosts
         regexp: '^(127\.0\.1\.1)\s*(\S*)\s*({{ ansible_facts["hostname"] }})($|\s.*)'
-        replace: '\1 \2 \4'
+        replace: "\\1 \\2 \\4"
   when:
     - rabbitmq_manage_hosts_entries | bool
   tags:

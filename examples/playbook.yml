@@ -1,3 +1,4 @@
+---
 - name: Install RabbitMQ server
   hosts: rabbitmq_all
   user: root

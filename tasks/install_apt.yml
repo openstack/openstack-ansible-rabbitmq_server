@@ -84,14 +84,14 @@
 
 - name: Update apt repositories when config is changed
   apt:
-    update_cache: yes
+    update_cache: true
   when: (apt_repo_removed is changed) or (deb822_repos is changed)
 
 - name: Install RabbitMQ package dependencies
   apt:
     pkg: "{{ rabbitmq_dependencies }}"
     state: "{{ rabbitmq_package_state }}"
-    update_cache: yes
+    update_cache: true
     cache_valid_time: "{{ cache_timeout }}"
   register: install_packages
   until: install_packages is success
