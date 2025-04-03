@@ -114,3 +114,7 @@
         - (_cluster_state.get('running_nodes', []) | length) == (groups[rabbitmq_host_group] | length)
         - (_cluster_state.get('alarms', []) | length) == 0
         - (_cluster_state.get('partitions', []) | length) == 0
+
+    - name: Run rabbitmq post_upgrade hook (rebalance queues)
+      ansible.builtin.command: rabbitmq-upgrade post_upgrade
+      changed_when: false
