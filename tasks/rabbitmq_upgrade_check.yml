@@ -97,6 +97,31 @@
   tags:
     - rabbitmq-upgrade
 
+- name: Fail if cluster state is not healthy for upgrade
+  vars:
+    _rabbitmq_cluster_health_issues:
+      - msg: |
+          The number of running RabbitMQ nodes is not equal to number of configured nodes in the {{ rabbitmq_host_group }} group.
+          Please ensure that all of the nodes are running and healthy before performing the upgrade.
+        condition: "{{ ((_cluster_state.get('running_nodes', []) | length) != (groups[rabbitmq_host_group] | length)) }}"
+      - msg: |
+          There are active alarms for the rabbitmq cluster. Please check the cluster status with `rabbitmq-diagnostics cluster_status` and
+          resolve any alarms before proceeding with the upgrade.
+        condition: "{{ ((_cluster_state.get('alarms', []) | length) != 0) }}"
+      - msg: |
+          A network partition has been detected within your cluster. This might indicate a split-brain or network connectivity problem.
+          Please check the cluster status with `rabbitmq-diagnostics cluster_status` and resolve any partitioning before proceeding with the upgrade.
+        condition: "{{ ((_cluster_state.get('partitions', []) | length) != 0) }}"
+    _rabbitmq_cluster_upgrade_blockers: "{{ _rabbitmq_cluster_health_issues | selectattr('condition', 'true') }}"
+  ansible.builtin.fail:
+    msg: "{{ _rabbitmq_cluster_upgrade_blockers | map(attribute='msg') | join('\n') }}"
+  when:
+    - rabbitmq_upgrade | bool
+    - _cluster_state
+    - _rabbitmq_cluster_upgrade_blockers | length > 0
+  tags:
+    - rabbitmq-upgrade
+
 - name: Prepare node for upgrade
   when:
     - rabbitmq_upgrade | bool
