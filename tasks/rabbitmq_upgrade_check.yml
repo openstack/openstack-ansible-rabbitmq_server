@@ -125,6 +125,63 @@
   tags:
     - rabbitmq-upgrade
 
+- name: Verify if queues/streams are healthy
+  vars:
+    _rabbitmq_other_cluster_memembers: "{{ _cluster_state.get('running_nodes', []) | reject('eq', 'rabbit@' ~ ansible_facts['hostname'].split('.')[0])  }}"
+    _rabbitmq_quorum_critical_queues: "{{ (_rabbitmq_is_quorum_critical.stderr | from_json)['queues'] }}"
+  when:
+    - rabbitmq_upgrade | bool
+    - _cluster_state
+  tags:
+    - rabbitmq-upgrade
+  block:
+    - name: Check if all quorum queues and streams are above the minimum online quorum
+      ansible.builtin.command: rabbitmq-diagnostics check_if_node_is_quorum_critical --formatter json
+      changed_when: false
+      register: _rabbitmq_is_quorum_critical
+
+  rescue:
+    # NOTE(noonedeadpunk): In case this proves to be too slow, alternatively we can use smth like
+    #       rabbitmq-queues grow "{{ item.0 }}" "all" --vhost-pattern ".*" --queue-pattern ".*"
+    #       But: a) it is available only for quorum, not streams b) it may cause load on rabbit at scale
+    - name: Grow affected quorum queues to all cluster nodes
+      ansible.builtin.command: 'rabbitmq-queues add_member --vhost "{{ item.1.virtual_host }}" "{{ item.1.name }}" "{{ item.0 }}"'
+      changed_when: false
+      vars:
+        loop_label:
+          node: "{{ item.0 }}"
+          vhost: "{{ item.1.virtual_host }}"
+          queue: "{{ item.1.name }}"
+      loop: >-
+        {{
+          _rabbitmq_other_cluster_memembers | product(
+            _rabbitmq_quorum_critical_queues | selectattr('type', 'eq', 'rabbit_quorum_queue')
+          )
+        }}
+      loop_control:
+        label: "{{ loop_label | to_json }}"
+
+    - name: Grow affected stream queues to all cluster nodes
+      ansible.builtin.command: 'rabbitmq-streams add_replica --vhost "{{ item.1.virtual_host }}" "{{ item.1.name }}" "{{ item.0 }}"'
+      changed_when: false
+      vars:
+        loop_label:
+          node: "{{ item.0 }}"
+          vhost: "{{ item.1.virtual_host }}"
+          queue: "{{ item.1.name }}"
+      loop: >-
+        {{
+          _rabbitmq_other_cluster_memembers | product(
+            _rabbitmq_quorum_critical_queues | selectattr('type', 'eq', 'rabbit_stream_queue')
+          )
+        }}
+      loop_control:
+        label: "{{ loop_label | to_json }}"
+
+    - name: Wait for queues to go above minimum online quorum (120s)
+      ansible.builtin.command: rabbitmq-upgrade await_online_quorum_plus_one
+      changed_when: false
+
 - name: Prepare node for upgrade
   when:
     - rabbitmq_upgrade | bool
