@@ -57,6 +57,7 @@
 - name: Ensure installed RabbitMQ version is same as expected
   ansible.builtin.fail:
     msg: "To install a new major/minor version of RabbitMQ set '-e rabbitmq_upgrade=true'."
+  any_errors_fatal: true
   when:
     - not rabbitmq_upgrade | bool
     - installed_rabbitmq.rc == 0
@@ -73,6 +74,7 @@
       Minimal required version for proceeding with RabbitMQ upgrade to {{ rabbitmq_package_version }} is {{ _minimal_required_version }}.
       Please, upgrade to the version {{ _minimal_required_version }} before proceeding with further upgrade.
       Current detected version is {{ installed_rabbitmq.stdout }}.
+  any_errors_fatal: true
   vars:
     _minimal_required_version: >-
       {{ (_rabbitmq_upgrade_minimal_requirement_mapping | selectattr('target', 'in', rabbitmq_package_version) | first)['requirement'] }}
@@ -115,6 +117,7 @@
     _rabbitmq_cluster_upgrade_blockers: "{{ _rabbitmq_cluster_health_issues | selectattr('condition', 'true') }}"
   ansible.builtin.fail:
     msg: "{{ _rabbitmq_cluster_upgrade_blockers | map(attribute='msg') | join('\n') }}"
+  any_errors_fatal: true
   when:
     - rabbitmq_upgrade | bool
     - _cluster_state
