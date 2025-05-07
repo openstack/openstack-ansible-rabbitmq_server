@@ -50,13 +50,14 @@
     name: pki
     tasks_from: "{{ rabbitmq_pki_create_ca | ternary('main.yml', 'main_certs.yml') }}"
   vars:
+    pki_backend: "{{ rabbitmq_pki_backend }}"
     pki_setup_host: "{{ rabbitmq_pki_setup_host }}"
     pki_dir: "{{ rabbitmq_pki_dir }}"
     pki_create_ca: "{{ rabbitmq_pki_create_ca }}"
     pki_regen_ca: "{{ rabbitmq_pki_regen_ca }}"
     pki_authorities: "{{ rabbitmq_pki_authorities }}"
     pki_install_ca: "{{ rabbitmq_pki_install_ca }}"
-    pki_create_certificates: "{{ rabbitmq_user_ssl_cert is not defined and rabbitmq_user_ssl_key is not defined }}"
+    pki_create_certificates: "{{ rabbitmq_user_ssl_cert | length == 0 and rabbitmq_user_ssl_key | length == 0 }}"
     pki_regen_cert: "{{ rabbitmq_pki_regen_cert }}"
     pki_certificates: "{{ rabbitmq_pki_certificates }}"
     pki_install_certificates: "{{ rabbitmq_pki_install_certificates }}"
