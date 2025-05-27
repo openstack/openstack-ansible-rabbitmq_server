@@ -13,9 +13,8 @@ Table of Contents
 
    configure-rabbitmq.rst
 
-
 To clone or view the source code for this repository, visit the role repository
-for `rabbitmq_server <https://github.com/openstack/openstack-ansible-rabbitmq_server>`_.
+for `rabbitmq_server <https://opendev.org/openstack/openstack-ansible-rabbitmq_server>`_.
 
 Default variables
 ~~~~~~~~~~~~~~~~~
@@ -26,8 +25,6 @@ Default variables
 
 Dependencies
 ~~~~~~~~~~~~
-
-This role needs pip >= 7.1 installed on the target host.
 
 To use this role, define the following variables:
 
