@@ -19,10 +19,14 @@ _rabbitmq_install_method: external_repo
 # el9, the packages themselves still have an el8 dist tag for rabbitmq
 _rabbitmq_package_dist_tag: "el8"
 
-_rabbitmq_erlang_package_dist_tag: "el{{ ansible_facts['distribution_major_version'] }}"
+# NOTE(noonedeadpunk): While there are no repository for EL10, EL9 keeps
+#                      working just fine, as it's pretty much self-contained.
+#                      Once there is EL10-specific repo, patch introducting this comment
+#                      can be reverted.
+_rabbitmq_erlang_package_dist_tag: "el9"
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
-_rabbitmq_repo_url: "https://yum1.rabbitmq.com/rabbitmq/el/{{ ansible_facts['distribution_major_version'] | lower }}/noarch"
+_rabbitmq_repo_url: "https://yum1.rabbitmq.com/rabbitmq/el/9/noarch"
 _rabbitmq_repo:
   name: rabbitmq_rabbitmq-server
   description: "RabbitMQ Server Rolling Repository"
@@ -35,7 +39,7 @@ _rabbitmq_repo:
     - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
-_rabbitmq_erlang_repo_url: "https://yum1.rabbitmq.com/erlang/el/{{ ansible_facts['distribution_major_version'] | lower }}/$basearch"
+_rabbitmq_erlang_repo_url: "https://yum1.rabbitmq.com/erlang/el/9/$basearch"
 _rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
   description: "RabbitMQ Erlang Packages"
