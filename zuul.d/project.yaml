@@ -18,7 +18,6 @@
       - openstack-ansible-linters-jobs
       - openstack-ansible-deploy-infra_lxc-jobs
       - openstack-ansible-deploy-aio_metal-jobs
-      - openstack-ansible-upgrade-infra_lxc-jobs
       - check-requirements
       - publish-openstack-docs-pti
       - build-release-notes-jobs-python3
