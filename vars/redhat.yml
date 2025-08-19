@@ -55,10 +55,12 @@ rabbitmq_distro_packages_mapping:
   distro:
     - openssl
     - rabbitmq-server
+    - util-linux
   external_repo:
     - openssl
     - "erlang-{{ rabbitmq_erlang_package_version }}.{{ _rabbitmq_erlang_package_dist_tag }}.{{ ansible_facts['architecture'] }}"
     - "rabbitmq-server-{{ rabbitmq_package_version }}.{{ _rabbitmq_package_dist_tag }}.noarch"
+    - util-linux
 
 rabbitmq_distro_packages: "{{ rabbitmq_distro_packages_mapping[rabbitmq_install_method] }}"
 
