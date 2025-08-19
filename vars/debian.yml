@@ -43,6 +43,7 @@ rabbitmq_dependencies:
   - "erlang-eldap{{ _rabbitmq_erlang_version_spec }}"
   - "erlang-nox{{ _rabbitmq_erlang_version_spec }}"
   - socat
+  - util-linux
 
 rabbitmq_distro_packages:
   - "rabbitmq-server{{ (rabbitmq_install_method == 'external_repo') | ternary('=' ~ rabbitmq_package_version, '') }}"
