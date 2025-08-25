@@ -27,3 +27,27 @@
   loop: "{{ _feature_flags.stdout | from_json | rejectattr('stability', 'eq', 'experimental') | selectattr('state', 'eq', 'disabled') }}"
   loop_control:
     loop_var: flag
+
+- name: Check for deprecated features
+  when:
+    - rabbitmq_upgrade | bool
+  tags:
+    - rabbitmq-upgrade
+  block:
+    - name: Check for deprecated features
+      ansible.builtin.command: rabbitmq-diagnostics check_if_any_deprecated_features_are_used --formatter json
+      changed_when: false
+      failed_when: false
+      register: deprecated_features
+
+    - name: Disable classic queues if still used
+      vars:
+        parsed_deprecations: "{{ ((deprecated_features.rc == 0) | ternary(deprecated_features.stdout, deprecated_features.stderr)) | from_json }}"
+      ansible.builtin.command: rabbitmqctl remove_classic_queue_mirroring_from_policies
+      changed_when: true
+      when:
+        - rabbitmq_package_version is version('4.0', '>=')
+        - installed_rabbitmq.rc == 0
+        - installed_rabbitmq.stdout is version('4.0', '<')
+        - parsed_deprecations.result == 'error'
+        - "'classic_queue_mirroring' in parsed_deprecations.deprecated_features"
