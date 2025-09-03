@@ -28,7 +28,7 @@ rabbitmq_erlang_package_version: "26.2.*-1"
 rabbitmq_host_group: "rabbitmq_all"
 
 # The local address used for the rabbitmq cluster node
-rabbitmq_node_address: "{{ ansible_host }}"
+rabbitmq_node_address: "{{ management_address | default(ansible_host) }}"
 
 rabbit_system_user_name: rabbitmq
 rabbit_system_group_name: rabbitmq
