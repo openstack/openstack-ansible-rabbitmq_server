@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Set rabbit cookie
+- name: Set RabbitMQ cookie
   ansible.builtin.copy:
     content: "{{ rabbitmq_cookie_token }}"
     dest: /var/lib/rabbitmq/.erlang.cookie
