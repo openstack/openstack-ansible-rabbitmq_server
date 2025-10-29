@@ -26,7 +26,9 @@ _rabbitmq_package_dist_tag: "el8"
 _rabbitmq_erlang_package_dist_tag: "el9"
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
-_rabbitmq_repo_url: "https://yum1.rabbitmq.com/rabbitmq/el/9/noarch"
+_rabbitmq_repo_url:
+  - "https://yum1.rabbitmq.com/rabbitmq/el/9/noarch"
+  - "https://yum2.rabbitmq.com/rabbitmq/el/9/noarch"
 _rabbitmq_repo:
   name: rabbitmq_rabbitmq-server
   description: "RabbitMQ Server Rolling Repository"
@@ -39,7 +41,9 @@ _rabbitmq_repo:
     - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
-_rabbitmq_erlang_repo_url: "https://yum1.rabbitmq.com/erlang/el/9/$basearch"
+_rabbitmq_erlang_repo_url:
+  - "https://yum1.rabbitmq.com/erlang/el/9/$basearch"
+  - "https://yum2.rabbitmq.com/erlang/el/9/$basearch"
 _rabbitmq_erlang_repo:
   name: rabbitmq_els-erlang
   description: "RabbitMQ Erlang Packages"
