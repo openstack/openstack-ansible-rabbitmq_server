@@ -15,22 +15,26 @@
 
 _rabbitmq_install_method: external_repo
 
-_rabbitmq_repo_url: "https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-server/deb/{{ ansible_facts['distribution'] | lower }}"
+_rabbitmq_repo_url: >-
+  https://deb1.rabbitmq.com/rabbitmq-server/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+  https://deb2.rabbitmq.com/rabbitmq-server/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
 _rabbitmq_repo:
   - name: "RabbitMQ"
     suites: "{{ ansible_facts['distribution_release'] | lower }}"
     uris: "{{ rabbitmq_repo_url }}"
-    signed_by: "{{ lookup('file', 'gpg/C072C960') }}"
+    signed_by: "{{ lookup('file', 'gpg/6026DFCA') }}"
     components: main
     architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
     state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
 
-_rabbitmq_erlang_repo_url: "https://ppa1.rabbitmq.com/rabbitmq/rabbitmq-erlang/deb/{{ ansible_facts['distribution'] | lower }}"
+_rabbitmq_erlang_repo_url: >-
+  https://deb1.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+  https://deb2.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
 _rabbitmq_erlang_repo:
   - name: "els_erlang"
     suites: "{{ ansible_facts['distribution_release'] | lower }}"
     uris: "{{ rabbitmq_erlang_repo_url }}"
-    signed_by: "{{ lookup('file', 'gpg/A16A4251') }}"
+    signed_by: "{{ lookup('file', 'gpg/6026DFCA') }}"
     components: main
     architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
     state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
