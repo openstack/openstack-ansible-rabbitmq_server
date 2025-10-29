@@ -24,6 +24,8 @@ _rabbitmq_is_last_play_host: >-
   }}
 
 _rabbitmq_upgrade_minimal_requirement_mapping:
+  - target: "4.1"
+    requirement: "3.13"
   - target: "4.0"
     requirement: "3.13"
   - target: "3.13"
