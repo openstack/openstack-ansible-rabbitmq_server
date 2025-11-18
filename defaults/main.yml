@@ -66,17 +66,6 @@ rabbitmq_architecture_mapping:
   armv7l: armhf
   aarch64: arm64
 
-# Set the gpg keys needed to be imported
-# This should be a list of dicts, with each dict
-# giving a set of arguments to the applicable
-# package module. The following is an example for
-# systems using the apt package manager.
-# rabbitmq_gpg_keys:
-#   - id: '0xC2E73424D59097AB'
-#     keyserver: 'hkp://keyserver.ubuntu.com:80'
-#     validate_certs: no
-rabbitmq_gpg_keys: "{{ _rabbitmq_gpg_keys | default([]) }}"
-
 # Set the URL for the RabbitMQ repository
 rabbitmq_repo_url: "{{ _rabbitmq_repo_url | default(null) }}"
 
