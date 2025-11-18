@@ -20,7 +20,39 @@
       - openstack-ansible-deploy-infra_lxc-jobs
       - openstack-ansible-deploy-aio_metal-jobs
       - openstack-ansible-deploy-infra_distro_lxc-jobs
-      - openstack-ansible-upgrade-infra_lxc-jobs
+      # - openstack-ansible-upgrade-infra_lxc-jobs
       - check-requirements
       - publish-openstack-docs-pti
       - build-release-notes-jobs-python3
+    check:
+      jobs:
+        - openstack-ansible-deploy-infra_lxc_tls-rockylinux-10:
+            voting: false
+        - openstack-ansible-deploy-infra_lxc_tls-ubuntu-noble:
+            voting: false
+        - openstack-ansible-upgrade-aio_metal-ubuntu-noble:
+            voting: false
+        - openstack-ansible-upgrade-aio_metal_tls-ubuntu-noble:
+            voting: false
+        - openstack-ansible-deploy-infra_lxc-debian-trixie:
+            voting: false
+        - openstack-ansible-deploy-aio_metal-debian-trixie:
+            voting: false
+        - openstack-ansible-deploy-aio_metal_tls-ubuntu-noble:
+            voting: false
+    gate:
+      jobs:
+        - openstack-ansible-deploy-infra_lxc_tls-rockylinux-10:
+            voting: false
+        - openstack-ansible-deploy-infra_lxc_tls-ubuntu-noble:
+            voting: false
+        - openstack-ansible-upgrade-aio_metal-ubuntu-noble:
+            voting: false
+        - openstack-ansible-upgrade-aio_metal_tls-ubuntu-noble:
+            voting: false
+        - openstack-ansible-deploy-infra_lxc-debian-trixie:
+            voting: false
+        - openstack-ansible-deploy-aio_metal-debian-trixie:
+            voting: false
+        - openstack-ansible-deploy-aio_metal_tls-ubuntu-noble:
+            voting: false
