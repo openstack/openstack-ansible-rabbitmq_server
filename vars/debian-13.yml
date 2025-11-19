@@ -1,0 +1,56 @@
+---
+# Copyright 2016, Walmart Stores, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_rabbitmq_install_method: external_repo
+# NOTE: Using erlang from distro as it is not available on deb1.rabbitmq.com:
+#       https://github.com/rabbitmq/erlang-debian-package/issues/45
+_rabbitmq_erlang_install_method: distro
+
+_rabbitmq_repo_url: >-
+  https://deb1.rabbitmq.com/rabbitmq-server/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+  https://deb2.rabbitmq.com/rabbitmq-server/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+_rabbitmq_repo:
+  - name: "RabbitMQ"
+    suites: "{{ ansible_facts['distribution_release'] | lower }}"
+    uris: "{{ rabbitmq_repo_url }}"
+    signed_by: "{{ lookup('file', 'gpg/6026DFCA') }}"
+    components: main
+    architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
+    state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
+
+_rabbitmq_erlang_repo_url: >-
+  https://deb1.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+  https://deb2.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+_rabbitmq_erlang_repo:
+  - name: "els_erlang"
+    suites: "{{ ansible_facts['distribution_release'] | lower }}"
+    uris: "{{ rabbitmq_erlang_repo_url }}"
+    signed_by: "{{ lookup('file', 'gpg/6026DFCA') }}"
+    components: main
+    architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
+    state: "{{ (rabbitmq_erlang_install_method == 'external_repo') | ternary('present', 'absent') }}"
+
+_rabbitmq_erlang_version_spec: "{{ (rabbitmq_erlang_install_method == 'external_repo') | ternary('=1:' ~ rabbitmq_erlang_package_version, '') }}"
+
+rabbitmq_dependencies:
+  - "erlang-base{{ _rabbitmq_erlang_version_spec }}"
+  - "erlang-diameter{{ _rabbitmq_erlang_version_spec }}"
+  - "erlang-eldap{{ _rabbitmq_erlang_version_spec }}"
+  - "erlang-nox{{ _rabbitmq_erlang_version_spec }}"
+  - socat
+  - util-linux
+
+rabbitmq_distro_packages:
+  - "rabbitmq-server{{ (rabbitmq_install_method == 'external_repo') | ternary('=' ~ rabbitmq_package_version, '') }}"
