@@ -40,6 +40,20 @@
   tags:
     - rabbitmq-apt-keys
 
+- name: Clean up old repos
+  apt_repository:
+    repo: "{{ item.repo }}"
+    state: absent
+    filename: "{{ item.file }}"
+  vars:
+    _erlang_old_url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-erlang/deb/{{ ansible_facts['distribution'] | lower }}"
+    _rabbitmq_old_url: https://ppa1.novemberain.com/rabbitmq/rabbitmq-server/deb/{{ ansible_facts['distribution'] | lower }}
+  loop:
+    - repo: "deb {{ _rabbitmq_old_url }} {{ ansible_facts['distribution_release'] | lower }} main"
+      file: RabbitMQ
+    - repo: "deb {{ _erlang_old_url }} {{ ansible_facts['distribution_release'] | lower }} main"
+      file: els_erlang
+
 # When updating the cache in the apt_repository
 # task, and the update fails, a retry does not
 # detect a change the second attempt and therefore

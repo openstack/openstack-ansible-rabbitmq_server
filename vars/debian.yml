@@ -17,19 +17,18 @@ _rabbitmq_install_method: external_repo
 _rabbitmq_package_version: "3.13.7-1"
 
 _rabbitmq_gpg_keys:
-  - file: gpg/C072C960
-  - file: gpg/A16A4251 # Erlang Cloudsmith repo
-  - file: gpg/0A9AF211 # RabbitMQ Release Signing Key
+  - file: gpg/6026DFCA
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/rabbitmq-server
-_rabbitmq_repo_url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-server/deb/{{ ansible_facts['distribution'] | lower }}"
+_rabbitmq_repo_url: "https://deb1.rabbitmq.com/rabbitmq-server/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}"
 _rabbitmq_repo:
   repo: "deb {{ rabbitmq_repo_url }} {{ ansible_facts['distribution_release'] | lower }} main"
   state: "present"
   filename: "RabbitMQ"
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/rabbitmq-erlang
-_rabbitmq_erlang_repo_url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-erlang/deb/{{ ansible_facts['distribution'] | lower }}"
+_rabbitmq_erlang_repo_url: >-
+  https://deb1.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
 _rabbitmq_erlang_repo:
   repo: "deb {{ rabbitmq_erlang_repo_url }} {{ ansible_facts['distribution_release'] | lower }} main"
   state: "present"
