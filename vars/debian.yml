@@ -37,9 +37,9 @@ _rabbitmq_erlang_repo:
     signed_by: "{{ lookup('file', 'gpg/6026DFCA') }}"
     components: main
     architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
-    state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
+    state: "{{ (rabbitmq_erlang_install_method == 'external_repo') | ternary('present', 'absent') }}"
 
-_rabbitmq_erlang_version_spec: "{{ (rabbitmq_install_method == 'external_repo') | ternary('=1:' ~ rabbitmq_erlang_package_version, '') }}"
+_rabbitmq_erlang_version_spec: "{{ (rabbitmq_erlang_install_method == 'external_repo') | ternary('=1:' ~ rabbitmq_erlang_package_version, '') }}"
 
 rabbitmq_dependencies:
   - "erlang-base{{ _rabbitmq_erlang_version_spec }}"
