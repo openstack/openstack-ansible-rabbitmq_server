@@ -49,5 +49,6 @@
         - rabbitmq_package_version is version('4.0', '>=')
         - installed_rabbitmq.rc == 0
         - installed_rabbitmq.stdout is version('4.0', '<')
+        - installed_rabbitmq.stdout is version('3.13', '>=')
         - parsed_deprecations.result == 'error'
         - "'classic_queue_mirroring' in parsed_deprecations.deprecated_features"
