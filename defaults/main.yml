@@ -21,13 +21,13 @@ cache_timeout: 600
 rabbitmq_package_state: "{{ package_state | default('latest') }}"
 
 # Defined versions of RabbitMQ and Erlang
-rabbitmq_package_version: "4.1.4-1"
+rabbitmq_package_version: "4.2.4-1"
 rabbitmq_erlang_package_version: "27.3.*-1"
 
 # Inventory group containing the hosts for the cluster
 rabbitmq_host_group: "rabbitmq_all"
 
-# The local address used for the rabbitmq cluster node
+# The local address used for the RabbitMQ cluster node
 rabbitmq_node_address: "{{ management_address | default(ansible_host) }}"
 
 rabbit_system_user_name: rabbitmq
@@ -82,16 +82,16 @@ rabbitmq_erlang_repo: "{{ _rabbitmq_erlang_repo | default({}) }}"
 rabbitmq_install_method: "{{ _rabbitmq_install_method }}"
 rabbitmq_erlang_install_method: "{{ _rabbitmq_erlang_install_method | default(rabbitmq_install_method) }}"
 
-# Name of the rabbitmq cluster
+# Name of the RabbitMQ cluster
 rabbitmq_cluster_name: rabbitmq_cluster1
 
 # Specify a partition recovery strategy (autoheal | pause_minority | ignore)
 rabbitmq_cluster_partition_handling: pause_minority
 
-# Rabbitmq open file limits
+# RabbitMQ open file limits
 rabbitmq_ulimit: 65536
 
-# Configure rabbitmq plugins
+# Configure RabbitMQ plugins
 # This should be a comma-separated list of plugin names.
 # Any plugin not listed will be disabled automatically.
 # rabbitmq_plugins:
@@ -144,7 +144,7 @@ rabbitmq_pki_install_ca:
   - name: "RabbitMQRoot"
     condition: "{{ rabbitmq_pki_create_ca }}"
 
-# Rabbitmq server certificate
+# RabbitMQ server certificate
 rabbitmq_pki_keys_path: "{{ rabbitmq_pki_dir ~ '/certs/private/' }}"
 rabbitmq_pki_certs_path: "{{ rabbitmq_pki_dir ~ '/certs/certs/' }}"
 rabbitmq_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('RabbitMQIntermediate') }}"
@@ -201,7 +201,7 @@ rabbitmq_ssl_tls_versions:
 rabbitmq_ssl_verify: "verify_none"
 rabbitmq_ssl_fail_if_no_peer_cert: false
 
-# Recommended ciphers taken from https://www.rabbitmq.com/ssl.html
+# Recommended ciphers taken from https://www.rabbitmq.com/docs/ssl
 rabbitmq_ssl_ciphers:
   - "ECDHE-ECDSA-AES256-GCM-SHA384"
   - "ECDHE-RSA-AES256-GCM-SHA384"
@@ -248,7 +248,7 @@ rabbitmq_hipe_compile: false
 rabbitmq_disable_non_tls_listeners: false
 
 # RabbitMQ logging options
-# See https://www.rabbitmq.com/logging.html for the logging options
+# See https://www.rabbitmq.com/docs/logging for the logging options
 rabbitmq_log:
   journald: true
   file: false
