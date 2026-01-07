@@ -31,8 +31,8 @@ _rabbitmq_repo:
   filename: RabbitMQ
   gpgcheck: yes
   gpgkey:
-    - https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
-    - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
+    - https://github.com/rabbitmq/signing-keys/releases/download/3.0/rabbitmq-release-signing-key.asc
+    - https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-server.9F4587F226208342.key
 
 # NOTE(noonedeadpunk): List of available packages can be searched here: https://cloudsmith.io/~rabbitmq/repos/
 _rabbitmq_erlang_repo_url: "https://yum1.novemberain.com/erlang/el/{{ ansible_facts['distribution_major_version'] | lower }}/$basearch"
@@ -43,8 +43,8 @@ _rabbitmq_erlang_repo:
   filename: els-erlang
   gpgcheck: yes
   gpgkey:
-    - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49CC4BBE5B.key
-    - https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+    - https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-erlang.E495BB49CC4BBE5B.key
+    - https://github.com/rabbitmq/signing-keys/releases/download/3.0/rabbitmq-release-signing-key.asc
 
 rabbitmq_distro_packages_mapping:
   distro:
