@@ -45,6 +45,7 @@
     repo: "{{ item.repo }}"
     state: absent
     filename: "{{ item.file }}"
+    update_cache: no
   vars:
     _erlang_old_url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-erlang/deb/{{ ansible_facts['distribution'] | lower }}"
     _rabbitmq_old_url: https://ppa1.novemberain.com/rabbitmq/rabbitmq-server/deb/{{ ansible_facts['distribution'] | lower }}
