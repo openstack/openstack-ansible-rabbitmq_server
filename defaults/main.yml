@@ -22,7 +22,7 @@ rabbitmq_package_state: "{{ package_state | default('latest') }}"
 
 # Defined versions of RabbitMQ and Erlang
 rabbitmq_package_version: "4.0.9-1"
-rabbitmq_erlang_package_version: "26.2.*-1"
+rabbitmq_erlang_package_version: "27.3.*-1"
 
 # Inventory group containing the hosts for the cluster
 rabbitmq_host_group: "rabbitmq_all"
