@@ -19,12 +19,12 @@ roles:
   - name: apt_package_pinning
     src: https://opendev.org/openstack/openstack-ansible-apt_package_pinning
     scm: git
-    version: master
+    version: stable/2025.1
   - name: systemd_service
     src: https://opendev.org/openstack/ansible-role-systemd_service
     scm: git
-    version: master
+    version: stable/2025.1
   - name: pki
     src: https://opendev.org/openstack/ansible-role-pki
     scm: git
-    version: master
+    version: stable/2025.1
