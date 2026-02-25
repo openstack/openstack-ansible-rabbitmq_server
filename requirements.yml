@@ -3,6 +3,9 @@ collections:
   - name: https://opendev.org/openstack/ansible-config_template
     version: master
     type: git
+  - name: https://opendev.org/openstack/openstack-ansible-plugins
+    version: master
+    type: git
   - name: community.crypto
     source: https://github.com/ansible-collections/community.crypto
     type: git

@@ -79,7 +79,7 @@
 - name: Including rabbitmq_setup tasks
   ansible.builtin.include_tasks: rabbitmq_setup.yml
   when:
-    - _rabbitmq_is_last_play_host
+    - _rabbitmq_is_last_play_host | bool
   args:
     apply:
       tags:
@@ -89,8 +89,8 @@
 
 - name: Ensure all flags are set after upgrade is done
   when:
-    - _rabbitmq_is_last_play_host
-    - rabbitmq_upgrade
+    - _rabbitmq_is_last_play_host | bool
+    - rabbitmq_upgrade | bool
   block:
     - name: Including rabbitmq_cluster_state tasks
       ansible.builtin.include_tasks: rabbitmq_cluster_state.yml
@@ -110,7 +110,7 @@
       tags:
         - rabbitmq-upgrade
       when:
-        - _cluster_state
+        - _cluster_state | length > 0
         - (_cluster_state.get('running_nodes', []) | length) == (groups[rabbitmq_host_group] | length)
         - (_cluster_state.get('alarms', []) | length) == 0
         - (_cluster_state.get('partitions', []) | length) == 0
