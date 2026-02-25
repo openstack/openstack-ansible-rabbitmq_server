@@ -58,10 +58,12 @@ _rabbitmq_erlang_repo:
 rabbitmq_distro_packages_mapping:
   distro:
     - openssl
+    - python3-requests
     - rabbitmq-server
     - util-linux
   external_repo:
     - openssl
+    - python3-requests
     - "erlang-{{ rabbitmq_erlang_package_version }}.{{ _rabbitmq_erlang_package_dist_tag }}.{{ ansible_facts['architecture'] }}"
     - "rabbitmq-server-{{ rabbitmq_package_version }}.{{ _rabbitmq_package_dist_tag }}.noarch"
     - util-linux
