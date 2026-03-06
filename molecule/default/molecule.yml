@@ -9,7 +9,7 @@ platforms:
   - name: rabbitmq01
     groups:
       - rabbitmq_all
-    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:bookworm}"
+    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:trixie}"
     command: ${DOCKER_COMMAND:-""}
     privileged: true
     pre_build_image: true
@@ -23,7 +23,7 @@ platforms:
   - name: rabbitmq02
     groups:
       - rabbitmq_all
-    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:bookworm}"
+    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:trixie}"
     command: ${DOCKER_COMMAND:-""}
     privileged: true
     pre_build_image: true
@@ -37,7 +37,7 @@ platforms:
   - name: rabbitmq03
     groups:
       - rabbitmq_all
-    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:bookworm}"
+    image: "${DOCKER_REGISTRY:-quay.io/gotmax23}/${DOCKER_IMAGE_TAG:-debian-systemd:trixie}"
     command: ${DOCKER_COMMAND:-""}
     privileged: true
     pre_build_image: true
@@ -67,10 +67,10 @@ provisioner:
   lint:
     name: ansible-lint
   playbooks:
-    prepare: prepare.yml
+    prepare: ../../tests/prepare.yml
     converge: ../../tests/test.yml
     verify: ../../tests/test-rabbitmq-functional.yml
-    cleanup: cleanup.yml
+    cleanup: ../../tests/cleanup.yml
   config_options:
     defaults:
       inject_facts_as_vars: false

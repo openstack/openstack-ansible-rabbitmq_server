@@ -17,4 +17,4 @@
   hosts: rabbitmq_all
   user: root
   roles:
-    - "{{ playbook_dir | dirname | basename }}"
+    - "rabbitmq_server"
