@@ -46,6 +46,7 @@ rabbitmq_dependencies:
   - "erlang-diameter{{ _rabbitmq_erlang_version_spec }}"
   - "erlang-eldap{{ _rabbitmq_erlang_version_spec }}"
   - "erlang-nox{{ _rabbitmq_erlang_version_spec }}"
+  - python3-requests
   - socat
   - util-linux
 
