@@ -27,6 +27,7 @@
   loop: "{{ _feature_flags.stdout | from_json | rejectattr('stability', 'eq', 'experimental') | selectattr('state', 'eq', 'disabled') }}"
   loop_control:
     loop_var: flag
+    label: "{'name': '{{ flag['name'] }}', 'stability': '{{ flag['stability'] }}'}"
 
 - name: Check for deprecated features
   when:
