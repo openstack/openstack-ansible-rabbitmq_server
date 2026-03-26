@@ -151,11 +151,18 @@ rabbitmq_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert
 rabbitmq_pki_intermediate_cert_path: >-
   {{ rabbitmq_pki_dir ~ '/roots/' ~ rabbitmq_pki_intermediate_cert_name ~ '/certs/' ~ rabbitmq_pki_intermediate_cert_name ~ '.crt' }}
 rabbitmq_pki_regen_cert: ""
+rabbitmq_pki_backend: "{{ openstack_pki_backend | default('standalone') }}"
 rabbitmq_pki_certificates:
   - name: "rabbitmq_{{ ansible_facts['hostname'] }}"
-    provider: ownca
     cn: "{{ ansible_facts['hostname'] }}"
-    san: "{{ 'DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ rabbitmq_node_address ~ ',DNS:' ~ ansible_facts['fqdn'] }}"
+    san:
+      dns:
+        - "{{ ansible_facts['hostname'] }}"
+        - "{{ ansible_facts['fqdn'] }}"
+      ip:
+        - "{{ rabbitmq_node_address }}"
+    # standalone backend only
+    provider: ownca
     signed_by: "{{ rabbitmq_pki_intermediate_cert_name }}"
 
 # RabbitMQ destination files for SSL certificates
@@ -165,27 +172,33 @@ rabbitmq_ssl_ca_cert: /etc/rabbitmq/rabbitmq-ca.pem
 
 # Installation details for SSL certificates
 rabbitmq_pki_install_certificates:
-  - src: "{{ rabbitmq_user_ssl_cert | default(rabbitmq_pki_certs_path ~ 'rabbitmq_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "rabbitmq_{{ ansible_facts['hostname'] }}"
+    type: "certificate_chain"
     dest: "{{ rabbitmq_ssl_cert }}"
     owner: "rabbitmq"
     group: "rabbitmq"
-    mode: "0644"
-  - src: "{{ rabbitmq_user_ssl_key | default(rabbitmq_pki_keys_path ~ 'rabbitmq_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+    # standalone backend only
+    src: "{{ rabbitmq_user_ssl_cert }}"
+  - name: "rabbitmq_{{ ansible_facts['hostname'] }}"
+    type: "private_key"
     dest: "{{ rabbitmq_ssl_key }}"
     owner: "rabbitmq"
     group: "rabbitmq"
-    mode: "0600"
-  - src: "{{ rabbitmq_user_ssl_ca_cert | default(rabbitmq_pki_intermediate_cert_path) }}"
+    # standalone backend only
+    src: "{{ rabbitmq_user_ssl_key }}"
+  - name: "rabbitmq_{{ ansible_facts['hostname'] }}"
+    type: "ca_bundle"
     dest: "{{ rabbitmq_ssl_ca_cert }}"
     owner: "rabbitmq"
     group: "rabbitmq"
-    mode: "0644"
+    # standalone backend only
+    src: "{{ rabbitmq_user_ssl_ca_cert }}"
 
 # Define user-provided SSL certificates in:
 # /etc/openstack_deploy/user_variables.yml
-# rabbitmq_user_ssl_cert: <path to cert on ansible deployment host>
-# rabbitmq_user_ssl_key: <path to cert on ansible deployment host>
-# rabbitmq_user_ssl_ca_cert: <path to cert on ansible deployment host>
+rabbitmq_user_ssl_cert: ""
+rabbitmq_user_ssl_key: ""
+rabbitmq_user_ssl_ca_cert: ""
 
 # These are highly recommended for TLSv1.2 but cannot be used
 # with TLSv1.3. If TLSv1.3 is enabled, these lines will not be

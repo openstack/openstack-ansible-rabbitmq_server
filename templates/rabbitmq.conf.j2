@@ -26,7 +26,7 @@ listeners.{{ _opt }}.{{ loop.index }} = {{ _key }}:{{ _value }}
 
 ssl_options.certfile   = {{ rabbitmq_ssl_cert }}
 ssl_options.keyfile    = {{ rabbitmq_ssl_key }}
-{% if rabbitmq_user_ssl_ca_cert is defined -%}
+{% if rabbitmq_user_ssl_ca_cert | length > 0 -%}
 ssl_options.cacertfile = {{ rabbitmq_ssl_ca_cert }}
 {% endif %}
 ssl_options.honor_cipher_order   = true
@@ -59,7 +59,7 @@ management.ssl.ip = {{ rabbitmq_management_bind_address }}
 management.ssl.port = {{ rabbitmq_management_bind_tls_port }}
 management.ssl.certfile   = {{ rabbitmq_ssl_cert }}
 management.ssl.keyfile    = {{ rabbitmq_ssl_key }}
-{%   if rabbitmq_user_ssl_ca_cert is defined -%}
+{%   if rabbitmq_user_ssl_ca_cert | length > 0 -%}
 management.ssl.cacertfile = {{ rabbitmq_ssl_ca_cert }}
 {%   endif %}
 management.ssl.honor_cipher_order   = true
