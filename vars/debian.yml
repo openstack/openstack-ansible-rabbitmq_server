@@ -27,14 +27,25 @@ _rabbitmq_repo:
     architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
     state: "{{ (rabbitmq_install_method == 'external_repo') | ternary('present', 'absent') }}"
 
-_rabbitmq_erlang_repo_url: >-
-  https://deb1.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
-  https://deb2.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+_rabbitmq_erlang_repo_url_mapping:
+  x86_64: >-
+    https://deb1.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+    https://deb2.rabbitmq.com/rabbitmq-erlang/{{ ansible_facts['distribution'] | lower }}/{{ ansible_facts['distribution_release'] | lower }}
+  aarch64: >-
+    http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu
+
+_rabbitmq_erlang_repo_url: "{{ _rabbitmq_erlang_repo_url_mapping[ansible_facts['architecture']] }}"
+
+# Erlang repo signed_by - architecture-specific
+_rabbitmq_erlang_repo_signature_mapping:
+  x86_64: "{{ lookup('file', 'gpg/6026DFCA') }}"
+  aarch64: "{{ lookup('file', 'gpg/57EBB1CC') }}"
+
 _rabbitmq_erlang_repo:
   - name: "els_erlang"
     suites: "{{ ansible_facts['distribution_release'] | lower }}"
     uris: "{{ rabbitmq_erlang_repo_url }}"
-    signed_by: "{{ lookup('file', 'gpg/6026DFCA') }}"
+    signed_by: "{{ _rabbitmq_erlang_repo_signature_mapping[ansible_facts['architecture']] }}"
     components: main
     architectures: "{{ rabbitmq_architecture_mapping.get(ansible_facts['architecture']) }}"
     state: "{{ (rabbitmq_erlang_install_method == 'external_repo') | ternary('present', 'absent') }}"
