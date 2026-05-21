@@ -21,7 +21,7 @@ cache_timeout: 600
 rabbitmq_package_state: "{{ package_state | default('latest') }}"
 
 # Defined versions of RabbitMQ and Erlang
-rabbitmq_package_version: "4.2.6-1"
+rabbitmq_package_version: "4.2.7-1"
 rabbitmq_erlang_package_version: "27.3.*"
 
 # Inventory group containing the hosts for the cluster
