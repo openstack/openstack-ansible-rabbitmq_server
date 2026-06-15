@@ -1,6 +1,9 @@
 [
   {kernel, [
      {inet_dist_use_interface, { {{ rabbitmq_management_bind_address|replace('.',',') }} } }
-  ]},
+  ]}
+{% if rabbitmq_install_method == 'distro' or rabbitmq_package_version is version('4.2.0', '<') %}
+ ,
   {mnesia, [{dump_log_write_threshold, {{ mnesia_dump_log_write_threshold }} }]}
+{% endif %}
 ].
