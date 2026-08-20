@@ -319,6 +319,8 @@ rabbitmq_init_overrides:
     Restart: on-failure
     RestartSec: 2
 
+# Khepri became the default backend as of RabbitMQ 4.2.
+#
 # Mnesia configuration
 # The Mnesia dump_log_write_threshold option controls
 # how often the dumping occurs
