@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+# {{ openstack_ansible_managed | default('OpenStack-Ansible Managed') }}
 
 # Set ERLANG VM parameters
 NODENAME=rabbit@{{ ansible_facts['fqdn'] if rabbitmq_env_use_longname else ansible_facts['hostname'] }}
